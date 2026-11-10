@@ -333,14 +333,14 @@
         <div class="sync-head">
           <div>
             <h2>기기 간 동기화 <span id="syncStatus"></span></h2>
-            <p id="syncSummary">공유 상태 파일을 불러오는 중이에요…</p>
+            <p id="syncSummary">서버 상태를 불러오는 중이에요…</p>
             <p class="sync-detail" id="syncDetail"></p>
           </div>
           <div class="sync-actions">
             <button class="btn primary" id="copySyncBtn" type="button">합친 상태 JSON 복사</button>
           </div>
         </div>
-        <p class="sync-note">삭제·담기 상태는 공유 파일 <code>data/state.json</code>과 이 브라우저에 함께 저장돼요. 이 페이지는 정적 페이지라 GitHub에 직접 쓸 수는 없어서, 동기화는 <b>JSON 복사 → Claude가 GitHub에 커밋</b>하는 방식으로 이뤄져요. 위 버튼으로 합쳐진 전체 상태를 복사해 이 채팅에 붙여넣어 주시면, Claude가 <code>data/state.json</code>에 커밋해서 다른 기기에서도 같은 삭제·담기 상태가 보이게 해 드려요.</p>
+        <p class="sync-note">삭제·담기 상태는 서버(<code>/api/state</code>)와 이 브라우저에 함께 저장돼요. 상품을 삭제·담기·복원하면 자동으로 서버에 동기화돼요. 서버를 쓸 수 없는 환경에서는 이 브라우저에만 저장되고, 위 버튼으로 합쳐진 전체 상태를 JSON으로 복사해 백업할 수도 있어요.</p>
       </section>
 
       <div class="flow">
@@ -7163,10 +7163,10 @@
     }
     function storeName(s){ return s==="donki" ? "돈키호테" : "일본 편의점"; }
 
-    // ---- deleted / saved persistence (localStorage) + shared file merge ----
+    // ---- deleted / saved persistence (localStorage) + server merge ----
     // Local entries use the shared DB shape: deleted [{id, name, deletedAt}],
-    // saved [{id, name, savedAt}]. The page also fetches data/state.json (the
-    // GitHub-managed shared state) and unions it with the local state:
+    // saved [{id, name, savedAt}]. On load the page fetches /api/state first
+    // (falling back to data/state.json) and unions it with the local state:
     // a product deleted in either place stays hidden, and saved items merge.
     // restoredSet / unsavedSet remember explicit local undo actions on items
     // that only exist in the shared file, so a restore or un-pick survives a
@@ -7262,6 +7262,7 @@
         if (unsavedSet[id]) { delete unsavedSet[id]; saveIdSet(UNSAVED_KEY, unsavedSet); }
       }
       saveSaved();
+      scheduleServerSync();
     }
     function restoreAllDeleted(){
       var dn = Object.keys(deleted).length;
@@ -7272,6 +7273,8 @@
       deletedNames = {};
       deletedDates = {};
       saveDeleted();
+      saveSaved();
+      scheduleServerSync();
       updateCount(); renderChips(); render();
       toast("삭제한 항목 " + dn + "개를 모두 되돌렸어요.");
     }
@@ -7284,6 +7287,7 @@
       delete deletedDates[id];
       if (sharedDeleted[id]) { restoredSet[id] = true; saveIdSet(RESTORED_KEY, restoredSet); }
       saveDeleted();
+      scheduleServerSync();
       updateCount(); renderChips(); render();
       toast("‘" + name + "’을(를) 복원했어요.");
     }
@@ -7542,6 +7546,7 @@
         delete pickedDates[pendingDeleteId];
         if (sharedSaved[pendingDeleteId]) { unsavedSet[pendingDeleteId] = true; saveIdSet(UNSAVED_KEY, unsavedSet); }
         saveSaved();
+        scheduleServerSync();
         closeDeleteModal();
         updateCount(); render();
         toast("‘" + name + "’ 담기를 취소했어요. 이제 삭제 버튼을 다시 누르면 삭제할 수 있어요.");
@@ -7552,6 +7557,7 @@
         if (restoredSet[pendingDeleteId]) { delete restoredSet[pendingDeleteId]; saveIdSet(RESTORED_KEY, restoredSet); }
         if (picked[pendingDeleteId]) { delete picked[pendingDeleteId]; delete pickedDates[pendingDeleteId]; saveSaved(); }
         saveDeleted();
+        scheduleServerSync();
         if (selectedId === pendingDeleteId) selectedId = null;
         closeDeleteModal();
         updateCount(); renderChips(); render();
@@ -7625,13 +7631,36 @@
       else fallback();
     });
 
-    // ---- shared state file (data/state.json, managed via GitHub) ----
+    // ---- server sync (/api/state) with data/state.json fallback ----
+    // On load the page tries GET /api/state first and unions the server
+    // state with this browser's localStorage state (deleted wins over
+    // saved). If the API is unavailable it falls back to data/state.json,
+    // and if that also fails it runs on localStorage alone. Every user
+    // change (delete / save / restore) is written to localStorage at once
+    // and POSTed to /api/state (debounced 500ms) as {version:1, deleted,
+    // saved}. After a POST the page does NOT re-GET: the local state stays
+    // the source of truth on screen because the server can lag a few
+    // seconds.
     var sharedStatus = "loading"; // "loading" | "ok" | "fail"
     var sharedUpdatedAt = null;
     var sharedDeleted = {};
     var sharedSaved = {};
     var sharedDeletedDates = {};
     var sharedSavedDates = {};
+    var apiStatus = "unknown"; // "unknown" | "ok" | "noapi"
+    var postState = "idle"; // "idle" | "syncing" | "synced" | "failed"
+    var lastSyncAt = null; // Date of last successful GET/POST sync
+    var serverDeletedCount = 0;
+    var serverSavedCount = 0;
+    var serverSyncTimer = null;
+    function formatHHMM(d){
+      if (!d) return "";
+      var hh = String(d.getHours());
+      var mm = String(d.getMinutes());
+      if (hh.length < 2) hh = "0" + hh;
+      if (mm.length < 2) mm = "0" + mm;
+      return hh + ":" + mm;
+    }
     function applySharedState(data){
       if (!data || typeof data !== "object") { sharedStatus = "fail"; renderSyncPanel(); return; }
       sharedStatus = "ok";
@@ -7671,13 +7700,93 @@
       saveSaved();
       updateCount(); renderChips(); render();
     }
-    function loadSharedState(){
-      if (!window.fetch) { sharedStatus = "fail"; renderSyncPanel(); return; }
+    function loadFileStateFallback(){
       fetch("data/state.json", { cache: "no-store" }).then(function(r){
         if (!r.ok) throw new Error("state " + r.status);
         return r.json();
-      }).then(applySharedState).catch(function(){
+      }).then(function(data){
+        serverDeletedCount = Array.isArray(data && data.deleted) ? data.deleted.length : 0;
+        serverSavedCount = Array.isArray(data && data.saved) ? data.saved.length : 0;
+        applySharedState(data);
+      }).catch(function(){
         sharedStatus = "fail";
+        renderSyncPanel();
+      });
+    }
+    function loadSharedState(){
+      if (!window.fetch) { apiStatus = "noapi"; sharedStatus = "fail"; renderSyncPanel(); return; }
+      fetch("/api/state", { cache: "no-store" }).then(function(r){
+        if (!r.ok) throw new Error("api " + r.status);
+        return r.json();
+      }).then(function(data){
+        if (!data || typeof data !== "object") throw new Error("api bad body");
+        apiStatus = "ok";
+        serverDeletedCount = Array.isArray(data.deleted) ? data.deleted.length : 0;
+        serverSavedCount = Array.isArray(data.saved) ? data.saved.length : 0;
+        lastSyncAt = new Date();
+        postState = "synced";
+        applySharedState(data);
+        // If the union with this browser differs from what the server had
+        // (e.g. offline changes or a click during load), push the union up.
+        if (!serverStateMatchesLocal()) scheduleServerSync();
+      }).catch(function(){
+        apiStatus = "noapi";
+        loadFileStateFallback();
+      });
+    }
+    function buildServerPayload(){
+      var del = orderedIds(deleted).map(function(id){
+        var p = byId(id);
+        return { id: id, name: deletedNames[id] || (p ? p.name : id) };
+      });
+      var savSet = {};
+      Object.keys(picked).forEach(function(id){ if (!deleted[id]) savSet[id] = true; });
+      var sav = orderedIds(savSet).map(function(id){
+        var p = byId(id);
+        return { id: id, name: savedNames[id] || (p ? p.name : id) };
+      });
+      return { version: 1, deleted: del, saved: sav };
+    }
+    function serverStateMatchesLocal(){
+      var dIds = Object.keys(deleted);
+      var sIds = Object.keys(picked).filter(function(id){ return !deleted[id]; });
+      if (dIds.length !== Object.keys(sharedDeleted).length) return false;
+      if (sIds.length !== Object.keys(sharedSaved).length) return false;
+      for (var i = 0; i < dIds.length; i++) if (!sharedDeleted[dIds[i]]) return false;
+      for (var j = 0; j < sIds.length; j++) if (!sharedSaved[sIds[j]]) return false;
+      return true;
+    }
+    function scheduleServerSync(){
+      if (apiStatus !== "ok") { renderSyncPanel(); return; }
+      postState = "syncing";
+      renderSyncPanel();
+      if (serverSyncTimer) clearTimeout(serverSyncTimer);
+      serverSyncTimer = setTimeout(postServerState, 500);
+    }
+    function postServerState(){
+      serverSyncTimer = null;
+      if (apiStatus !== "ok") return;
+      postState = "syncing";
+      renderSyncPanel();
+      var payload = buildServerPayload();
+      fetch("/api/state", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(function(r){
+        if (!r.ok) throw new Error("post " + r.status);
+        // No re-GET after POST: keep showing the localStorage-backed state.
+        postState = "synced";
+        lastSyncAt = new Date();
+        serverDeletedCount = payload.deleted.length;
+        serverSavedCount = payload.saved.length;
+        // The server now mirrors the merged local state.
+        sharedDeleted = {}; sharedSaved = {};
+        payload.deleted.forEach(function(e){ sharedDeleted[e.id] = true; });
+        payload.saved.forEach(function(e){ sharedSaved[e.id] = true; });
+        renderSyncPanel();
+      }).catch(function(){
+        postState = "failed";
         renderSyncPanel();
       });
     }
@@ -7702,6 +7811,14 @@
       });
       return { version: 1, updatedAt: now, deleted: del, saved: sav };
     }
+    function syncStatusText(){
+      if (apiStatus === "noapi") return "API 없음 — 이 브라우저에만 저장됨";
+      if (postState === "syncing" || sharedStatus === "loading") return "동기화 중…";
+      if (postState === "failed") return "동기화 실패 — 나중에 다시 시도";
+      if (apiStatus === "ok") return "서버 동기화됨 · 마지막 동기화 " + (lastSyncAt ? formatHHMM(lastSyncAt) : formatHHMM(new Date()));
+      if (sharedStatus === "loading") return "동기화 중…";
+      return "API 없음 — 이 브라우저에만 저장됨";
+    }
     function renderSyncPanel(){
       var sum = document.getElementById("syncSummary");
       if (!sum) return;
@@ -7709,42 +7826,30 @@
       var st = document.getElementById("syncStatus");
       var delN = Object.keys(deleted).length;
       var savN = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
-      var shDel = Object.keys(sharedDeleted).length;
-      var shSav = Object.keys(sharedSaved).length;
-      var loDel = Object.keys(deleted).filter(function(id){ return !sharedDeleted[id]; }).length;
-      var loSav = Object.keys(picked).filter(function(id){ return !deleted[id] && !sharedSaved[id]; }).length;
-      var pendRestore = Object.keys(sharedDeleted).filter(function(id){ return !deleted[id]; }).length;
-      var pendUnsave = Object.keys(sharedSaved).filter(function(id){ return !picked[id] && !deleted[id]; }).length;
-      var localOnly = loDel + loSav + pendRestore + pendUnsave;
-      if (st) st.textContent = sharedStatus === "ok" ? "· 공유 파일 연결됨" : sharedStatus === "fail" ? "· 공유 파일 없음" : "";
-      if (sharedStatus === "ok") {
-        sum.innerHTML = "공유 파일(<code>data/state.json</code>)에서 삭제 <b>" + shDel + "개</b> · 담기 <b>" + shSav + "개</b>를 불러와 이 브라우저의 상태와 합쳤어요." + (sharedUpdatedAt ? " 공유 파일 기준 시각은 " + esc(sharedUpdatedAt) + "예요." : "");
-      } else if (sharedStatus === "fail") {
-        sum.innerHTML = "공유 파일(<code>data/state.json</code>)을 불러오지 못해, 이 브라우저에 저장된 상태만으로 동작 중이에요.";
+      if (st) st.textContent = "· " + syncStatusText();
+      if (apiStatus === "ok") {
+        sum.innerHTML = "서버에 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>가 저장돼 있어요. 서버 상태와 이 브라우저의 상태를 합쳐서 보여주고 있어요.";
+      } else if (apiStatus === "noapi" && sharedStatus === "ok") {
+        sum.innerHTML = "서버 API를 쓸 수 없어 공유 파일(<code>data/state.json</code>)에서 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>를 불러와 이 브라우저의 상태와 합쳤어요." + (sharedUpdatedAt ? " 공유 파일 기준 시각은 " + esc(sharedUpdatedAt) + "예요." : "");
+      } else if (apiStatus === "noapi") {
+        sum.textContent = "서버와 공유 파일을 모두 불러오지 못해, 이 브라우저에 저장된 상태만으로 동작 중이에요.";
       } else {
-        sum.textContent = "공유 상태 파일(data/state.json)을 불러오는 중이에요…";
+        sum.textContent = "서버 상태를 불러오는 중이에요…";
       }
-      var parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개"];
-      if (sharedStatus === "ok") {
-        if (localOnly) {
-          var bits = [];
-          if (loDel) bits.push("삭제 " + loDel + "개");
-          if (loSav) bits.push("담기 " + loSav + "개");
-          if (pendRestore) bits.push("복원 " + pendRestore + "개");
-          if (pendUnsave) bits.push("담기 취소 " + pendUnsave + "개");
-          parts.push("아직 공유 파일에 반영 안 된 이 브라우저만의 변경: " + bits.join(" · ") + ". ‘합친 상태 JSON 복사’로 복사해 채팅에 붙여넣으면 반영돼요.");
-        } else {
-          parts.push("이 브라우저에만 있는 미반영 변경은 없어요.");
-        }
-      } else if (sharedStatus === "fail") {
-        parts.push("삭제·담기 변경은 이 브라우저에 저장되고 있어요. JSON을 복사해 채팅에 붙여넣으면 공유 파일에도 반영할 수 있어요.");
+      var parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개", "서버 저장: 삭제 " + serverDeletedCount + "개 · 담기 " + serverSavedCount + "개"];
+      if (apiStatus === "ok" && postState === "failed") {
+        parts.push("마지막 변경을 서버에 보내지 못했어요. 화면에는 이 브라우저 기준으로 그대로 표시되고, 다음 변경 때 다시 동기화를 시도해요.");
+      } else if (apiStatus === "ok" && postState === "syncing") {
+        parts.push("변경 내용을 서버에 보내는 중이에요.");
+      } else if (apiStatus === "noapi") {
+        parts.push("삭제·담기 변경은 이 브라우저에만 저장돼요.");
       }
       if (det) det.textContent = parts.join(" ");
     }
     var copySyncBtnEl = document.getElementById("copySyncBtn");
     if (copySyncBtnEl) copySyncBtnEl.addEventListener("click", function(){
       var text = JSON.stringify(buildStateJSON(), null, 2);
-      function done(){ toast("합친 상태 JSON을 복사했어요. 이 채팅에 붙여넣어 주시면 GitHub에 반영해 드려요."); }
+      function done(){ toast("합친 상태 JSON을 복사했어요."); }
       function fallback(){
         var ta = document.createElement("textarea");
         ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
