@@ -273,6 +273,32 @@
       .sync-login-prompt[hidden]{display:none}
       .sync-login-prompt p{margin:0;font-size:13.5px;color:var(--ink2)}
       @media (max-width:640px){.auth-main{flex-direction:column;align-items:stretch}.auth-actions .google-btn{width:100%;justify-content:center}.sync-login-prompt .btn{width:100%;justify-content:center}}
+      /* ---- login gate: guest sees intro only, full list after login ---- */
+      #appContent[hidden],#guestView[hidden]{display:none !important}
+      body:not(.is-authed) .pick3{display:none}
+      .guest-view{margin:18px 0 2px}
+      .guest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+      .guest-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 18px 16px}
+      .guest-card .gk{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--accent-ink);margin:0 0 6px}
+      .guest-card h3{margin:0 0 6px;font-size:18px;font-weight:800;letter-spacing:-.01em}
+      .guest-card p{margin:0;color:var(--ink2);font-size:14px;line-height:1.6}
+      .guest-card p b{color:var(--ink)}
+      .guest-how{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .guest-how h2{margin:0 0 10px;font-size:17px;font-weight:800}
+      .guest-how ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+      .guest-how li{font-size:14px;color:var(--ink2);line-height:1.6}
+      .guest-how li b{display:block;color:var(--ink);font-size:14.5px;margin-bottom:2px}
+      .guest-how .step-no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:12px;font-weight:800;margin-bottom:7px}
+      .guest-caution{margin-top:12px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:16px 18px;color:var(--warn-ink)}
+      .guest-caution h2{margin:0 0 7px;font-size:16px}
+      .guest-caution ul{margin:0;padding-left:19px;font-size:14px;line-height:1.65}
+      .guest-caution li{margin:2px 0}
+      .guest-caution-note{margin:9px 0 0;font-size:13px;opacity:.9}
+      .guest-cta{margin-top:12px;background:var(--surface);border:1.5px dashed var(--accent);border-radius:14px;padding:18px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+      .guest-cta p{margin:0;font-size:15px;line-height:1.55;flex:1 1 320px}
+      .guest-cta p span{color:var(--ink2);font-size:13.5px}
+      .guest-cta .btn{flex:none;padding:12px 18px;font-size:15px}
+      @media (max-width:760px){.guest-grid{grid-template-columns:1fr}.guest-how ol{grid-template-columns:1fr}.guest-cta .btn{width:100%;justify-content:center}}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -281,7 +307,7 @@
       <header class="hero">
         <div>
           <h1>일본 쇼핑리스트<br />돈키호테 <span class="hl">141</span> + 편의점 <span class="hl">74</span></h1>
-          <p>따로 정리했던 <b>돈키호테 쇼핑리스트</b>와 <b>일본 편의점 쇼핑리스트</b>를 한 페이지로 합쳤어요. 둘 다 한국 유튜브 영상을 교차 확인해, 여러 영상에서 공통으로 추천된 제품만 모은 리스트예요. 위쪽 탭으로 가게를 골라 보거나, 전체를 한 번에 검색할 수 있어요.</p>
+          <p>따로 정리했던 <b>돈키호테 쇼핑리스트</b>와 <b>일본 편의점 쇼핑리스트</b>를 한 페이지로 합쳤어요. 한국 유튜브 영상을 교차 확인해, 여러 영상에서 공통으로 추천된 제품만 모은 리스트예요. 로그인하면 전체 목록을 검색하고, 살 것만 담아 나만의 리스트를 만들 수 있어요.</p>
           <div class="stats">
             <span class="stat">전체 제품 <b id="statTotal">215개</b> <span id="statRef">(참고용 2개 별도)</span></span>
             <span class="stat">돈키호테 <b id="statDonki">141개</b> · 출처 영상 42개</span>
@@ -303,8 +329,8 @@
       <section class="auth-bar" id="authBar" aria-label="구글 로그인">
         <div class="auth-main">
           <div class="auth-info">
-            <strong id="authTitle">내 목록을 기기마다 이어서 보려면</strong>
-            <span id="authDesc">로그인하면 삭제·담기 목록이 내 구글 계정에 따로 저장돼요. 로그인 없이도 상품 보기·검색은 그대로 할 수 있어요.</span>
+            <strong id="authTitle">로그인하면 전체 쇼핑리스트를 볼 수 있어요</strong>
+            <span id="authDesc">돈키호테 141개 · 편의점 74개 전체 목록과 검색·담기·삭제 기능은 로그인 후 이용할 수 있어요. 로그인하면 내 목록이 구글 계정에 따로 저장돼 다른 기기에서도 이어서 볼 수 있어요.</span>
           </div>
           <div class="auth-actions">
             <div id="authLoggedOutActions">
@@ -321,6 +347,49 @@
         <p class="auth-msg" id="authMsg" hidden></p>
       </section>
 
+      <section class="guest-view" id="guestView" aria-label="사이트 소개">
+        <div class="guest-grid">
+          <article class="guest-card">
+            <p class="gk">돈키호테</p>
+            <h3>141개 · 영상 42개</h3>
+            <p>간식·뷰티·의약품·생활용품까지, 여러 영상에서 <b>공통으로 추천된 제품</b>만 골랐어요. 약사 추천 영상에서 나온 제품도 함께 정리했어요.</p>
+          </article>
+          <article class="guest-card">
+            <p class="gk">일본 편의점</p>
+            <h3>74개 · 영상 35개</h3>
+            <p>세븐일레븐·패밀리마트·로손에서 사 먹을 것 위주로 모았어요. <b>현지에서 먹을 것</b>과 가져올 수 있는 것을 구분해 표시해요.</p>
+          </article>
+          <article class="guest-card">
+            <p class="gk">한 페이지에 통합</p>
+            <h3>전체 215개 · 카테고리 16개</h3>
+            <p>따로 보던 두 리스트를 합쳐서 <b>한 번에 검색</b>할 수 있어요. 제품마다 가격·파는 곳·근거 영상을 함께 볼 수 있어요.</p>
+          </article>
+        </div>
+        <div class="guest-how">
+          <h2>로그인하면 할 수 있어요</h2>
+          <ol>
+            <li><span class="step-no">1</span><b>전체 목록 보기</b>가게·카테고리·편의점 브랜드별로 골라 보고, 제품명·일본어 이름으로 검색해요.</li>
+            <li><span class="step-no">2</span><b>담고, 빼고, 복사하기</b>살 것은 담아 두고 필요 없는 건 삭제해요. 담은 목록은 한 번에 복사할 수 있어요.</li>
+            <li><span class="step-no">3</span><b>기기마다 이어보기</b>담기·삭제 목록이 내 구글 계정에 저장돼, 폰에서 만든 목록을 다른 기기에서도 그대로 봐요.</li>
+          </ol>
+        </div>
+        <div class="guest-caution">
+          <h2>사기 전에 꼭 알아둘 것</h2>
+          <ul>
+            <li><b>이브(EVE) 진통제</b>는 한국 반입 금지라 이 리스트에서 제외했어요.</li>
+            <li><b>곤약젤리는 튜브형만</b> 반입할 수 있어요. 컵형은 불가해요.</li>
+            <li>삼각김밥·푸딩·아이스크림 같은 냉장·냉동 식품은 <b>현지에서 먹고 오는 것</b>으로 표시했어요.</li>
+            <li>가격은 영상 촬영 시점 기준이라 지금 가격과 다를 수 있어요.</li>
+          </ul>
+          <p class="guest-caution-note">자세한 주의사항과 제품별 출처 영상은 로그인 후 상세에서 확인할 수 있어요.</p>
+        </div>
+        <div class="guest-cta">
+          <p><b>전체 215개 목록이 궁금하다면</b><br /><span>구글 계정으로 로그인하고 바로 시작하세요. 별도 가입 없이, 로그인만으로 내 목록이 저장돼요.</span></p>
+          <button class="btn primary" id="guestLoginBtn" type="button">구글로 로그인하고 목록 보기</button>
+        </div>
+      </section>
+
+      <div id="appContent" hidden>
       <div class="notice" role="note">
         <h2>사기 전에 꼭 확인 — 반입·현지 섭취 주의</h2>
         <h3>돈키호테</h3>
@@ -439,6 +508,7 @@
           <li>제품 사진은 각 제품의 실제 제품 사진으로 확인한 것만 붙였고, 사진이 없던 냉동 고구마 찰떡 1개는 연동이네 영상 11:20 구간을 캡처해 넣었어요 (화면 표기 ¥368).</li>
           <li>조사일: 2026년 11월 8일. 가격과 반입 규정은 바뀔 수 있으니 출발 전에 최신 안내를 다시 확인하세요.</li>
         </ul>
+      </div>
       </div>
     </div>
     <div class="modal-backdrop" id="deleteModal" hidden>
@@ -8397,7 +8467,13 @@
       var title = document.getElementById("authTitle");
       var desc = document.getElementById("authDesc");
       var lp = document.getElementById("syncLoginPrompt");
-      if (isLoggedIn()) {
+      var logged = isLoggedIn();
+      document.body.classList.toggle("is-authed", logged);
+      var app = document.getElementById("appContent");
+      var guest = document.getElementById("guestView");
+      if (app) app.hidden = !logged;
+      if (guest) guest.hidden = logged;
+      if (logged) {
         if (out) out.hidden = true;
         if (inn) inn.hidden = false;
         var label = document.getElementById("authUserLabel");
@@ -8413,8 +8489,8 @@
       } else {
         if (out) out.hidden = false;
         if (inn) inn.hidden = true;
-        if (title) title.textContent = "내 목록을 기기마다 이어서 보려면";
-        if (desc) desc.textContent = "로그인하면 삭제·담기 목록이 내 구글 계정에 따로 저장돼요. 로그인 없이도 상품 보기·검색은 그대로 할 수 있어요.";
+        if (title) title.textContent = "로그인하면 전체 쇼핑리스트를 볼 수 있어요";
+        if (desc) desc.textContent = "돈키호테 141개 · 편의점 74개 전체 목록과 검색·담기·삭제 기능은 로그인 후 이용할 수 있어요. 로그인하면 내 목록이 구글 계정에 따로 저장돼 다른 기기에서도 이어서 볼 수 있어요.";
         if (lp) lp.hidden = false;
       }
     }
@@ -8468,7 +8544,7 @@
       setAuthMsg("");
       updateAuthUI();
       renderSyncPanel();
-      toast("로그아웃했어요. 이제 삭제·담기 목록은 이 브라우저에만 저장돼요.");
+      toast("로그아웃했어요. 전체 목록은 다시 로그인하면 볼 수 있어요.");
     }
     function showGisFallback(){
       var w = document.getElementById("gisFallbackWrap");
@@ -8523,6 +8599,8 @@
     setTimeout(function(){ clearInterval(gisPoll); }, 15000);
     var googleLoginBtnEl = document.getElementById("googleLoginBtn");
     if (googleLoginBtnEl) googleLoginBtnEl.addEventListener("click", startGoogleLogin);
+    var guestLoginBtnEl = document.getElementById("guestLoginBtn");
+    if (guestLoginBtnEl) guestLoginBtnEl.addEventListener("click", startGoogleLogin);
     var syncLoginBtnEl = document.getElementById("syncLoginBtn");
     if (syncLoginBtnEl) syncLoginBtnEl.addEventListener("click", startGoogleLogin);
     var logoutBtnEl = document.getElementById("logoutBtn");
@@ -8739,7 +8817,7 @@
       var lp = document.getElementById("syncLoginPrompt");
       if (lp) lp.hidden = isLoggedIn();
       if (!isLoggedIn()) {
-        sum.innerHTML = "로그인하지 않아서 삭제·담기 목록이 <b>이 브라우저에만</b> 저장돼요. 상품 보기·검색은 로그인 없이 그대로 할 수 있어요.";
+        sum.innerHTML = "로그인하지 않아서 전체 목록을 볼 수 없어요. 로그인하면 삭제·담기 목록이 내 계정에 저장돼요.";
       } else if (apiStatus === "ok") {
         sum.innerHTML = "서버에 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>가 저장돼 있어요. 서버 상태와 이 브라우저의 상태를 합쳐서 보여주고 있어요.";
       } else if (apiStatus === "noapi" && sharedStatus === "ok") {
