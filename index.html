@@ -249,10 +249,9 @@
       .sync-head p{margin:0;color:var(--ink2);font-size:13.5px;max-width:44em;line-height:1.55}
       .sync-head p code{font-size:12.5px;background:var(--chip-bg);border-radius:5px;padding:1px 5px}
       .sync-detail{margin-top:5px !important;color:var(--ink) !important}
-      .sync-actions{display:flex;gap:8px;flex-wrap:wrap;flex:none}
       .sync-note{margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line);color:var(--ink3);font-size:12.5px;line-height:1.6}
       .sync-note code{font-size:12px;background:var(--chip-bg);border-radius:5px;padding:1px 5px}
-      @media (max-width:640px){.sync-head{flex-direction:column}.sync-actions{width:100%}.sync-actions .btn{flex:1;justify-content:center}}
+      @media (max-width:640px){.sync-head{flex-direction:column}}
       /* ---- google account bar ---- */
       .auth-bar{margin:18px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
       .auth-bar [hidden]{display:none !important}
@@ -443,22 +442,19 @@
         <ul class="deleted-list" id="deletedList"></ul>
       </section>
 
-      <section class="sync-panel" id="syncPanel" aria-label="기기 간 동기화 상태">
+      <section class="sync-panel" id="syncPanel" aria-label="내 목록 저장 상태">
         <div class="sync-head">
           <div>
-            <h2>기기 간 동기화 <span id="syncStatus"></span></h2>
-            <p id="syncSummary">서버 상태를 불러오는 중이에요…</p>
+            <h2>내 목록 저장 <span id="syncStatus"></span></h2>
+            <p id="syncSummary">내 목록을 불러오는 중이에요…</p>
             <p class="sync-detail" id="syncDetail"></p>
-          </div>
-          <div class="sync-actions">
-            <button class="btn primary" id="copySyncBtn" type="button">합친 상태 JSON 복사</button>
           </div>
         </div>
         <div class="sync-login-prompt" id="syncLoginPrompt">
-          <p>로그인하면 다른 기기에서도 이어서 볼 수 있어요.</p>
+          <p>로그인하면 폰에서 만든 목록을 다른 기기에서도 그대로 볼 수 있어요.</p>
           <button class="btn primary" id="syncLoginBtn" type="button">구글로 로그인</button>
         </div>
-        <p class="sync-note">삭제·담기 상태는 로그인하면 내 구글 계정에 연결해 서버(<code>/api/state</code>)에 나만 볼 수 있게 따로 저장되고, 로그인하지 않으면 이 브라우저에만 저장돼요. 로그인한 상태에서 상품을 삭제·담기·복원하면 자동으로 서버에 동기화돼요. 위 버튼으로 합쳐진 전체 상태를 JSON으로 복사해 백업할 수도 있어요.</p>
+        <p class="sync-note">로그인하면 담은 것과 삭제한 것이 내 구글 계정에 저장돼요. 그래서 폰에서 담아 둔 목록을 컴퓨터나 다른 기기에서 로그인하면 똑같이 볼 수 있어요. 다른 사람에게는 내 목록이 보이지 않아요. 로그인하지 않으면 이 기기에만 저장돼요.</p>
       </section>
 
       <div class="flow">
@@ -8507,7 +8503,7 @@
       var fw = document.getElementById("gisFallbackWrap");
       if (fw) fw.hidden = true;
       updateAuthUI();
-      toast(displayName() + "님, 로그인했어요. 내 목록을 서버와 합치는 중이에요.");
+      toast(displayName() + "님, 로그인했어요. 내 목록을 불러오는 중이에요.");
       // Merge this browser's state with my server state (deleted wins).
       apiStatus = "unknown";
       sharedStatus = "loading";
@@ -8783,28 +8779,14 @@
       Object.keys(set).forEach(function(id){ if (!seen[id]) out.push(id); });
       return out;
     }
-    function buildStateJSON(){
-      var now = new Date().toISOString();
-      var del = orderedIds(deleted).map(function(id){
-        var p = byId(id);
-        return { id: id, name: deletedNames[id] || (p ? p.name : id), deletedAt: deletedDates[id] || sharedDeletedDates[id] || now };
-      });
-      var savSet = {};
-      Object.keys(picked).forEach(function(id){ if (!deleted[id]) savSet[id] = true; });
-      var sav = orderedIds(savSet).map(function(id){
-        var p = byId(id);
-        return { id: id, name: savedNames[id] || (p ? p.name : id), savedAt: pickedDates[id] || sharedSavedDates[id] || now };
-      });
-      return { version: 1, updatedAt: now, deleted: del, saved: sav };
-    }
     function syncStatusText(){
-      if (!isLoggedIn()) return "로그인 필요";
-      if (apiStatus === "noapi") return "API 없음 — 이 브라우저에만 저장됨";
-      if (postState === "syncing" || sharedStatus === "loading") return "동기화 중…";
-      if (postState === "failed") return "동기화 실패 — 나중에 다시 시도";
-      if (apiStatus === "ok") return "서버 동기화됨 · 마지막 동기화 " + (lastSyncAt ? formatHHMM(lastSyncAt) : formatHHMM(new Date()));
-      if (sharedStatus === "loading") return "동기화 중…";
-      return "API 없음 — 이 브라우저에만 저장됨";
+      if (!isLoggedIn()) return "로그인하면 저장돼요";
+      if (apiStatus === "noapi") return "이 기기에만 저장 중";
+      if (postState === "syncing" || sharedStatus === "loading") return "저장 중…";
+      if (postState === "failed") return "저장에 실패했어요";
+      if (apiStatus === "ok") return "저장됨 · " + (lastSyncAt ? formatHHMM(lastSyncAt) : formatHHMM(new Date()));
+      if (sharedStatus === "loading") return "저장 중…";
+      return "이 기기에만 저장 중";
     }
     function renderSyncPanel(){
       var sum = document.getElementById("syncSummary");
@@ -8817,44 +8799,25 @@
       var lp = document.getElementById("syncLoginPrompt");
       if (lp) lp.hidden = isLoggedIn();
       if (!isLoggedIn()) {
-        sum.innerHTML = "로그인하지 않아서 전체 목록을 볼 수 없어요. 로그인하면 삭제·담기 목록이 내 계정에 저장돼요.";
+        sum.innerHTML = "지금은 이 기기에만 저장되고 있어요. 로그인하면 내 목록이 계정에 저장돼 다른 기기에서도 볼 수 있어요.";
       } else if (apiStatus === "ok") {
-        sum.innerHTML = "서버에 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>가 저장돼 있어요. 서버 상태와 이 브라우저의 상태를 합쳐서 보여주고 있어요.";
-      } else if (apiStatus === "noapi" && sharedStatus === "ok") {
-        sum.innerHTML = "서버 API를 쓸 수 없어 공유 파일(<code>data/state.json</code>)에서 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>를 불러와 이 브라우저의 상태와 합쳤어요." + (sharedUpdatedAt ? " 공유 파일 기준 시각은 " + esc(sharedUpdatedAt) + "예요." : "");
+        sum.innerHTML = "내 목록이 잘 저장되고 있어요. 다른 기기에서 로그인해도 같은 목록이 보여요.";
       } else if (apiStatus === "noapi") {
-        sum.textContent = "서버와 공유 파일을 모두 불러오지 못해, 이 브라우저에 저장된 상태만으로 동작 중이에요.";
+        sum.textContent = "지금은 연결이 원활하지 않아 이 기기에만 저장되고 있어요.";
       } else {
-        sum.textContent = "서버 상태를 불러오는 중이에요…";
+        sum.textContent = "내 목록을 불러오는 중이에요…";
       }
-      var parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개", "서버 저장: 삭제 " + serverDeletedCount + "개 · 담기 " + serverSavedCount + "개"];
+      var parts = ["담은 것 " + savN + "개 · 삭제한 것 " + delN + "개"];
       if (!isLoggedIn()) {
-        parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개 (이 브라우저에만 저장 중)", "서버 동기화는 로그인한 뒤 내 계정으로만 이뤄져요. 다른 사람에게는 내 목록이 보이지 않아요."];
+        parts.push("로그인하면 다른 기기에서도 이 목록을 그대로 볼 수 있어요.");
       }
       if (apiStatus === "ok" && postState === "failed") {
-        parts.push("마지막 변경을 서버에 보내지 못했어요. 화면에는 이 브라우저 기준으로 그대로 표시되고, 다음 변경 때 다시 동기화를 시도해요.");
+        parts.push("방금 바꾼 내용이 저장되지 않았어요. 화면에는 그대로 남아 있고, 다음에 바꿀 때 다시 저장해요.");
       } else if (apiStatus === "ok" && postState === "syncing") {
-        parts.push("변경 내용을 서버에 보내는 중이에요.");
-      } else if (apiStatus === "noapi") {
-        parts.push("삭제·담기 변경은 이 브라우저에만 저장돼요.");
+        parts.push("방금 바꾼 내용을 저장하는 중이에요.");
       }
       if (det) det.textContent = parts.join(" ");
     }
-    var copySyncBtnEl = document.getElementById("copySyncBtn");
-    if (copySyncBtnEl) copySyncBtnEl.addEventListener("click", function(){
-      var text = JSON.stringify(buildStateJSON(), null, 2);
-      function done(){ toast("합친 상태 JSON을 복사했어요."); }
-      function fallback(){
-        var ta = document.createElement("textarea");
-        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand("copy"); done(); }
-        catch (e) { toast("복사에 실패했어요. 브라우저 권한을 확인해 주세요."); }
-        document.body.removeChild(ta);
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
-      else fallback();
-    });
     loadSharedState();
 
     // ---- events ----
