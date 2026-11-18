@@ -114,6 +114,24 @@
       .newbadge{display:inline-block;background:var(--accent);color:#fff;font-size:10px;font-weight:800;letter-spacing:.05em;line-height:1.35;padding:2px 6px;border-radius:5px;vertical-align:middle}
       .crow .th .newbadge{position:absolute;top:4px;left:4px;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,.3)}
       .detail h2 .newbadge{font-size:13px;padding:3px 9px;border-radius:6px;margin-left:9px;position:relative;top:-4px}
+      .crow .mrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;align-items:center}
+      .mchip{display:inline-block;font-size:11px;font-weight:700;color:var(--ink2);background:var(--chip-bg);border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+      .rankchip{display:inline-block;font-size:11px;font-weight:800;color:var(--bg);background:var(--ink);border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+      .rankchip.top3{background:var(--accent);color:#fff}
+      .detail .meta .rankchip{font-size:12.5px;padding:4px 10px}
+      section.cat.newsec>h3 .ntag{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;border-radius:5px;padding:2px 7px;margin-right:7px;vertical-align:2px}
+      .top10{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px 10px;margin:22px 0 4px}
+      .top10 h3{font-size:16.5px;margin:0;font-weight:800}
+      .top10 .t10note{margin:3px 0 10px;font-size:12.5px;color:var(--ink3)}
+      .top10 ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;column-gap:26px}
+      .top10 li{border-top:1px solid var(--line)}
+      .top10 a{display:flex;align-items:center;gap:9px;padding:8px 2px;text-decoration:none;color:var(--ink)}
+      .top10 a:hover .t10name{text-decoration:underline;text-underline-offset:3px}
+      .top10 .t10rank{flex:none;font-size:12px;font-weight:800;color:var(--accent-ink);min-width:30px}
+      .top10 li:nth-child(-n+3) .t10rank{color:#fff;background:var(--accent);border-radius:999px;text-align:center;padding:2px 0}
+      .top10 .t10name{flex:1;min-width:0;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .top10 .t10meta{flex:none;font-size:12px;color:var(--ink3);white-space:nowrap}
+      @media (max-width:760px){.top10 ol{grid-template-columns:1fr}}
       .empty{display:none;text-align:center;color:var(--ink3);padding:36px 0;font-size:14.5px}
 
       .solonote{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--ink2);margin-bottom:10px;line-height:1.5}
@@ -458,7 +476,7 @@
       </section>
 
       <div class="flow">
-        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>제품을 누르면 그 자리에서 바로 아래에 상세 정보가 펼쳐져요 · 필요 없는 제품은 카드의 ‘삭제’로 지울 수 있어요</span></div>
+        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>새로 등록된 제품이 맨 위에 모여 있어요 · 카드마다 언급된 영상 건수가 보이고, 많이 언급된 상위 10개에는 순위가 붙어요 · 제품을 누르면 그 자리에서 바로 아래에 상세 정보가 펼쳐져요</span></div>
         <main id="list"></main>
         <p class="empty" id="emptyMsg">조건에 맞는 제품이 없어요. 검색어나 필터를 바꿔 보세요.</p>
       </div>
@@ -480,6 +498,9 @@
 
       <div class="fineprint">
         <h2>조사 방법과 한계</h2>
+        <ul>
+          <li><b>‘많이 언급된 TOP 10’ 순위 기준:</b> 각 제품에 표기된 언급 건수(‘영상 N곳 이상’, ‘약 N개 영상’)가 많은 순이고, 동점이면 상세에 링크된 근거 영상이 많은 순으로 정했습니다. 언급 건수 자체가 대략치인 제품은 순위도 그만큼 대략적인 순서로 봐 주세요.</li>
+        </ul>
         <h3>돈키호테</h3>
         <ul>
           <li><b>‘영상 N곳’ 표기는 대략치입니다.</b> 영상 본편 전체 자막을 전수 확인한 것이 아니라 설명·챕터·자막 스니펫 기준이라, 실제 언급 횟수는 이보다 많을 수 있습니다.</li>
@@ -7937,6 +7958,59 @@
       var diff = Math.round((today - t) / 864e5);
       return diff >= 0 && diff <= 7;
     }
+    // Mention count used for the on-card count chip and the TOP 10 ranking.
+    // The number comes from the item's own mentions text ("영상 5곳 이상",
+    // "약 7개 영상" …); items whose mentions text carries no number fall
+    // back to how many source videos are linked in their detail.
+    function mentionCount(p){
+      var m = p.mentions || "";
+      var mm = m.match(/(\d+)\s*~\s*(\d+)\s*곳/);
+      if (mm) return parseInt(mm[2], 10);
+      mm = m.match(/(\d+)\s*곳/);
+      if (mm) return parseInt(mm[1], 10);
+      mm = m.match(/(\d+)\s*개\s*영상/);
+      if (mm) return parseInt(mm[1], 10);
+      return (p.srcs ? p.srcs.length : 0) || 1;
+    }
+    function mentionShort(p){
+      var m = p.mentions || "";
+      if (/\d/.test(m) && /(곳|개\s*영상)/.test(m)) return m.replace(/에서\s*(추천|언급).*$/, "").replace(/\s*·\s*참고용\s*$/, "").trim();
+      if (m) return m;
+      return "근거 영상 " + (p.srcs ? p.srcs.length : 0) + "개";
+    }
+    // TOP 10 by mention count (ties: more linked source videos first,
+    // then original list order). Only these ten items show a rank.
+    var RANK = {};
+    var TOP10 = [];
+    (function(){
+      var idx = ITEMS.map(function(p, i){ return { p: p, i: i }; }).filter(function(x){ return !x.p.nc; });
+      idx.sort(function(a, b){
+        var d = mentionCount(b.p) - mentionCount(a.p);
+        if (d) return d;
+        d = (b.p.srcs ? b.p.srcs.length : 0) - (a.p.srcs ? a.p.srcs.length : 0);
+        if (d) return d;
+        return a.i - b.i;
+      });
+      TOP10 = idx.slice(0, 10).map(function(x){ return x.p; });
+      TOP10.forEach(function(p, i){ RANK[p.id] = i + 1; });
+    })();
+    function rankOf(p){ return RANK[p.id] || 0; }
+    function rankChipHTML(p){
+      var r = rankOf(p);
+      if (!r) return "";
+      return '<span class="rankchip' + (r <= 3 ? " top3" : "") + '">많이 언급된 ' + r + "위</span>";
+    }
+    function latestAddedDate(){
+      var d = "";
+      ITEMS.forEach(function(p){ if (p.addedDate && p.addedDate > d) d = p.addedDate; });
+      return d;
+    }
+    function addedLabel(p){
+      if (!p.addedDate) return "";
+      var parts = p.addedDate.split("-");
+      if (parts.length !== 3) return p.addedDate;
+      return parseInt(parts[0], 10) + "년 " + parseInt(parts[1], 10) + "월 " + parseInt(parts[2], 10) + "일 등록";
+    }
     function groupOf(p){ for (var i=0;i<GROUPS.length;i++) if (GROUPS[i].gid===p.gid) return GROUPS[i]; return GROUPS[0]; }
     function brandClass(p){
       if (!p.bk || !p.bk.length) return "";
@@ -8091,7 +8165,8 @@
       if (isNew(p)) h += '<span class="newbadge">NEW</span>';
       h += "</span>";
       h += '<span class="tx"><span class="nm">' + esc(p.name) + '</span>';
-      h += '<span class="sub">' + esc(p.place) + (p.price ? ' · <span class="pr">' + esc(p.price) + "</span>" : "") + "</span></span>";
+      h += '<span class="sub">' + esc(p.place) + (p.price ? ' · <span class="pr">' + esc(p.price) + "</span>" : "") + "</span>";
+      h += '<span class="mrow">' + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + "</span></span></span>";
       h += '<span class="rowacts"><span class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" role="button" aria-pressed="' + (picked[p.id] ? "true" : "false") + '" title="담기">' + (picked[p.id] ? "담음 ✓" : "담기") + '</span><span class="rowdel" data-rowdel="' + p.id + '" role="button" title="이 제품 삭제">삭제</span></span>';
       h += "</button>";
       return h;
@@ -8113,6 +8188,8 @@
       if (p.store === "donki") h += '<span class="bchip donki">돈키호테</span>';
       else h += '<span class="bchip ' + brandClass(p) + '">' + esc(p.place) + "</span>";
       if (p.mentions) h += '<span class="mentions">' + esc(p.mentions) + "</span>";
+      h += rankChipHTML(p);
+      if (p.addedDate) h += '<span class="mentions">' + esc(addedLabel(p)) + "</span>";
       if (p.use) h += '<span class="tchip' + (p.use.indexOf("주류") === 0 ? " alc" : "") + '">' + esc(p.use) + "</span>";
       h += "</div>";
       h += '<p class="dreason">' + (p.reasonHtml ? p.reasonHtml : esc(p.reason || "")) + "</p>";
@@ -8161,13 +8238,53 @@
     var emptyMsg = document.getElementById("emptyMsg");
     var catCount = document.getElementById("catCount");
 
+    function rowsFor(items){
+      var rowsHtml = "";
+      items.forEach(function(p){
+        rowsHtml += rowHTML(p);
+        if (p.id === selectedId) rowsHtml += '<section class="detail dwrap" aria-live="polite">' + detailHTML(p) + "</section>";
+      });
+      return rowsHtml;
+    }
+    function top10HTML(){
+      var alive = TOP10.filter(function(p){ return !deleted[p.id]; });
+      if (!alive.length) return "";
+      var h = '<div class="top10"><h3>많이 언급된 TOP 10</h3><p class="t10note">여러 영상에서 언급된 건수 기준이에요. 동점이면 근거 영상이 많은 순으로 정했어요. 누르면 해당 제품으로 이동해요.</p><ol>';
+      alive.forEach(function(p){
+        h += '<li><a href="#' + p.id + '" data-jump="' + p.id + '"><span class="t10rank">' + RANK[p.id] + '위</span><span class="t10name">' + esc(p.name) + '</span><span class="t10meta">' + esc(mentionShort(p)) + " · " + (p.store === "donki" ? "돈키호테" : "편의점") + "</span></a></li>";
+      });
+      h += "</ol></div>";
+      return h;
+    }
     function render(){
       var vis = ITEMS.filter(match);
       if (selectedId && !vis.some(function(p){ return p.id===selectedId; })) selectedId = null;
       var html = "";
+      // 1) Newly registered items first: pulled out of their categories
+      // into one section at the very top of the catalog.
+      var newItems = vis.filter(function(p){ return !!p.addedDate; });
+      var newIds = {};
+      newItems.forEach(function(p){ newIds[p.id] = true; });
+      if (newItems.length) {
+        var orderedNew = newItems.map(function(p, i){ return { p: p, i: i }; }).sort(function(a, b){
+          var d = mentionCount(b.p) - mentionCount(a.p);
+          if (d) return d;
+          d = (b.p.srcs ? b.p.srcs.length : 0) - (a.p.srcs ? a.p.srcs.length : 0);
+          if (d) return d;
+          return a.i - b.i;
+        }).map(function(x){ return x.p; });
+        html += '<section class="cat newsec">';
+        html += '<h3><span class="ntag">NEW</span>새로 등록된 제품 <span class="n">' + newItems.length + "개</span></h3>";
+        html += '<p class="catnote">' + esc(addedLabel({ addedDate: latestAddedDate() })) + "에 새로 등록된 제품이에요. 원래 카테고리에서 여기로 모아 맨 위에 보여드려요.</p>";
+        html += '<div class="rows">' + rowsFor(orderedNew) + "</div></section>";
+      }
+      // 2) TOP 10 ranking board, in the default (unfiltered) view only.
+      var isDefault = !state.q && state.store === "all" && state.cat === "all" && state.brand === "all" && !state.only;
+      if (isDefault) html += top10HTML();
+      // 3) Everything else, grouped by category as before.
       var lastStore = null;
       GROUPS.forEach(function(g){
-        var items = vis.filter(function(p){ return p.gid===g.gid; });
+        var items = vis.filter(function(p){ return p.gid===g.gid && !newIds[p.id]; });
         if (!items.length) return;
         if (g.store !== lastStore) {
           lastStore = g.store;
@@ -8179,12 +8296,7 @@
         html += '<section class="cat" data-cat="' + g.gid + '">';
         html += "<h3>" + (g.store==="donki" ? "돈키호테" : "편의점") + " · " + esc(g.name) + ' <span class="n">' + items.length + "개</span></h3>";
         if (g.note) html += '<p class="catnote">' + esc(g.note) + "</p>";
-        var rowsHtml = "";
-        items.forEach(function(p){
-          rowsHtml += rowHTML(p);
-          if (p.id === selectedId) rowsHtml += '<section class="detail dwrap" aria-live="polite">' + detailHTML(p) + "</section>";
-        });
-        html += '<div class="rows">' + rowsHtml + "</div></section>";
+        html += '<div class="rows">' + rowsFor(items) + "</div></section>";
       });
       listEl.innerHTML = html;
       emptyMsg.style.display = vis.length ? "none" : "block";
