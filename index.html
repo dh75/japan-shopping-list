@@ -253,7 +253,28 @@
       .sync-note{margin:12px 0 0;padding-top:11px;border-top:1px solid var(--line);color:var(--ink3);font-size:12.5px;line-height:1.6}
       .sync-note code{font-size:12px;background:var(--chip-bg);border-radius:5px;padding:1px 5px}
       @media (max-width:640px){.sync-head{flex-direction:column}.sync-actions{width:100%}.sync-actions .btn{flex:1;justify-content:center}}
+      /* ---- google account bar ---- */
+      .auth-bar{margin:18px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+      .auth-bar [hidden]{display:none !important}
+      .auth-main{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+      .auth-info{min-width:0;flex:1 1 320px}
+      .auth-info strong{display:block;font-size:16px;margin:0 0 3px;font-weight:800}
+      .auth-info span{color:var(--ink2);font-size:13.5px;line-height:1.55;display:block}
+      .auth-actions{flex:none}
+      .google-btn{background:#fff;color:#1f1f1f;border:1px solid #c9ccd1;font-weight:600}
+      .google-btn:hover{border-color:var(--ink3)}
+      .google-btn svg{flex:none}
+      .auth-user{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+      .auth-user img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--surface2)}
+      .auth-user .uname{font-weight:700;font-size:14.5px}
+      .auth-msg{margin:10px 0 0;font-size:13px;color:var(--accent-ink)}
+      #gisFallbackWrap{margin-top:10px}
+      .sync-login-prompt{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+      .sync-login-prompt[hidden]{display:none}
+      .sync-login-prompt p{margin:0;font-size:13.5px;color:var(--ink2)}
+      @media (max-width:640px){.auth-main{flex-direction:column;align-items:stretch}.auth-actions .google-btn{width:100%;justify-content:center}.sync-login-prompt .btn{width:100%;justify-content:center}}
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
     <div class="wrap">
@@ -278,6 +299,27 @@
           <figcaption>일본 편의점 매장 내부 (자료 사진)</figcaption>
         </figure>
       </header>
+
+      <section class="auth-bar" id="authBar" aria-label="구글 로그인">
+        <div class="auth-main">
+          <div class="auth-info">
+            <strong id="authTitle">내 목록을 기기마다 이어서 보려면</strong>
+            <span id="authDesc">로그인하면 삭제·담기 목록이 내 구글 계정에 따로 저장돼요. 로그인 없이도 상품 보기·검색은 그대로 할 수 있어요.</span>
+          </div>
+          <div class="auth-actions">
+            <div id="authLoggedOutActions">
+              <button class="btn google-btn" id="googleLoginBtn" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>구글로 로그인</button>
+              <div id="gisFallbackWrap" hidden><div id="gisFallbackBtn"></div></div>
+            </div>
+            <div class="auth-user" id="authLoggedInActions" hidden>
+              <img id="authAvatar" alt="" referrerpolicy="no-referrer" hidden />
+              <span class="uname" id="authUserLabel"></span>
+              <button class="btn" id="logoutBtn" type="button">로그아웃</button>
+            </div>
+          </div>
+        </div>
+        <p class="auth-msg" id="authMsg" hidden></p>
+      </section>
 
       <div class="notice" role="note">
         <h2>사기 전에 꼭 확인 — 반입·현지 섭취 주의</h2>
@@ -343,7 +385,11 @@
             <button class="btn primary" id="copySyncBtn" type="button">합친 상태 JSON 복사</button>
           </div>
         </div>
-        <p class="sync-note">삭제·담기 상태는 서버(<code>/api/state</code>)와 이 브라우저에 함께 저장돼요. 상품을 삭제·담기·복원하면 자동으로 서버에 동기화돼요. 서버를 쓸 수 없는 환경에서는 이 브라우저에만 저장되고, 위 버튼으로 합쳐진 전체 상태를 JSON으로 복사해 백업할 수도 있어요.</p>
+        <div class="sync-login-prompt" id="syncLoginPrompt">
+          <p>로그인하면 다른 기기에서도 이어서 볼 수 있어요.</p>
+          <button class="btn primary" id="syncLoginBtn" type="button">구글로 로그인</button>
+        </div>
+        <p class="sync-note">삭제·담기 상태는 로그인하면 내 구글 계정에 연결해 서버(<code>/api/state</code>)에 나만 볼 수 있게 따로 저장되고, 로그인하지 않으면 이 브라우저에만 저장돼요. 로그인한 상태에서 상품을 삭제·담기·복원하면 자동으로 서버에 동기화돼요. 위 버튼으로 합쳐진 전체 상태를 JSON으로 복사해 백업할 수도 있어요.</p>
       </section>
 
       <div class="flow">
@@ -8302,6 +8348,188 @@
       else fallback();
     });
 
+    // ---- google login (Google Identity Services) ----
+    // The ID token is kept in this browser (localStorage) so a refresh
+    // stays logged in, and it is sent as "Authorization: Bearer <token>"
+    // on every /api/state call so the server can keep each person's
+    // deleted/saved lists separate. Display name/email come from the
+    // token payload only (no server verification on this page).
+    var GIS_CLIENT_ID = "93184252693-6v74mb8uvmt9je2vkl0hm3ljbfqd4hok.apps.googleusercontent.com";
+    var AUTH_TOKEN_KEY = "jp-shopping-list-google-token-v1";
+    var AUTH_USER_KEY = "jp-shopping-list-google-user-v1";
+    var googleIdToken = null;
+    var googleUser = null;
+    var gisInitialized = false;
+    function parseJwtPayload(token){
+      try {
+        var part = String(token || "").split(".")[1];
+        if (!part) return null;
+        var b64 = part.replace(/-/g, "+").replace(/_/g, "/");
+        while (b64.length % 4) b64 += "=";
+        var json = decodeURIComponent(atob(b64).split("").map(function(c){ return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2); }).join(""));
+        return JSON.parse(json);
+      } catch (e) { return null; }
+    }
+    function tokenExpired(token){
+      var p = parseJwtPayload(token);
+      if (!p || !p.exp) return false;
+      return p.exp * 1000 <= Date.now();
+    }
+    function isLoggedIn(){ return !!googleIdToken && !tokenExpired(googleIdToken); }
+    function authHeaders(){ return googleIdToken ? { "Authorization": "Bearer " + googleIdToken } : {}; }
+    function displayName(){
+      if (googleUser && googleUser.name) return googleUser.name;
+      if (googleUser && googleUser.email) return googleUser.email.split("@")[0];
+      return "사용자";
+    }
+    function setAuthMsg(msg){
+      var el = document.getElementById("authMsg");
+      if (!el) return;
+      el.textContent = msg || "";
+      el.hidden = !msg;
+    }
+    function clearStoredAuth(){
+      try { localStorage.removeItem(AUTH_TOKEN_KEY); localStorage.removeItem(AUTH_USER_KEY); } catch (e) { /* storage unavailable */ }
+    }
+    function updateAuthUI(){
+      var out = document.getElementById("authLoggedOutActions");
+      var inn = document.getElementById("authLoggedInActions");
+      var title = document.getElementById("authTitle");
+      var desc = document.getElementById("authDesc");
+      var lp = document.getElementById("syncLoginPrompt");
+      if (isLoggedIn()) {
+        if (out) out.hidden = true;
+        if (inn) inn.hidden = false;
+        var label = document.getElementById("authUserLabel");
+        if (label) label.textContent = displayName() + (googleUser && googleUser.email ? " · " + googleUser.email : "");
+        var av = document.getElementById("authAvatar");
+        if (av) {
+          if (googleUser && googleUser.picture) { av.src = googleUser.picture; av.hidden = false; }
+          else av.hidden = true;
+        }
+        if (title) title.textContent = displayName() + "님으로 로그인됨";
+        if (desc) desc.textContent = "삭제·담기 목록이 내 계정에 따로 저장돼요. 다른 사람에게는 보이지 않아요.";
+        if (lp) lp.hidden = true;
+      } else {
+        if (out) out.hidden = false;
+        if (inn) inn.hidden = true;
+        if (title) title.textContent = "내 목록을 기기마다 이어서 보려면";
+        if (desc) desc.textContent = "로그인하면 삭제·담기 목록이 내 구글 계정에 따로 저장돼요. 로그인 없이도 상품 보기·검색은 그대로 할 수 있어요.";
+        if (lp) lp.hidden = false;
+      }
+    }
+    function onGoogleCredential(resp){
+      if (!resp || !resp.credential) { setAuthMsg("로그인 응답을 받지 못했어요. 다시 시도해 주세요."); return; }
+      googleIdToken = resp.credential;
+      var p = parseJwtPayload(googleIdToken) || {};
+      googleUser = { name: p.name || "", email: p.email || "", picture: p.picture || "" };
+      try {
+        localStorage.setItem(AUTH_TOKEN_KEY, googleIdToken);
+        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(googleUser));
+      } catch (e) { /* storage unavailable — login lasts for this session only */ }
+      setAuthMsg("");
+      var fw = document.getElementById("gisFallbackWrap");
+      if (fw) fw.hidden = true;
+      updateAuthUI();
+      toast(displayName() + "님, 로그인했어요. 내 목록을 서버와 합치는 중이에요.");
+      // Merge this browser's state with my server state (deleted wins).
+      apiStatus = "unknown";
+      sharedStatus = "loading";
+      sharedDeleted = {}; sharedSaved = {};
+      serverDeletedCount = 0; serverSavedCount = 0;
+      loadSharedState();
+    }
+    function handleAuthExpired(){
+      clearStoredAuth();
+      googleIdToken = null;
+      googleUser = null;
+      apiStatus = "auth";
+      postState = "idle";
+      sharedStatus = "fail";
+      sharedDeleted = {}; sharedSaved = {};
+      serverDeletedCount = 0; serverSavedCount = 0;
+      updateAuthUI();
+      setAuthMsg("로그인이 만료됐어요. 다시 로그인해 주세요.");
+      toast("로그인이 만료됐어요. 다시 로그인해 주세요.");
+      renderSyncPanel();
+    }
+    function doLogout(){
+      if (window.google && google.accounts && google.accounts.id) {
+        try { google.accounts.id.disableAutoSelect(); } catch (e) { /* noop */ }
+      }
+      clearStoredAuth();
+      googleIdToken = null;
+      googleUser = null;
+      apiStatus = "auth";
+      postState = "idle";
+      sharedStatus = "fail";
+      sharedDeleted = {}; sharedSaved = {};
+      serverDeletedCount = 0; serverSavedCount = 0;
+      setAuthMsg("");
+      updateAuthUI();
+      renderSyncPanel();
+      toast("로그아웃했어요. 이제 삭제·담기 목록은 이 브라우저에만 저장돼요.");
+    }
+    function showGisFallback(){
+      var w = document.getElementById("gisFallbackWrap");
+      if (w) w.hidden = false;
+    }
+    function initGoogleGIS(){
+      if (gisInitialized) return true;
+      if (!window.google || !google.accounts || !google.accounts.id) return false;
+      try {
+        google.accounts.id.initialize({ client_id: GIS_CLIENT_ID, callback: onGoogleCredential, auto_select: false, cancel_on_tap_outside: true });
+        var fb = document.getElementById("gisFallbackBtn");
+        if (fb) google.accounts.id.renderButton(fb, { theme: "outline", size: "large", type: "standard", text: "signin_with", shape: "rectangular", locale: "ko" });
+        gisInitialized = true;
+      } catch (e) { return false; }
+      return true;
+    }
+    function startGoogleLogin(){
+      setAuthMsg("");
+      if (!initGoogleGIS()) {
+        setAuthMsg("Google 로그인 버튼을 아직 불러오지 못했어요. 인터넷 연결을 확인하고 잠시 후 다시 눌러 주세요.");
+        return;
+      }
+      // Show the GIS-rendered Google button right under the login button;
+      // the actual sign-in happens through that official button.
+      showGisFallback();
+      var bar = document.getElementById("authBar");
+      if (bar) bar.scrollIntoView({ block: "nearest", behavior: scrollBehavior() });
+      toast("아래 Google 버튼을 눌러 로그인해 주세요.");
+    }
+    // restore a previous login from this browser
+    (function restoreAuth(){
+      var expired = false;
+      try {
+        var t = localStorage.getItem(AUTH_TOKEN_KEY);
+        if (t) {
+          if (tokenExpired(t)) { expired = true; clearStoredAuth(); }
+          else {
+            googleIdToken = t;
+            var u = localStorage.getItem(AUTH_USER_KEY);
+            if (u) { try { googleUser = JSON.parse(u); } catch (e) { googleUser = null; } }
+            if (!googleUser) {
+              var p = parseJwtPayload(t) || {};
+              googleUser = { name: p.name || "", email: p.email || "", picture: p.picture || "" };
+            }
+          }
+        }
+      } catch (e) { /* storage unavailable */ }
+      updateAuthUI();
+      if (expired) setAuthMsg("로그인이 만료됐어요. 다시 로그인해 주세요.");
+    })();
+    var gisPoll = setInterval(function(){ if (initGoogleGIS()) clearInterval(gisPoll); }, 300);
+    setTimeout(function(){ clearInterval(gisPoll); }, 15000);
+    var googleLoginBtnEl = document.getElementById("googleLoginBtn");
+    if (googleLoginBtnEl) googleLoginBtnEl.addEventListener("click", startGoogleLogin);
+    var syncLoginBtnEl = document.getElementById("syncLoginBtn");
+    if (syncLoginBtnEl) syncLoginBtnEl.addEventListener("click", startGoogleLogin);
+    var logoutBtnEl = document.getElementById("logoutBtn");
+    if (logoutBtnEl) logoutBtnEl.addEventListener("click", doLogout);
+    var authAvatarEl = document.getElementById("authAvatar");
+    if (authAvatarEl) authAvatarEl.addEventListener("error", function(){ authAvatarEl.hidden = true; });
+
     // ---- server sync (/api/state) with data/state.json fallback ----
     // On load the page tries GET /api/state first and unions the server
     // state with this browser's localStorage state (deleted wins over
@@ -8385,8 +8613,10 @@
       });
     }
     function loadSharedState(){
+      if (!isLoggedIn()) { apiStatus = "auth"; sharedStatus = "fail"; renderSyncPanel(); return; }
       if (!window.fetch) { apiStatus = "noapi"; sharedStatus = "fail"; renderSyncPanel(); return; }
-      fetch("/api/state", { cache: "no-store" }).then(function(r){
+      fetch("/api/state", { cache: "no-store", headers: authHeaders() }).then(function(r){
+        if (r.status === 401) { handleAuthExpired(); throw new Error("api 401"); }
         if (!r.ok) throw new Error("api " + r.status);
         return r.json();
       }).then(function(data){
@@ -8401,6 +8631,7 @@
         // (e.g. offline changes or a click during load), push the union up.
         if (!serverStateMatchesLocal()) scheduleServerSync();
       }).catch(function(){
+        if (!isLoggedIn()) { apiStatus = "auth"; renderSyncPanel(); return; }
         apiStatus = "noapi";
         loadFileStateFallback();
       });
@@ -8428,6 +8659,7 @@
       return true;
     }
     function scheduleServerSync(){
+      if (!isLoggedIn()) { renderSyncPanel(); return; }
       if (apiStatus !== "ok") { renderSyncPanel(); return; }
       postState = "syncing";
       renderSyncPanel();
@@ -8436,15 +8668,20 @@
     }
     function postServerState(){
       serverSyncTimer = null;
+      if (!isLoggedIn()) return;
       if (apiStatus !== "ok") return;
       postState = "syncing";
       renderSyncPanel();
       var payload = buildServerPayload();
+      var postHeaders = { "Content-Type": "application/json" };
+      var ah = authHeaders();
+      for (var hk in ah) postHeaders[hk] = ah[hk];
       fetch("/api/state", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: postHeaders,
         body: JSON.stringify(payload)
       }).then(function(r){
+        if (r.status === 401) { handleAuthExpired(); throw new Error("post 401"); }
         if (!r.ok) throw new Error("post " + r.status);
         // No re-GET after POST: keep showing the localStorage-backed state.
         postState = "synced";
@@ -8483,6 +8720,7 @@
       return { version: 1, updatedAt: now, deleted: del, saved: sav };
     }
     function syncStatusText(){
+      if (!isLoggedIn()) return "로그인 필요";
       if (apiStatus === "noapi") return "API 없음 — 이 브라우저에만 저장됨";
       if (postState === "syncing" || sharedStatus === "loading") return "동기화 중…";
       if (postState === "failed") return "동기화 실패 — 나중에 다시 시도";
@@ -8498,7 +8736,11 @@
       var delN = Object.keys(deleted).length;
       var savN = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
       if (st) st.textContent = "· " + syncStatusText();
-      if (apiStatus === "ok") {
+      var lp = document.getElementById("syncLoginPrompt");
+      if (lp) lp.hidden = isLoggedIn();
+      if (!isLoggedIn()) {
+        sum.innerHTML = "로그인하지 않아서 삭제·담기 목록이 <b>이 브라우저에만</b> 저장돼요. 상품 보기·검색은 로그인 없이 그대로 할 수 있어요.";
+      } else if (apiStatus === "ok") {
         sum.innerHTML = "서버에 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>가 저장돼 있어요. 서버 상태와 이 브라우저의 상태를 합쳐서 보여주고 있어요.";
       } else if (apiStatus === "noapi" && sharedStatus === "ok") {
         sum.innerHTML = "서버 API를 쓸 수 없어 공유 파일(<code>data/state.json</code>)에서 삭제 <b>" + serverDeletedCount + "개</b> · 담기 <b>" + serverSavedCount + "개</b>를 불러와 이 브라우저의 상태와 합쳤어요." + (sharedUpdatedAt ? " 공유 파일 기준 시각은 " + esc(sharedUpdatedAt) + "예요." : "");
@@ -8508,6 +8750,9 @@
         sum.textContent = "서버 상태를 불러오는 중이에요…";
       }
       var parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개", "서버 저장: 삭제 " + serverDeletedCount + "개 · 담기 " + serverSavedCount + "개"];
+      if (!isLoggedIn()) {
+        parts = ["지금 적용 중: 삭제 " + delN + "개 · 담기 " + savN + "개 (이 브라우저에만 저장 중)", "서버 동기화는 로그인한 뒤 내 계정으로만 이뤄져요. 다른 사람에게는 내 목록이 보이지 않아요."];
+      }
       if (apiStatus === "ok" && postState === "failed") {
         parts.push("마지막 변경을 서버에 보내지 못했어요. 화면에는 이 브라우저 기준으로 그대로 표시되고, 다음 변경 때 다시 동기화를 시도해요.");
       } else if (apiStatus === "ok" && postState === "syncing") {
