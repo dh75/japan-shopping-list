@@ -46,13 +46,6 @@
       .hero figcaption{font-size:12px;color:var(--ink3);padding:7px 12px;background:var(--surface)}
       @media (max-width:760px){.hero{grid-template-columns:1fr;padding-top:22px}.hero figure img{max-height:230px}}
 
-      .pick3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0 4px}
-      .pick3 a{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 15px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow)}
-      .pick3 .rank{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.02em}
-      .pick3 .pname{font-weight:700;font-size:16.5px;margin:2px 0 2px}
-      .pick3 .pdesc{font-size:13px;color:var(--ink2)}
-      @media (max-width:760px){.pick3{grid-template-columns:1fr}}
-
       .notice{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:12px;padding:15px 18px;margin:20px 0 6px;color:var(--warn-ink)}
       .notice h2{margin:0 0 6px;font-size:16px}
       .notice ul{margin:0;padding-left:19px;font-size:14px}
@@ -292,7 +285,6 @@
       @media (max-width:640px){.auth-main{flex-direction:column;align-items:stretch}.auth-actions .google-btn{width:100%;justify-content:center}.sync-login-prompt .btn{width:100%;justify-content:center}}
       /* ---- login gate: guest sees intro only, full list after login ---- */
       #appContent[hidden],#guestView[hidden]{display:none !important}
-      body:not(.is-authed) .pick3{display:none}
       .guest-view{margin:18px 0 2px}
       .guest-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
       .guest-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 18px 16px}
@@ -330,11 +322,6 @@
             <span class="stat">돈키호테 <b id="statDonki">141개</b> · 출처 영상 42개</span>
             <span class="stat">편의점 <b id="statConv">74개</b> · 출처 영상 35개</span>
             <span class="stat">카테고리 <b>16개</b></span>
-          </div>
-          <div class="pick3">
-            <a href="#c-p105" data-jump="c-p105"><span class="rank">할명수 편의점 Pick 1위</span><div class="pname">낫토김밥</div><div class="pdesc">패밀리마트 · 바삭한 김과 찰진 낫토</div></a>
-            <a href="#c-p201" data-jump="c-p201"><span class="rank">할명수 편의점 Pick 2위</span><div class="pname">쟈지 우유 푸딩</div><div class="pdesc">오하요 · 진한 우유 맛 푸딩</div></a>
-            <a href="#c-p601" data-jump="c-p601"><span class="rank">할명수 편의점 Pick 3위</span><div class="pname">몽고탄멘 나카모토</div><div class="pdesc">세븐일레븐 · 매운 된장 컵라면</div></a>
           </div>
         </div>
         <figure>
