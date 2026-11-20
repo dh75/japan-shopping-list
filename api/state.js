@@ -21,6 +21,9 @@ function defaultState() {
     // so the separate purchased page can render them without the catalog.
     // The page sends/reads this list under the name `bought`; the API keeps
     // both names in sync (same array) so either name works.
+    // Quantity tracking (2026-11-20): plannedQty / boughtQty / localPrice
+    // (user-confirmed local price per unit, yen) are kept as numbers so
+    // partial purchases (e.g. 5 of 10 planned) sync across devices.
     purchased: [],
     bought: [],
     // Activity history: { type, id, name, at } where type is a short action
@@ -41,6 +44,13 @@ function normalizePurchasedEntry(e) {
   const out = { id: e.id, name: typeof e.name === 'string' && e.name ? e.name : e.id };
   for (const k of ['price', 'image', 'store', 'purchasedDate']) {
     if (typeof e[k] === 'string' && e[k]) out[k] = e[k];
+  }
+  // Quantity tracking (2026-11-20): keep integer counts and the
+  // user-confirmed local price per unit (yen) so partial purchases
+  // (e.g. bought 5 of 10 planned) survive sync. Numbers only.
+  for (const k of ['plannedQty', 'boughtQty', 'localPrice']) {
+    const v = e[k];
+    if (typeof v === 'number' && Number.isFinite(v) && v >= 0) out[k] = Math.floor(v);
   }
   // The page may carry the purchase date under another field name.
   if (!out.purchasedDate) {

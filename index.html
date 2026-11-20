@@ -541,6 +541,29 @@
         .browbtn{min-height:42px;font-size:13px;padding:9px 13px}
         .browbtn.pickoff{margin-top:12px}
       }
+      /* ---- quantity + local price controls ---- */
+      .qtybox{margin-top:9px;background:var(--surface2);border-radius:10px;padding:10px 11px;display:flex;flex-direction:column;gap:8px}
+      .qtyrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+      .qtylab{flex:none;font-size:12.5px;font-weight:800;color:var(--ink2);min-width:62px}
+      .qtybtn{flex:none;min-width:42px;height:42px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;font:inherit;font-size:17px;font-weight:800;cursor:pointer;padding:0 10px}
+      .qtybtn.buy1{border-color:var(--buy);color:var(--buy);font-size:13.5px}
+      .qtybtn:active{transform:scale(.97)}
+      .qtyinput{flex:none;width:62px;height:42px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;font:inherit;font-size:15px;font-weight:700;text-align:center;padding:0 4px}
+      .qtyinput.price{width:92px;text-align:right}
+      .qtyinput.addin{width:56px}
+      .qtyunit{font-size:13px;color:var(--ink2);font-weight:600}
+      .progchip{display:inline-block;font-size:12px;font-weight:800;color:var(--buy);background:var(--buy-bg);border-radius:999px;padding:3px 9px;line-height:1.5;white-space:nowrap}
+      .progchip.done{background:var(--buy);color:#fff}
+      .noprice{display:inline-block;font-size:11.5px;font-weight:800;color:#7c5410;background:#fdf3e3;border:1px solid #e8cf9f;border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+      @media (prefers-color-scheme: dark){.noprice{color:#edc979;background:#2c2413;border-color:#5c4a22}.qtybtn.buy1{color:var(--buy)}}
+      .detail .qtybox{margin:12px 0 2px}
+      .detail .qtylab{min-width:70px;font-size:13.5px}
+      .price-field{display:flex;flex-direction:column;gap:5px;margin:0 0 14px}
+      .price-field label{font-size:13.5px;font-weight:700;color:var(--ink2)}
+      .price-field input{font:inherit;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%}
+      .price-field .hint{font-size:12.5px;color:var(--ink3);line-height:1.5}
+      .stats-lines{line-height:1.7}
+      .stats-lines .amt{font-size:17px}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -606,7 +629,7 @@
           <h2>로그인하면 할 수 있어요</h2>
           <ol>
             <li><span class="step-no">1</span><b>전체 목록 보기</b>가게·카테고리·편의점 브랜드별로 골라 보고, 제품명·일본어 이름으로 검색해요.</li>
-            <li><span class="step-no">2</span><b>담고, 사고, 체크하기</b>살 것은 담아 두고, 실제로 산 건 구매 완료로 체크해요. 담은 것만 모은 ‘담은 목록’과 구매한 것만 모은 ‘구매한 목록’을 각각 따로 볼 수 있어요.</li>
+            <li><span class="step-no">2</span><b>담고, 개수 정하고, 사기</b>살 것은 담아 두고 몇 개 살 예정인지 정해요. 살 때마다 ‘구매 +1’을 누르면 산 개수가 늘고, 담은 것만 모은 ‘담은 목록’과 산 것만 모은 ‘구매한 목록’을 각각 따로 볼 수 있어요.</li>
             <li><span class="step-no">3</span><b>기기마다 이어보기</b>담기·삭제 목록이 내 구글 계정에 저장돼, 폰에서 만든 목록을 다른 기기에서도 그대로 봐요.</li>
           </ol>
         </div>
@@ -793,7 +816,7 @@
           <div class="totals" id="boughtTotals"></div>
           <details class="copyprev"><summary>복사 형식 미리보기 — 이렇게 복사돼요</summary><pre id="boughtCopyPreview"></pre></details>
         </div>
-        <div class="bought-empty" id="boughtEmpty" hidden>아직 구매 체크한 제품이 없어요.<br />담은 제품 중에서 실제로 산 게 있으면, 전체 목록의 카드나 상세에서 <b>구매 체크</b>를 눌러 보세요. 여기에 따로 모여요.</div>
+        <div class="bought-empty" id="boughtEmpty" hidden>아직 산 제품이 없어요.<br />담은 제품 중에서 실제로 산 게 있으면, 담은 목록이나 상세에서 <b>구매 +1</b>을 눌러 보세요. 1개라도 사면 여기에 따로 모여요.</div>
         <div id="boughtListWrap"></div>
         <p class="remain-note" id="boughtRemainNote" hidden></p>
       </section>
@@ -919,13 +942,32 @@
         <h3 id="helpTitle">도움말 — 이렇게 쓰세요</h3>
         <ul class="help-list">
           <li><b>찾기:</b> 위쪽 검색창으로 제품을 찾고, 좁은 화면에서는 ‘필터·정렬 펼치기’ 버튼을 눌러 가게·카테고리·정렬을 열 수 있어요. ‘필터 초기화’를 누르면 한 번에 처음 상태로 돌아가요.</li>
-          <li><b>담기·구매:</b> 카드의 ‘담기’로 담고, 산 뒤에는 ‘구매 체크’를 눌러요. 구매한 것만 ‘구매한 목록’ 탭에 모여요.</li>
+          <li><b>담기·구매:</b> 카드의 ‘담기’로 담고, 담은 목록에서 살 예정 개수를 정해요. 살 때마다 ‘구매 +1’을 누르면 산 개수가 1개씩 늘고, 처음 살 때는 현지에서 본 1개 가격을 적을 수 있어요. 1개라도 산 건 ‘구매한 목록’ 탭에 모여요.</li>
           <li><b>삭제:</b> 카드에는 삭제 버튼이 없어요. 제품 상세를 열고 맨 아래 ‘삭제’ 영역에서만 지울 수 있고, 지운 건 카탈로그 위 ‘삭제한 상품’에서 복원할 수 있어요.</li>
           <li><b>가격:</b> ‘가격 미확인’은 조사에서 가격을 못 찾은 경우예요. 예상 총액은 가격을 아는 제품만 더한 값이라 실제보다 적을 수 있어요.</li>
           <li><b>인쇄:</b> 담은/구매한 목록의 ‘인쇄용으로 보기’를 누르면 깔끔한 목록이 나오고, 브라우저 메뉴에서 인쇄할 수 있어요.</li>
           <li><b>문의:</b> 별도 문의 창구는 없어요. 잘못된 가격·링크를 발견하면 이 페이지를 공유해 준 사람에게 알려 주세요.</li>
         </ul>
         <div class="modal-actions" style="margin-top:16px"><button class="btn primary" id="helpCloseBtn" type="button">닫기</button></div>
+      </div>
+    </div>
+    <div class="modal-backdrop" id="priceModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+        <h3 id="priceModalTitle">현지 가격을 알려 주세요</h3>
+        <p id="priceModalMsg"></p>
+        <div class="price-field">
+          <label for="priceModalInput">1개 가격 (엔)</label>
+          <input id="priceModalInput" type="number" inputmode="numeric" min="0" step="1" placeholder="예: 300" />
+          <span class="hint" id="priceModalHint"></span>
+        </div>
+        <div class="price-field">
+          <label for="priceModalQty">몇 개 샀어요?</label>
+          <input id="priceModalQty" type="number" inputmode="numeric" min="1" step="1" value="1" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn ghost" id="priceModalCancel" type="button">취소</button>
+          <button class="btn primary" id="priceModalOk" type="button">이렇게 구매했어요</button>
+        </div>
       </div>
     </div>
     <div class="modal-backdrop" id="deleteModal" hidden>
@@ -8343,6 +8385,10 @@
     var bought = {};
     var boughtDates = {};
     var boughtNames = {};
+    var plannedQty = {};
+    var boughtQty = {};
+    var localPrices = {};
+    var priceBlank = {};
     var unboughtSet = {};
     var historyLog = [];
     var DELETED_KEY = "jp-shopping-list-deleted-v1";
@@ -8564,12 +8610,21 @@
         });
       } catch (e) { deleted = {}; deletedNames = {}; deletedDates = {}; }
     }
+    function getPlanned(id){ var v = parseInt(plannedQty[id], 10); return (isNaN(v) || v < 1) ? 1 : v; }
+    function getBoughtQty(id){ var v = parseInt(boughtQty[id], 10); return (isNaN(v) || v < 0) ? 0 : v; }
+    function getLocalPrice(id){ var v = localPrices[id]; return (v == null || v === "" || isNaN(Number(v))) ? null : Number(v); }
+    function needsPricePrompt(id){ return getLocalPrice(id) == null && !priceBlank[id]; }
+    function progressText(id){ return getBoughtQty(id) + "/" + getPlanned(id) + "개 삼"; }
     function saveSaved(){
       try {
         var arr = Object.keys(picked).filter(function(id){ return !deleted[id]; }).map(function(id){
           var p = byId(id);
           var o = { id: id, name: savedNames[id] || (p ? p.name : id) };
           if (pickedDates[id]) o.savedAt = pickedDates[id];
+          o.plannedQty = getPlanned(id);
+          var lp = getLocalPrice(id);
+          if (lp != null) o.localPrice = lp;
+          else if (priceBlank[id]) o.priceBlank = true;
           return o;
         });
         localStorage.setItem(SAVED_KEY, JSON.stringify(arr));
@@ -8590,15 +8645,23 @@
           picked[id] = true;
           if (entry && entry.savedAt) pickedDates[id] = entry.savedAt;
           if (entry && entry.name) savedNames[id] = entry.name;
+          if (entry && entry.plannedQty != null) { var pq = parseInt(entry.plannedQty, 10); if (!isNaN(pq) && pq >= 1) plannedQty[id] = pq; }
+          if (entry && entry.localPrice != null && entry.localPrice !== "") { var lpv = Number(entry.localPrice); if (!isNaN(lpv)) localPrices[id] = lpv; }
+          if (entry && entry.priceBlank) priceBlank[id] = true;
         });
       } catch (e) { picked = {}; pickedDates = {}; savedNames = {}; }
     }
     function saveBought(){
       try {
-        var arr = Object.keys(bought).filter(function(id){ return picked[id] && !deleted[id]; }).map(function(id){
+        var arr = Object.keys(boughtQty).filter(function(id){ return getBoughtQty(id) > 0 && picked[id] && !deleted[id]; }).map(function(id){
           var p = byId(id);
           var o = { id: id, name: boughtNames[id] || (p ? p.name : id) };
           if (boughtDates[id]) o.boughtAt = boughtDates[id];
+          o.boughtQty = getBoughtQty(id);
+          o.plannedQty = getPlanned(id);
+          var lp = getLocalPrice(id);
+          if (lp != null) o.localPrice = lp;
+          else if (priceBlank[id]) o.priceBlank = true;
           return o;
         });
         localStorage.setItem(BOUGHT_KEY, JSON.stringify(arr));
@@ -8616,9 +8679,15 @@
         arr.forEach(function(entry){
           var id = typeof entry === "string" ? entry : (entry && entry.id);
           if (!id) return;
+          var q = (entry && entry.boughtQty != null) ? parseInt(entry.boughtQty, 10) : 1;
+          if (isNaN(q) || q < 1) q = 1;
+          boughtQty[id] = q;
           bought[id] = true;
           if (entry && entry.boughtAt) boughtDates[id] = entry.boughtAt;
           if (entry && entry.name) boughtNames[id] = entry.name;
+          if (entry && entry.plannedQty != null) { var pq2 = parseInt(entry.plannedQty, 10); if (!isNaN(pq2) && pq2 >= 1 && plannedQty[id] == null) plannedQty[id] = pq2; }
+          if (entry && entry.localPrice != null && entry.localPrice !== "") { var lpv2 = Number(entry.localPrice); if (!isNaN(lpv2)) localPrices[id] = lpv2; }
+          if (entry && entry.priceBlank) priceBlank[id] = true;
         });
       } catch (e) { bought = {}; boughtDates = {}; boughtNames = {}; }
     }
@@ -8645,50 +8714,114 @@
     loadSaved();
     loadBought();
     loadHistory();
-    // a purchase check only counts while the item stays in the picked list
-    Object.keys(bought).forEach(function(id){ if (!picked[id] || deleted[id]) { delete bought[id]; delete boughtDates[id]; } });
-    function clearBought(id){
-      if (!bought[id]) return;
-      delete bought[id];
-      delete boughtDates[id];
-      if (sharedBought[id]) { unboughtSet[id] = true; saveIdSet(UNBOUGHT_KEY, unboughtSet); }
-      saveBought();
+    // a purchase only counts while the item stays in the picked list
+    Object.keys(boughtQty).forEach(function(id){ if (!picked[id] || deleted[id]) { delete boughtQty[id]; delete boughtDates[id]; } });
+    bought = {};
+    Object.keys(boughtQty).forEach(function(id){ if (getBoughtQty(id) > 0) bought[id] = true; });
+    function syncBoughtFlag(id){
+      if (getBoughtQty(id) > 0) bought[id] = true; else delete bought[id];
     }
-    function toggleBought(id){
+    function ensurePicked(id){
+      if (picked[id]) return;
+      var p = byId(id);
+      picked[id] = true;
+      pickedDates[id] = new Date().toISOString();
+      if (p) savedNames[id] = p.name;
+      if (unsavedSet[id]) { delete unsavedSet[id]; saveIdSet(UNSAVED_KEY, unsavedSet); }
+      saveSaved();
+      pushHistory("담기", id, p ? p.name : id);
+    }
+    function setPlannedQty(id, v){
+      v = parseInt(v, 10);
+      if (isNaN(v)) v = 1;
+      if (v < 1) v = 1;
+      if (v > 999) v = 999;
+      plannedQty[id] = v;
+      saveSaved();
+      if (getBoughtQty(id) > 0) saveBought();
+      scheduleServerSync();
+    }
+    function setLocalPrice(id, v){
+      if (v === "" || v == null || isNaN(Number(v))) { delete localPrices[id]; priceBlank[id] = true; }
+      else { localPrices[id] = Math.max(0, Math.round(Number(v))); delete priceBlank[id]; }
+      saveSaved();
+      if (getBoughtQty(id) > 0) saveBought();
+      scheduleServerSync();
+    }
+    function setBoughtQty(id, v, silent){
       var p = byId(id);
       var nm = p ? p.name : id;
-      if (bought[id]) {
-        clearBought(id);
-        pushHistory("구매취소", id, nm);
-        toast("‘" + nm + "’ 구매 체크를 취소했어요.");
-      } else {
-        if (!picked[id]) {
-          picked[id] = true;
-          pickedDates[id] = new Date().toISOString();
-          if (p) savedNames[id] = p.name;
-          if (unsavedSet[id]) { delete unsavedSet[id]; saveIdSet(UNSAVED_KEY, unsavedSet); }
-          saveSaved();
-          pushHistory("담기", id, nm);
-        }
-        bought[id] = true;
+      var before = getBoughtQty(id);
+      v = parseInt(v, 10);
+      if (isNaN(v) || v < 0) v = 0;
+      if (v > 999) v = 999;
+      if (v > 0) ensurePicked(id);
+      boughtQty[id] = v;
+      syncBoughtFlag(id);
+      if (v > 0) {
         boughtDates[id] = new Date().toISOString();
         if (p) boughtNames[id] = p.name;
         if (unboughtSet[id]) { delete unboughtSet[id]; saveIdSet(UNBOUGHT_KEY, unboughtSet); }
-        saveBought();
-        pushHistory("구매", id, nm);
-        toast("‘" + nm + "’ 구매 완료로 체크했어요. 구매한 목록에서 볼 수 있어요.");
+      } else {
+        delete boughtDates[id];
+        if (sharedBought[id]) { unboughtSet[id] = true; saveIdSet(UNBOUGHT_KEY, unboughtSet); }
+      }
+      saveBought();
+      saveSaved();
+      if (!silent) {
+        if (v > before) pushHistory("구매", id, nm);
+        else if (v < before) pushHistory("구매취소", id, nm);
       }
       scheduleServerSync();
+      return v;
     }
+    function clearBought(id){
+      if (getBoughtQty(id) <= 0) { delete bought[id]; return; }
+      setBoughtQty(id, 0, true);
+    }
+    // ---- first-purchase price ask (in-page modal, no browser dialogs) ----
+    var pricePending = null; // {id, mode:"add"|"set", qty}
+    function openPriceModal(id, mode, qty){
+      var p = byId(id);
+      if (!p) return;
+      pricePending = { id: id, mode: mode, qty: qty };
+      var m = document.getElementById("priceModal");
+      var msg = document.getElementById("priceModalMsg");
+      var inp = document.getElementById("priceModalInput");
+      var qin = document.getElementById("priceModalQty");
+      var hint = document.getElementById("priceModalHint");
+      var rep = priceYen(p);
+      if (msg) msg.innerHTML = "<b>" + esc(p.name) + "</b>을(를) 처음 사는 거예요. 현지에서 확인한 1개 가격을 적어 주세요. 나중에 구매한 목록이나 상세에서 바꿀 수 있어요.";
+      if (inp) inp.value = rep != null ? rep : "";
+      if (hint) hint.textContent = rep != null ? "이 페이지에 적힌 대표 가격 " + fmtYen(rep) + "을(를) 미리 넣어 뒀어요. 현지 가격이 다르면 고쳐 주세요. 비워 두면 금액 없이 구매한 것으로 표시돼요." : "이 제품은 이 페이지에 가격이 없어요. 현지에서 본 가격을 직접 적어 주세요. 비워 두면 금액 없이 구매한 것으로 표시돼요.";
+      if (qin) qin.value = qty;
+      if (m) m.hidden = false;
+      if (inp) { inp.focus(); inp.select(); }
+    }
+    function closePriceModal(){ var m = document.getElementById("priceModal"); if (m) m.hidden = true; pricePending = null; }
+    function addBought(id, n, mode){
+      n = parseInt(n, 10);
+      if (isNaN(n) || n < 1) n = 1;
+      if (needsPricePrompt(id)) { openPriceModal(id, mode || "add", n); return; }
+      var target = (mode === "set") ? n : getBoughtQty(id) + n;
+      var v = setBoughtQty(id, target);
+      var p = byId(id);
+      toast("‘" + (p ? p.name : id) + "’ " + v + "개 샀어요. (" + progressText(id) + ")");
+      updateCount(); render(); renderPickedPage(); renderBoughtPage();
+    }
+    function toggleBought(id){ addBought(id, 1, "add"); }
     function togglePick(id){
       var tp = byId(id);
       var tnm = tp ? tp.name : id;
       if (picked[id]) {
-        var wasBought = !!bought[id];
+        var wasBought = getBoughtQty(id) > 0;
         delete picked[id];
         delete pickedDates[id];
         if (sharedSaved[id]) { unsavedSet[id] = true; saveIdSet(UNSAVED_KEY, unsavedSet); }
         clearBought(id);
+        delete plannedQty[id];
+        delete localPrices[id];
+        delete priceBlank[id];
         if (wasBought) pushHistory("구매취소", id, tnm);
         pushHistory("담기취소", id, tnm);
       } else {
@@ -8744,6 +8877,18 @@
       return out;
     }
 
+    function qtyBoxHTML(p){
+      var pq = getPlanned(p.id), bq = getBoughtQty(p.id), lp = getLocalPrice(p.id);
+      var done = bq >= pq && bq > 0;
+      var h = '<div class="qtybox">';
+      h += '<div class="qtyrow"><span class="qtylab">살 예정</span><button type="button" class="qtybtn" data-plan-minus="' + p.id + '" aria-label="살 예정 개수 줄이기">−</button><input class="qtyinput" type="number" inputmode="numeric" min="1" max="999" step="1" value="' + pq + '" data-plan-input="' + p.id + '" aria-label="살 예정 개수" /><button type="button" class="qtybtn" data-plan-plus="' + p.id + '" aria-label="살 예정 개수 늘리기">+</button><span class="qtyunit">개</span></div>';
+      h += '<div class="qtyrow"><span class="qtylab">산 것</span><button type="button" class="qtybtn" data-buy-minus="' + p.id + '" aria-label="산 개수 줄이기">−</button><input class="qtyinput" type="number" inputmode="numeric" min="0" max="999" step="1" value="' + bq + '" data-bought-input="' + p.id + '" aria-label="산 개수" /><button type="button" class="qtybtn buy1" data-buy-plus1="' + p.id + '">구매 +1</button><span class="progchip' + (done ? " done" : "") + '">' + bq + "/" + pq + "개 삼" + (done ? " · 다 샀어요" : "") + "</span></div>";
+      h += '<div class="qtyrow"><span class="qtylab">한 번에 사기</span><input class="qtyinput addin" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="개수" data-buy-add-input="' + p.id + '" aria-label="한 번에 살 개수" /><button type="button" class="qtybtn buy1" data-buy-add="' + p.id + '">이만큼 구매</button></div>';
+      h += '<div class="qtyrow"><span class="qtylab">1개 가격</span><span class="qtyunit">¥</span><input class="qtyinput price" type="number" inputmode="numeric" min="0" step="1" placeholder="현지 가격" value="' + (lp != null ? lp : "") + '" data-price-input="' + p.id + '" aria-label="현지에서 본 1개 가격 (엔)" /><span class="qtyunit">엔</span>' + (bq > 0 && lp == null ? '<span class="noprice">금액 미입력</span>' : "") + (bq > 0 && lp != null ? '<span class="qtyunit">산 것 합계 ' + fmtYen(lp * bq) + "</span>" : "") + "</div>";
+      h += "</div>";
+      return h;
+    }
+
     function rowHTML(p){
       var h = '<div class="crow' + (p.id===selectedId ? " selected" : "") + (bought[p.id] ? " is-bought" : "") + '" id="' + p.id + '">';
       h += '<button type="button" class="crow-main" data-select="' + p.id + '" aria-current="' + (p.id===selectedId ? "true" : "false") + '" aria-label="' + esc(p.name) + ' 상세 ' + (p.id===selectedId ? "닫기" : "열기") + '">';
@@ -8754,10 +8899,10 @@
       h += "</span>";
       h += '<span class="tx"><span class="nm">' + hlText(p.name) + '</span>';
       h += '<span class="sub">' + esc(p.place) + ' · <span class="pr">' + esc(priceLabel(p)) + "</span></span>";
-      h += '<span class="mrow">' + (bought[p.id] ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + " · 근거 영상 " + (p.srcs ? p.srcs.length : 0) + "개</span>" + dupChipHTML(p) + "</span></span>";
+      h += '<span class="mrow">' + (getBoughtQty(p.id) > 0 ? '<span class="buychip">' + esc(progressText(p.id)) + "</span>" : (picked[p.id] ? '<span class="mchip">살 예정 ' + getPlanned(p.id) + "개</span>" : "")) + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + " · 근거 영상 " + (p.srcs ? p.srcs.length : 0) + "개</span>" + dupChipHTML(p) + "</span></span>";
       h += "</button>";
       var acts = '<button type="button" class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" aria-pressed="' + (picked[p.id] ? "true" : "false") + '">' + (picked[p.id] ? "담음 ✓" : "담기") + "</button>";
-      if (picked[p.id]) acts += '<button type="button" class="rowbuy' + (bought[p.id] ? " on" : "") + '" data-rowbuy="' + p.id + '" aria-pressed="' + (bought[p.id] ? "true" : "false") + '">' + (bought[p.id] ? "구매완료 ✓" : "구매 체크") + "</button>";
+      if (picked[p.id]) acts += '<button type="button" class="rowbuy' + (getBoughtQty(p.id) > 0 ? " on" : "") + '" data-rowbuy="' + p.id + '">' + (getBoughtQty(p.id) > 0 ? progressText(p.id) + " · +1" : "구매 +1") + "</button>";
       h += '<span class="rowacts">' + acts + "</span>";
       h += "</div>";
       if (p.id === selectedId) h += '<section class="detail dwrap" aria-live="polite">' + detailHTML(p) + "</section>";
@@ -8790,7 +8935,12 @@
       if (p.srcs) { for (var ji = 0; ji < p.srcs.length; ji++) { var js = p.srcs[ji]; if (js.ts && js.u && js.u.indexOf("youtube.com") >= 0) { jump = js; break; } } }
       if (jump) h += '<a class="jumpbtn" href="' + jump.u + (jump.u.indexOf("?") >= 0 ? "&t=" : "?t=") + jump.ts + 's" target="_blank" rel="noopener">▶ 영상에서 이 상품 바로 보기 <span>' + esc(jump.tl || "") + "부터</span></a>";
       h += '<button class="pickbtn" data-pick="' + p.id + '" aria-pressed="' + (picked[p.id] ? "true" : "false") + '">' + (picked[p.id] ? "담았어요 ✓ — 담은 목록에 있어요" : "이 제품 담기") + "</button>";
-      h += '<button class="buybtn" data-buy="' + p.id + '" aria-pressed="' + (bought[p.id] ? "true" : "false") + '">' + (bought[p.id] ? "구매했어요 ✓ — 구매한 목록에 있어요" : (picked[p.id] ? "구매 완료로 체크하기" : "담고 구매 완료로 체크하기")) + "</button>";
+      if (picked[p.id]) {
+        h += qtyBoxHTML(p);
+        h += '<p class="delhint" style="margin-top:8px">살 예정 개수를 정해 두고, 살 때마다 ‘구매 +1’을 눌러 주세요. 나눠서 사도 돼요. 산 개수가 1개 이상이면 구매한 목록에 보여요.</p>';
+      } else {
+        h += '<button class="buybtn" data-buy="' + p.id + '">담고 구매 +1 하기</button>';
+      }
       if (DUPMAP[p.id]) {
         h += '<p class="delhint" style="margin-top:10px">같은 제품을 다른 가게에서도 팔아요: ';
         DUPMAP[p.id].forEach(function(q, qi){ h += (qi ? " · " : "") + '<a href="#' + q.id + '" data-jump="' + q.id + '">' + esc(storeName(q.store)) + "의 " + esc(q.name) + " 보기</a>"; });
@@ -8999,7 +9149,8 @@
     function updateCount(){
       var n = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
       var bn = Object.keys(bought).filter(function(id){ return picked[id] && !deleted[id]; }).length;
-      pickCount.innerHTML = "담은 제품 <b>" + n + "</b>개 · 구매 <b>" + bn + "</b>개";
+      var qtC = totalsFor(pickedItems());
+      pickCount.innerHTML = "담은 제품 <b>" + n + "</b>가지 · 살 예정 총 <b>" + qtC.planned + "</b>개 · 산 것 총 <b>" + qtC.boughtN + "</b>개";
       var bnc = document.getElementById("boughtNavCount");
       if (bnc) bnc.textContent = bn + "개";
       var pnc = document.getElementById("pickedNavCount");
@@ -9090,12 +9241,15 @@
       var p = byId(pendingDeleteId);
       var name = p ? p.name : "";
       if (modalMode === "picked") {
-        var wasBoughtM = !!bought[pendingDeleteId];
+        var wasBoughtM = getBoughtQty(pendingDeleteId) > 0;
         delete picked[pendingDeleteId];
         delete pickedDates[pendingDeleteId];
         if (sharedSaved[pendingDeleteId]) { unsavedSet[pendingDeleteId] = true; saveIdSet(UNSAVED_KEY, unsavedSet); }
         saveSaved();
         clearBought(pendingDeleteId);
+        delete plannedQty[pendingDeleteId];
+        delete localPrices[pendingDeleteId];
+        delete priceBlank[pendingDeleteId];
         if (wasBoughtM) pushHistory("구매취소", pendingDeleteId, name);
         pushHistory("담기취소", pendingDeleteId, name);
         scheduleServerSync();
@@ -9109,6 +9263,9 @@
         if (restoredSet[pendingDeleteId]) { delete restoredSet[pendingDeleteId]; saveIdSet(RESTORED_KEY, restoredSet); }
         if (picked[pendingDeleteId]) { delete picked[pendingDeleteId]; delete pickedDates[pendingDeleteId]; saveSaved(); }
         clearBought(pendingDeleteId);
+        delete plannedQty[pendingDeleteId];
+        delete localPrices[pendingDeleteId];
+        delete priceBlank[pendingDeleteId];
         saveDeleted();
         pushHistory("삭제", pendingDeleteId, name);
         scheduleServerSync();
@@ -9423,6 +9580,9 @@
     var lastSyncAt = null; // Date of last successful GET/POST sync
     var serverDeletedCount = 0;
     var serverSavedCount = 0;
+    var serverPlannedSum = 0;
+    var serverBoughtQtySum = 0;
+    var serverAmountSum = 0;
     var serverSyncTimer = null;
     function formatHHMM(d){
       if (!d) return "";
@@ -9457,6 +9617,9 @@
         var p = byId(id);
         if (entry && entry.name) savedNames[id] = entry.name;
         else if (p && !savedNames[id]) savedNames[id] = p.name;
+        if (entry && entry.plannedQty != null && plannedQty[id] == null) { var spq = parseInt(entry.plannedQty, 10); if (!isNaN(spq) && spq >= 1) plannedQty[id] = spq; }
+        if (entry && entry.localPrice != null && entry.localPrice !== "" && localPrices[id] == null) { var slp = Number(entry.localPrice); if (!isNaN(slp)) localPrices[id] = slp; }
+        if (entry && entry.priceBlank && localPrices[id] == null) priceBlank[id] = true;
         if (deleted[id] || unsavedSet[id]) return;
         if (!picked[id]) {
           picked[id] = true;
@@ -9472,20 +9635,36 @@
         var p = byId(id);
         if (entry && entry.name) boughtNames[id] = entry.name;
         else if (p && !boughtNames[id]) boughtNames[id] = p.name;
+        if (entry && entry.plannedQty != null && plannedQty[id] == null) { var bpq = parseInt(entry.plannedQty, 10); if (!isNaN(bpq) && bpq >= 1) plannedQty[id] = bpq; }
+        if (entry && entry.localPrice != null && entry.localPrice !== "" && localPrices[id] == null) { var blp = Number(entry.localPrice); if (!isNaN(blp)) localPrices[id] = blp; }
+        if (entry && entry.priceBlank && localPrices[id] == null) priceBlank[id] = true;
         if (deleted[id] || unboughtSet[id] || !picked[id]) return;
-        if (!bought[id]) {
-          bought[id] = true;
+        if (boughtQty[id] == null) {
+          var bq = (entry && entry.boughtQty != null) ? parseInt(entry.boughtQty, 10) : 1;
+          if (isNaN(bq) || bq < 1) bq = 1;
+          boughtQty[id] = bq;
+          syncBoughtFlag(id);
           if (entry && entry.boughtAt) boughtDates[id] = entry.boughtAt;
         }
+      });
+      serverPlannedSum = 0; serverBoughtQtySum = 0; serverAmountSum = 0;
+      sArr.forEach(function(entry){ if (entry && entry.plannedQty != null) { var v1 = parseInt(entry.plannedQty, 10); if (!isNaN(v1)) serverPlannedSum += v1; } });
+      bArr.forEach(function(entry){
+        if (!entry) return;
+        var v2 = (entry.boughtQty != null) ? parseInt(entry.boughtQty, 10) : 1;
+        if (!isNaN(v2)) serverBoughtQtySum += v2;
+        if (entry.localPrice != null && entry.localPrice !== "" && !isNaN(Number(entry.localPrice)) && !isNaN(v2)) serverAmountSum += Number(entry.localPrice) * v2;
+        if (entry.plannedQty != null && !sArr.some(function(se){ return (typeof se === "string" ? se : se && se.id) === entry.id; })) { var v3 = parseInt(entry.plannedQty, 10); if (!isNaN(v3)) serverPlannedSum += v3; }
       });
       // a deleted product never stays in the saved list
       Object.keys(picked).forEach(function(id){
         if (deleted[id]) { delete picked[id]; delete pickedDates[id]; }
       });
-      // a purchase check only counts while the item stays picked
-      Object.keys(bought).forEach(function(id){
-        if (deleted[id] || !picked[id]) { delete bought[id]; delete boughtDates[id]; }
+      // a purchase only counts while the item stays picked
+      Object.keys(boughtQty).forEach(function(id){
+        if (deleted[id] || !picked[id]) { delete boughtQty[id]; delete boughtDates[id]; delete bought[id]; }
       });
+      Object.keys(bought).forEach(function(id){ if (getBoughtQty(id) <= 0) delete bought[id]; });
       // merge the shared history with this browser's (newest first)
       var hArr = Array.isArray(data.history) ? data.history : [];
       sharedHistoryKeys = hArr.map(historyKey);
@@ -9551,13 +9730,24 @@
       Object.keys(picked).forEach(function(id){ if (!deleted[id]) savSet[id] = true; });
       var sav = orderedIds(savSet).map(function(id){
         var p = byId(id);
-        return { id: id, name: savedNames[id] || (p ? p.name : id) };
+        var o = { id: id, name: savedNames[id] || (p ? p.name : id) };
+        o.plannedQty = getPlanned(id);
+        var lp = getLocalPrice(id);
+        if (lp != null) o.localPrice = lp;
+        else if (priceBlank[id]) o.priceBlank = true;
+        return o;
       });
       var buySet = {};
-      Object.keys(bought).forEach(function(id){ if (!deleted[id] && picked[id]) buySet[id] = true; });
+      Object.keys(boughtQty).forEach(function(id){ if (getBoughtQty(id) > 0 && !deleted[id] && picked[id]) buySet[id] = true; });
       var buy = orderedIds(buySet).map(function(id){
         var p = byId(id);
-        return { id: id, name: boughtNames[id] || (p ? p.name : id) };
+        var o2 = { id: id, name: boughtNames[id] || (p ? p.name : id) };
+        o2.boughtQty = getBoughtQty(id);
+        o2.plannedQty = getPlanned(id);
+        var lp2 = getLocalPrice(id);
+        if (lp2 != null) o2.localPrice = lp2;
+        else if (priceBlank[id]) o2.priceBlank = true;
+        return o2;
       });
       return { version: 1, deleted: del, saved: sav, bought: buy, history: historyLog };
     }
@@ -9568,9 +9758,13 @@
       if (sIds.length !== Object.keys(sharedSaved).length) return false;
       for (var i = 0; i < dIds.length; i++) if (!sharedDeleted[dIds[i]]) return false;
       for (var j = 0; j < sIds.length; j++) if (!sharedSaved[sIds[j]]) return false;
-      var bIds = Object.keys(bought).filter(function(id){ return !deleted[id] && picked[id]; });
+      var bIds = Object.keys(boughtQty).filter(function(id){ return getBoughtQty(id) > 0 && !deleted[id] && picked[id]; });
       if (bIds.length !== Object.keys(sharedBought).length) return false;
       for (var k = 0; k < bIds.length; k++) if (!sharedBought[bIds[k]]) return false;
+      var lt = totalsFor(pickedItems());
+      if (lt.planned !== serverPlannedSum) return false;
+      if (lt.boughtN !== serverBoughtQtySum) return false;
+      if (lt.amount !== serverAmountSum) return false;
       if (historyLog.length !== sharedHistoryKeys.length) return false;
       for (var m = 0; m < historyLog.length; m++) if (!sharedHistoryKeySet[historyKey(historyLog[m])]) return false;
       return true;
@@ -9610,6 +9804,9 @@
         payload.deleted.forEach(function(e){ sharedDeleted[e.id] = true; });
         payload.saved.forEach(function(e){ sharedSaved[e.id] = true; });
         payload.bought.forEach(function(e){ sharedBought[e.id] = true; });
+        serverPlannedSum = 0; serverBoughtQtySum = 0; serverAmountSum = 0;
+        payload.saved.forEach(function(e){ if (e.plannedQty != null) serverPlannedSum += e.plannedQty; });
+        payload.bought.forEach(function(e){ serverBoughtQtySum += (e.boughtQty || 0); if (e.localPrice != null) serverAmountSum += e.localPrice * (e.boughtQty || 0); });
         sharedHistoryKeys = payload.history.map(historyKey);
         sharedHistoryKeySet = {};
         sharedHistoryKeys.forEach(function(k){ sharedHistoryKeySet[k] = true; });
@@ -9693,11 +9890,11 @@
       if (p.cat) metaBits.push(p.cat);
       h += '<span class="sub">' + esc(metaBits.join(" · ")) + "</span>";
       h += '<span class="sub price">' + esc(priceLabel(p)) + (priceYen(p) != null && p.price ? ' <span style="font-weight:500;color:var(--ink3)">(출처 표기: ' + esc(p.price) + ")</span>" : "") + "</span>";
-      h += '<span class="mrow">' + (isBought ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + (p.mentions ? '<span class="mchip">' + esc(mentionShort(p)) + "</span>" : "") + dupChipHTML(p) + "</span>";
-      if (isBought && boughtDates[p.id]) h += '<span class="sub buydate">구매 체크한 날: ' + esc(fmtDate(boughtDates[p.id])) + "</span>";
+      h += '<span class="mrow">' + (isBought ? '<span class="buychip">' + esc(progressText(p.id)) + "</span>" : "") + rankChipHTML(p) + (p.mentions ? '<span class="mchip">' + esc(mentionShort(p)) + "</span>" : "") + dupChipHTML(p) + "</span>";
+      if (isBought && boughtDates[p.id]) h += '<span class="sub buydate">마지막으로 산 날: ' + esc(fmtDate(boughtDates[p.id])) + "</span>";
       if (!isBought && pickedDates[p.id]) h += '<span class="sub">담은 날: ' + esc(fmtDate(pickedDates[p.id])) + "</span>";
+      h += qtyBoxHTML(p);
       h += '</span><span class="browacts">';
-      h += '<button type="button" class="btn browbtn' + (isBought ? "" : " buy") + '" data-buytoggle="' + p.id + '">' + (isBought ? "구매 취소" : "구매 체크") + "</button>";
       h += '<button type="button" class="btn browbtn" data-listdetail="' + p.id + '" data-listctx="' + ctx + '" aria-expanded="' + (open ? "true" : "false") + '">' + (open ? "상세 닫기" : "상세 보기") + "</button>";
       if (ctx === "picked") h += '<button type="button" class="btn browbtn pickoff" data-rowpick="' + p.id + '">담기 취소</button>';
       h += "</span></div>";
@@ -9716,7 +9913,7 @@
       return h;
     }
     function copyTextFor(items, title){
-      var lines = ["일본 쇼핑리스트 — " + title + " (" + items.length + "개)", ""];
+      var lines = ["일본 쇼핑리스트 — " + title + " (" + items.length + "가지)", ""];
       ["donki","conv"].forEach(function(st){
         var group = items.filter(function(p){ return p.store===st; });
         if (!group.length) return;
@@ -9724,29 +9921,53 @@
         var lastCat = null;
         group.forEach(function(p){
           if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
-          lines.push("  - " + p.name + " (" + priceLabel(p) + ")" + (bought[p.id] ? " ✓ 구매완료" : ""));
+          var bq = getBoughtQty(p.id), lp = getLocalPrice(p.id);
+          var extra = " · 살 예정 " + getPlanned(p.id) + "개";
+          if (bq > 0) extra += " · " + bq + "개 삼" + (lp != null ? " · 1개 " + fmtYen(lp) + " · 산 것 합계 " + fmtYen(lp * bq) : " · 금액 미입력");
+          lines.push("  - " + p.name + " (" + priceLabel(p) + ")" + extra);
         });
         lines.push("");
       });
       var tot = totalsFor(items);
-      lines.push("예상 합계: " + fmtYen(tot.sum) + " (가격 확인된 " + tot.known + "개 기준" + (tot.unknown ? ", 미확인 " + tot.unknown + "개 제외" : "") + ")");
+      lines.push("살 예정 총 " + tot.planned + "개 · 산 것 총 " + tot.boughtN + "개 · 남은 것 총 " + tot.remain + "개");
+      lines.push("구매한 총액: " + fmtYen(tot.amount) + " (현지 가격을 적은 것만 더했어요" + (tot.noPrice ? ", 금액 미입력 " + tot.noPrice + "가지는 빼고 셌어요" : "") + ")");
+      lines.push("예상 합계: " + fmtYen(tot.sum) + " (대표 가격 × 살 예정 개수, 가격 확인된 " + tot.known + "가지 기준" + (tot.unknown ? ", 미확인 " + tot.unknown + "가지 제외" : "") + ")");
       return lines.join("\n");
     }
     function totalsFor(items){
-      var sum = 0, known = 0, byStore = {};
+      var sum = 0, known = 0, planned = 0, boughtN = 0, amount = 0, noPrice = 0;
+      var byStore = {}, expByStore = {};
       items.forEach(function(p){
+        var pq = getPlanned(p.id), bq = getBoughtQty(p.id), lp = getLocalPrice(p.id);
+        planned += pq; boughtN += bq;
+        if (!byStore[p.store]) byStore[p.store] = { planned: 0, bought: 0, amount: 0 };
+        byStore[p.store].planned += pq; byStore[p.store].bought += bq;
+        if (bq > 0) {
+          if (lp != null) { amount += lp * bq; byStore[p.store].amount += lp * bq; }
+          else noPrice++;
+        }
         var v = priceYen(p);
-        if (v != null) { sum += v; known++; byStore[p.store] = (byStore[p.store] || 0) + v; }
+        if (v != null) { sum += v * pq; known++; expByStore[p.store] = (expByStore[p.store] || 0) + v * pq; }
       });
-      return { sum: sum, known: known, unknown: items.length - known, byStore: byStore };
+      return { sum: sum, known: known, unknown: items.length - known, planned: planned, boughtN: boughtN, remain: planned - boughtN, amount: amount, noPrice: noPrice, byStore: byStore, expByStore: expByStore };
     }
     function totalsHTML(items, label){
       if (!items.length) return label + "이 비어 있어 합계를 낼 수 없어요.";
       var t = totalsFor(items);
-      var parts = [];
-      if (t.byStore.donki) parts.push("돈키호테 소계 " + fmtYen(t.byStore.donki));
-      if (t.byStore.conv) parts.push("편의점 소계 " + fmtYen(t.byStore.conv));
-      return "예상 총액 <b>" + fmtYen(t.sum) + "</b> <span class=\"t-sub\">가격 확인된 " + t.known + "개만 더한 값이에요" + (t.unknown ? " · 가격 미확인 " + t.unknown + "개는 빠져서 실제보다 적을 수 있어요" : "") + (parts.length ? " · " + parts.join(" · ") : "") + "</span>";
+      var storeParts = [];
+      ["donki", "conv"].forEach(function(st){
+        var s = t.byStore[st];
+        if (!s || !s.planned) return;
+        storeParts.push(storeName(st) + " — 살 예정 " + s.planned + "개 · 산 것 " + s.bought + "개 · 구매 금액 " + fmtYen(s.amount));
+      });
+      var expParts = [];
+      if (t.expByStore.donki) expParts.push("돈키호테 " + fmtYen(t.expByStore.donki));
+      if (t.expByStore.conv) expParts.push("편의점 " + fmtYen(t.expByStore.conv));
+      var h = '<span class="stats-lines">살 예정 총 <b>' + t.planned + "개</b> · 산 것 총 <b>" + t.boughtN + "개</b> · 남은 것 총 <b>" + t.remain + "개</b><br />";
+      h += '구매한 총액 <b class="amt">' + fmtYen(t.amount) + '</b> <span class="t-sub">현지에서 적은 1개 가격 × 산 개수로 셌어요' + (t.noPrice ? " · 금액 미입력 " + t.noPrice + "가지는 빼고 셌어요" : "") + "</span><br />";
+      if (storeParts.length) h += '<span class="t-sub">가게별: ' + storeParts.join(" / ") + "</span><br />";
+      h += "예상 총액 <b>" + fmtYen(t.sum) + '</b> <span class="t-sub">대표 가격 × 살 예정 개수예요. 가격 확인된 ' + t.known + "가지만 더했어요" + (t.unknown ? " · 가격 미확인 " + t.unknown + "가지는 빠져서 실제보다 적을 수 있어요" : "") + (expParts.length ? " · " + expParts.join(" · ") : "") + "</span></span>";
+      return h;
     }
     function sortListItems(items, mode){
       var arr = items.slice();
@@ -9768,13 +9989,14 @@
       var sum = document.getElementById("pickedSummary");
       if (sum) {
         if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담으면 여기에 사진·가격·파는 곳과 함께 모여요.";
-        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했고, 아직 " + (total - bItems.length) + "개가 남았어요. ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 볼 수 있어요.";
+        else { var qt0 = totalsFor(pItems); sum.textContent = "살 예정 총 " + qt0.planned + "개 중 " + qt0.boughtN + "개를 샀고, 아직 " + qt0.remain + "개가 남았어요. 담은 종류는 " + total + "가지예요. ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 볼 수 있어요."; }
       }
-      var pct = total ? Math.round(bItems.length / total * 100) : 0;
+      var qtP = totalsFor(pItems);
+      var pct = qtP.planned ? Math.min(100, Math.round(qtP.boughtN / qtP.planned * 100)) : 0;
       var fill = document.getElementById("pickedProgressFill");
       if (fill) fill.style.width = pct + "%";
       var pt = document.getElementById("pickedProgressText");
-      if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
+      if (pt) pt.textContent = total ? "살 예정 " + qtP.planned + "개 중 " + qtP.boughtN + "개 샀어요 (" + pct + "%) · 구매한 총액 " + fmtYen(qtP.amount) : "담은 제품이 없어요";
       var empty = document.getElementById("pickedEmpty");
       if (empty) empty.hidden = total > 0;
       var tot = document.getElementById("pickedTotals");
@@ -9800,18 +10022,19 @@
       var sum = document.getElementById("boughtSummary");
       if (sum) {
         if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담아 보세요.";
-        else if (!bItems.length) sum.textContent = "담은 " + total + "개 중 아직 구매한 게 없어요. 이 탭에는 실제로 구매 체크한 것만 보여요. 아직 안 산 담은 것은 ‘담은 목록’ 탭에서 보세요.";
-        else sum.textContent = "구매 체크한 " + bItems.length + "개만 모았어요." + (rItems.length ? " 아직 안 산 담은 것 " + rItems.length + "개는 ‘담은 목록’ 탭에 따로 있어요." : " 담은 건 전부 샀어요.");
+        else if (!bItems.length) sum.textContent = "담은 " + total + "가지 중 아직 산 게 없어요. 이 탭에는 1개라도 산 것만 보여요. 아직 안 산 담은 것은 ‘담은 목록’ 탭에서 보세요.";
+        else { var qt1 = totalsFor(pickedItems()); sum.textContent = "1개라도 산 " + bItems.length + "가지를 모았어요. 살 예정 총 " + qt1.planned + "개 중 " + qt1.boughtN + "개를 샀어요." + (rItems.length ? " 아직 하나도 안 산 담은 것 " + rItems.length + "가지는 ‘담은 목록’ 탭에 따로 있어요." : ""); }
       }
-      var pct = total ? Math.round(bItems.length / total * 100) : 0;
+      var qtB = totalsFor(pickedItems());
+      var pct = qtB.planned ? Math.min(100, Math.round(qtB.boughtN / qtB.planned * 100)) : 0;
       var fill = document.getElementById("boughtProgressFill");
       if (fill) fill.style.width = pct + "%";
       var pt = document.getElementById("boughtProgressText");
-      if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
+      if (pt) pt.textContent = total ? "살 예정 " + qtB.planned + "개 중 " + qtB.boughtN + "개 샀어요 (" + pct + "%) · 구매한 총액 " + fmtYen(qtB.amount) : "담은 제품이 없어요";
       var empty = document.getElementById("boughtEmpty");
       if (empty) empty.hidden = bItems.length > 0;
       var tot = document.getElementById("boughtTotals");
-      if (tot) tot.innerHTML = totalsHTML(bItems, "구매한 목록");
+      if (tot) tot.innerHTML = totalsHTML(pickedItems(), "구매한 목록");
       var prev = document.getElementById("boughtCopyPreview");
       if (prev) prev.textContent = bItems.length ? copyTextFor(bItems, "구매한 목록") : "구매한 제품이 없어서 복사할 내용이 없어요.";
       var cp = document.getElementById("copyBoughtBtn");
@@ -9859,7 +10082,7 @@
       var dd = document.getElementById("dashDeleted");
       if (dd) dd.innerHTML = delN + "<small>개</small>";
       var ds = document.getElementById("dashBoughtSub");
-      if (ds) ds.textContent = savN ? ("담은 것 중 " + buyN + "개 샀어요 · 아직 " + (savN - buyN) + "개 남았어요") : "아직 구매 체크한 게 없어요";
+      if (ds) { var qtD = totalsFor(pickedItems()); ds.textContent = savN ? ("살 예정 총 " + qtD.planned + "개 중 " + qtD.boughtN + "개 샀어요 · 아직 " + qtD.remain + "개 남았어요 · 구매한 총액 " + fmtYen(qtD.amount)) : "아직 산 게 없어요"; }
       var filtered = historyLog.filter(function(e){ return listState.histFilter === "all" || e.type === listState.histFilter; });
       var hl = document.getElementById("histList");
       var he = document.getElementById("histEmpty");
@@ -9946,10 +10169,21 @@
         if (lctx === "picked") renderPickedPage(); else renderBoughtPage();
         return;
       }
-      var bt = t.closest ? t.closest("[data-buytoggle]") : null;
-      if (bt) {
-        toggleBought(bt.getAttribute("data-buytoggle"));
-        updateCount(); render();
+      var pm = t.closest ? t.closest("[data-plan-minus]") : null;
+      if (pm) { var pmid = pm.getAttribute("data-plan-minus"); setPlannedQty(pmid, getPlanned(pmid) - 1); updateCount(); render(); return; }
+      var pp = t.closest ? t.closest("[data-plan-plus]") : null;
+      if (pp) { var ppid = pp.getAttribute("data-plan-plus"); setPlannedQty(ppid, getPlanned(ppid) + 1); updateCount(); render(); return; }
+      var bm = t.closest ? t.closest("[data-buy-minus]") : null;
+      if (bm) { var bmid = bm.getAttribute("data-buy-minus"); if (getBoughtQty(bmid) > 0) { setBoughtQty(bmid, getBoughtQty(bmid) - 1); } updateCount(); render(); return; }
+      var bp1 = t.closest ? t.closest("[data-buy-plus1]") : null;
+      if (bp1) { addBought(bp1.getAttribute("data-buy-plus1"), 1, "add"); return; }
+      var ba = t.closest ? t.closest("[data-buy-add]") : null;
+      if (ba) {
+        var baid = ba.getAttribute("data-buy-add");
+        var bain = document.querySelector('[data-buy-add-input="' + baid + '"]');
+        var ban = bain ? parseInt(bain.value, 10) : NaN;
+        if (isNaN(ban) || ban < 1) { toast("몇 개 살지 먼저 적어 주세요."); if (bain) bain.focus(); return; }
+        addBought(baid, ban, "add");
         return;
       }
       var gt = t.closest ? t.closest("[data-goto]") : null;
@@ -10039,6 +10273,53 @@
       if (row) selectProduct(row.getAttribute("data-select"));
     });
 
+    document.addEventListener("change", function(e){
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      var pid = t.getAttribute("data-plan-input");
+      if (pid) { setPlannedQty(pid, t.value); updateCount(); render(); return; }
+      var bid = t.getAttribute("data-bought-input");
+      if (bid) {
+        var bv = parseInt(t.value, 10);
+        if (isNaN(bv) || bv < 0) bv = 0;
+        if (bv > getBoughtQty(bid) && needsPricePrompt(bid)) { openPriceModal(bid, "set", bv); return; }
+        setBoughtQty(bid, bv);
+        updateCount(); render();
+        return;
+      }
+      var prid = t.getAttribute("data-price-input");
+      if (prid) {
+        setLocalPrice(prid, t.value);
+        updateCount(); render();
+        var pnm = byId(prid);
+        toast(getLocalPrice(prid) != null ? ("‘" + (pnm ? pnm.name : prid) + "’ 1개 가격을 " + fmtYen(getLocalPrice(prid)) + "으로 적었어요.") : "금액을 비웠어요. 구매한 총액에서 빠져요.");
+        return;
+      }
+    });
+    // price modal wiring
+    var priceOkEl = document.getElementById("priceModalOk");
+    if (priceOkEl) priceOkEl.addEventListener("click", function(){
+      if (!pricePending) { closePriceModal(); return; }
+      var pid2 = pricePending.id, mode2 = pricePending.mode;
+      var inp2 = document.getElementById("priceModalInput");
+      var qin2 = document.getElementById("priceModalQty");
+      var pv = inp2 ? inp2.value : "";
+      if (pv === "" || pv == null || isNaN(Number(pv))) { delete localPrices[pid2]; priceBlank[pid2] = true; }
+      else { localPrices[pid2] = Math.max(0, Math.round(Number(pv))); delete priceBlank[pid2]; }
+      var qv = qin2 ? parseInt(qin2.value, 10) : 1;
+      if (isNaN(qv) || qv < 1) qv = 1;
+      closePriceModal();
+      var target2 = (mode2 === "set") ? qv : getBoughtQty(pid2) + qv;
+      var v2 = setBoughtQty(pid2, target2);
+      var pp2 = byId(pid2);
+      toast("‘" + (pp2 ? pp2.name : pid2) + "’ " + v2 + "개 샀어요. (" + progressText(pid2) + ")");
+      updateCount(); render();
+    });
+    var priceCancelEl = document.getElementById("priceModalCancel");
+    if (priceCancelEl) priceCancelEl.addEventListener("click", closePriceModal);
+    var priceModalEl = document.getElementById("priceModal");
+    if (priceModalEl) priceModalEl.addEventListener("click", function(e){ if (e.target === priceModalEl) closePriceModal(); });
+
     document.getElementById("q").addEventListener("input", function(e){
       state.q = e.target.value.trim().toLowerCase();
       render();
@@ -10099,12 +10380,12 @@
       if (!pa) return;
       if (!items.length) { toast("목록이 비어 있어 인쇄용으로 볼 게 없어요."); return; }
       var t = totalsFor(items);
-      var hh = "<h2>일본 쇼핑리스트 — " + esc(title) + " (" + items.length + "개)</h2><p>예상 합계 " + fmtYen(t.sum) + " (가격 확인된 " + t.known + "개 기준" + (t.unknown ? ", 미확인 " + t.unknown + "개 제외" : "") + ") · 이 화면에서 브라우저 메뉴의 인쇄를 누르면 이 목록만 인쇄돼요.</p>";
+      var hh = "<h2>일본 쇼핑리스트 — " + esc(title) + " (" + items.length + "가지)</h2><p>살 예정 총 " + t.planned + "개 · 산 것 총 " + t.boughtN + "개 · 남은 것 총 " + t.remain + "개 · 구매한 총액 " + fmtYen(t.amount) + (t.noPrice ? " (금액 미입력 " + t.noPrice + "가지 제외)" : "") + " · 예상 합계 " + fmtYen(t.sum) + " (대표 가격 × 살 예정 개수, 가격 확인된 " + t.known + "가지 기준" + (t.unknown ? ", 미확인 " + t.unknown + "가지 제외" : "") + ") · 이 화면에서 브라우저 메뉴의 인쇄를 누르면 이 목록만 인쇄돼요.</p>";
       ["donki","conv"].forEach(function(st){
         var group = items.filter(function(x){ return x.store===st; });
         if (!group.length) return;
         hh += "<h3>" + storeName(st) + "</h3><ul>";
-        group.forEach(function(x){ hh += "<li>" + esc(x.name) + " — " + esc(priceLabel(x)) + " · " + esc(x.place || "") + (bought[x.id] ? " · 구매완료" : "") + "</li>"; });
+        group.forEach(function(x){ var bqx = getBoughtQty(x.id), lpx = getLocalPrice(x.id); hh += "<li>" + esc(x.name) + " — " + esc(priceLabel(x)) + " · " + esc(x.place || "") + " · 살 예정 " + getPlanned(x.id) + "개" + (bqx > 0 ? " · " + bqx + "개 삼" + (lpx != null ? " · 1개 " + fmtYen(lpx) + " · 합계 " + fmtYen(lpx * bqx) : " · 금액 미입력") : "") + "</li>"; });
         hh += "</ul>";
       });
       hh += '<button class="btn" type="button" id="printCloseBtn">인쇄용 목록 닫기</button>';
