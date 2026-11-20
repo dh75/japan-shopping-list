@@ -20,7 +20,16 @@ function defaultState() {
     // Purchased items: snapshots { id, name, price?, image?, store?, purchasedDate? }
     // so the separate purchased page can render them without the catalog.
     purchased: [],
+    // Activity history: { type, id, name, at } where type is a short action
+    // name such as saved / unsaved / deleted / restored / purchased / unpurchased.
+    // Newest entries are at the end; the server keeps the newest 500.
+    history: [],
   };
+}
+
+function normalizeHistoryEntry(e) {
+  const out = { type: e.type, id: e.id, name: e.name, at: e.at };
+  return out;
 }
 
 function normalizePurchasedEntry(e) {
@@ -36,10 +45,18 @@ function isValidState(body) {
   if (!Array.isArray(body.deleted) || !Array.isArray(body.saved)) return false;
   // purchased is optional for old clients; when present it must be an array.
   if (body.purchased !== undefined && !Array.isArray(body.purchased)) return false;
+  // history is optional for old clients; when present it must be an array.
+  // Validation is intentionally loose on the action type so the page can
+  // add new action names without breaking sync.
+  if (body.history !== undefined && !Array.isArray(body.history)) return false;
   const okEntry = (e) =>
     e && typeof e === 'object' && typeof e.id === 'string' && typeof e.name === 'string';
+  const okHistoryEntry = (e) =>
+    e && typeof e === 'object' && typeof e.type === 'string' && typeof e.id === 'string' &&
+    typeof e.name === 'string' && typeof e.at === 'string';
   const purchasedOk = !Array.isArray(body.purchased) || body.purchased.every(okEntry);
-  return body.deleted.every(okEntry) && body.saved.every(okEntry) && purchasedOk;
+  const historyOk = !Array.isArray(body.history) || body.history.every(okHistoryEntry);
+  return body.deleted.every(okEntry) && body.saved.every(okEntry) && purchasedOk && historyOk;
 }
 
 // Verify a Google ID token and return the user's opaque subject id (sub),
@@ -123,13 +140,20 @@ export default async function handler(req, res) {
     if (!isValidState(body)) {
       return res.status(400).json({ error: 'invalid state shape' });
     }
-    // Old clients may post without purchased; keep the stored list then.
+    // Old clients may post without purchased/history; keep the stored lists then.
     let purchased = [];
+    let history = [];
     if (Array.isArray(body.purchased)) {
       purchased = body.purchased;
     } else {
       const existing = await readState(blobPath);
       if (existing && Array.isArray(existing.purchased)) purchased = existing.purchased;
+    }
+    if (Array.isArray(body.history)) {
+      history = body.history;
+    } else {
+      const existing = await readState(blobPath);
+      if (existing && Array.isArray(existing.history)) history = existing.history;
     }
     const state = {
       version: 1,
@@ -137,6 +161,8 @@ export default async function handler(req, res) {
       deleted: body.deleted.slice(0, 1000),
       saved: body.saved.slice(0, 1000),
       purchased: purchased.slice(0, 1000).map(normalizePurchasedEntry),
+      // Keep only the newest 500 history entries.
+      history: history.slice(-500).map(normalizeHistoryEntry),
     };
     try {
       await put(blobPath, JSON.stringify(state), {
