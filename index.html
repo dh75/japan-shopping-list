@@ -308,6 +308,77 @@
       .guest-cta p span{color:var(--ink2);font-size:13.5px}
       .guest-cta .btn{flex:none;padding:12px 18px;font-size:15px}
       @media (max-width:760px){.guest-grid{grid-template-columns:1fr}.guest-how ol{grid-template-columns:1fr}.guest-cta .btn{width:100%;justify-content:center}}
+      /* ---- purchased check + separate purchased page ---- */
+      :root{--buy:#1a7f4b;--buy-bg:#e8f4ec}
+      @media (prefers-color-scheme: dark){:root{--buy:#45cf8d;--buy-bg:#16382a}.viewtab.buy[aria-pressed="true"]{color:#0b2417 !important}.rowbuy.on{color:#0b2417}.buybtn[aria-pressed="true"]{color:#0b2417}}
+      .viewnav{display:flex;gap:8px;margin:16px 0 2px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:8px}
+      .viewtab{flex:1;border:0;background:transparent;color:var(--ink2);border-radius:10px;padding:11px 10px;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer}
+      .viewtab[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+      .viewtab.buy[aria-pressed="true"]{background:var(--buy);color:#fff}
+      .viewtab .vn{font-size:13px;font-weight:700;opacity:.75;margin-left:5px}
+      .view-hidden{display:none !important}
+      .rowbuy{flex:none;font-size:12px;font-weight:700;border:1.5px solid var(--buy);color:var(--buy);border-radius:999px;padding:4px 9px;background:transparent;text-align:center;cursor:pointer}
+      .rowbuy.on{background:var(--buy);border-color:var(--buy);color:#fff}
+      .buychip{display:inline-block;font-size:11px;font-weight:800;color:var(--buy);background:var(--buy-bg);border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+      .crow.is-bought{border-color:var(--buy)}
+      .buybtn{border:1.5px solid var(--buy);color:var(--buy);background:transparent;border-radius:12px;padding:13px 16px;font:inherit;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:9px}
+      .buybtn[aria-pressed="true"]{background:var(--buy);color:#fff}
+      .bought-page{margin:18px 0 2px}
+      .bought-page[hidden]{display:none}
+      .bought-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .bought-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+      .bought-head h2{font-size:21px;margin:0 0 4px;font-weight:800}
+      .bought-head h2 span{color:var(--buy)}
+      .bought-head p{margin:0;color:var(--ink2);font-size:14px;line-height:1.55;max-width:40em}
+      .bought-actions{display:flex;gap:8px;flex-wrap:wrap;flex:none}
+      .bp-track{height:10px;border-radius:999px;background:var(--surface2);overflow:hidden;margin:16px 0 6px}
+      .bp-fill{height:100%;background:var(--buy);border-radius:999px;transition:width .3s}
+      .bp-text{margin:0;font-size:13px;color:var(--ink2)}
+      .bought-group{margin-top:22px}
+      .bought-group>h3{font-size:15px;margin:0 0 8px;font-weight:800}
+      .bought-group>h3 .n{font-size:12px;color:var(--ink3);font-weight:600}
+      .brows{display:flex;flex-direction:column;gap:7px}
+      .brow{display:flex;gap:11px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+      .brow .th{flex:none;width:52px;height:52px;border-radius:7px;overflow:hidden;background:var(--surface2);position:relative}
+      .brow .th img{width:100%;height:100%;object-fit:cover;display:block}
+      .brow .th .noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-size:10px;text-align:center;padding:2px}
+      .brow .tx{flex:1;min-width:0}
+      .brow .nm{font-size:14.5px;font-weight:700;line-height:1.3}
+      .brow .sub{display:block;font-size:12px;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .brow .sub.buydate{color:var(--buy);font-weight:700;white-space:normal}
+      .browacts{flex:none;display:flex;flex-direction:column;gap:5px;align-items:stretch}
+      .browbtn{font-size:12.5px;padding:6px 11px;border-radius:999px;justify-content:center}
+      .browbtn.buy{border-color:var(--buy);color:var(--buy);font-weight:700}
+      .bought-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:30px 20px;text-align:center;color:var(--ink2);font-size:14.5px;line-height:1.6;margin-top:18px}
+      .bought-empty[hidden]{display:none}
+      .remain-title{font-size:17px;font-weight:800;margin:30px 0 4px}
+      .remain-note{margin:0 0 10px;color:var(--ink3);font-size:13px}
+      @media (max-width:640px){.bought-head{flex-direction:column}.bought-actions{width:100%}.bought-actions .btn{flex:1;justify-content:center}}
+      @media (prefers-reduced-motion: reduce){.bp-fill{transition:none}}
+      /* ---- dashboard: summary cards + recent history ---- */
+      .dash-page{margin:18px 0 2px}
+      .dash-page[hidden]{display:none}
+      .dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+      .dash-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .dash-card .dk{font-size:13px;font-weight:700;color:var(--ink2);margin:0 0 4px}
+      .dash-card .dn{font-size:32px;font-weight:800;line-height:1.1;margin:0}
+      .dash-card .dn small{font-size:15px;font-weight:700;color:var(--ink3);margin-left:2px}
+      .dash-card.buy .dn{color:var(--buy)}
+      .dash-card.del .dn{color:var(--accent-ink)}
+      .dash-card .ds{margin:5px 0 0;font-size:12.5px;color:var(--ink3);line-height:1.5}
+      .dash-hist{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .dash-hist h2{font-size:17px;margin:0 0 4px;font-weight:800}
+      .dash-hist>p{margin:0 0 6px;color:var(--ink2);font-size:13.5px}
+      .hist-list{margin:0;padding:0;list-style:none}
+      .hist-list li{display:flex;gap:10px;align-items:baseline;padding:9px 2px;border-top:1px solid var(--line)}
+      .hist-chip{flex:none;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;background:var(--chip-bg);color:var(--ink2);line-height:1.5;white-space:nowrap}
+      .hist-chip.buy{background:var(--buy-bg);color:var(--buy)}
+      .hist-chip.del{background:var(--accent);color:#fff}
+      .hist-text{flex:1;min-width:0;font-size:14.5px;line-height:1.45}
+      .hist-time{flex:none;font-size:12.5px;color:var(--ink3);white-space:nowrap}
+      .hist-empty{color:var(--ink3);font-size:14.5px;padding:14px 0 4px;text-align:center;line-height:1.6;margin:0}
+      .hist-empty[hidden]{display:none}
+      @media (max-width:640px){.dash-grid{gap:7px}.dash-card{padding:13px 12px}.dash-card .dn{font-size:24px}.dash-card .ds{font-size:11.5px}}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -373,7 +444,7 @@
           <h2>로그인하면 할 수 있어요</h2>
           <ol>
             <li><span class="step-no">1</span><b>전체 목록 보기</b>가게·카테고리·편의점 브랜드별로 골라 보고, 제품명·일본어 이름으로 검색해요.</li>
-            <li><span class="step-no">2</span><b>담고, 빼고, 복사하기</b>살 것은 담아 두고 필요 없는 건 삭제해요. 담은 목록은 한 번에 복사할 수 있어요.</li>
+            <li><span class="step-no">2</span><b>담고, 사고, 체크하기</b>살 것은 담아 두고, 실제로 산 건 구매 완료로 체크해요. 구매한 것만 모은 페이지를 따로 볼 수 있어요.</li>
             <li><span class="step-no">3</span><b>기기마다 이어보기</b>담기·삭제 목록이 내 구글 계정에 저장돼, 폰에서 만든 목록을 다른 기기에서도 그대로 봐요.</li>
           </ol>
         </div>
@@ -394,6 +465,11 @@
       </section>
 
       <div id="appContent" hidden>
+      <nav class="viewnav" aria-label="목록 보기 방식">
+        <button class="viewtab" type="button" data-viewtab="catalog" aria-pressed="true">전체 목록</button>
+        <button class="viewtab buy" type="button" data-viewtab="bought" aria-pressed="false">구매한 목록<span class="vn" id="boughtNavCount">0개</span></button>
+        <button class="viewtab" type="button" data-viewtab="dashboard" aria-pressed="false">내 기록</button>
+      </nav>
       <div class="notice" role="note">
         <h2>사기 전에 꼭 확인 — 반입·현지 섭취 주의</h2>
         <h3>돈키호테</h3>
@@ -459,14 +535,50 @@
           <p>로그인하면 폰에서 만든 목록을 다른 기기에서도 그대로 볼 수 있어요.</p>
           <button class="btn primary" id="syncLoginBtn" type="button">구글로 로그인</button>
         </div>
-        <p class="sync-note">로그인하면 담은 것과 삭제한 것이 내 구글 계정에 저장돼요. 그래서 폰에서 담아 둔 목록을 컴퓨터나 다른 기기에서 로그인하면 똑같이 볼 수 있어요. 다른 사람에게는 내 목록이 보이지 않아요. 로그인하지 않으면 이 기기에만 저장돼요.</p>
+        <p class="sync-note">로그인하면 담은 것, 구매한 것과 삭제한 것이 내 구글 계정에 저장돼요. 그래서 폰에서 담아 둔 목록을 컴퓨터나 다른 기기에서 로그인하면 똑같이 볼 수 있어요. 다른 사람에게는 내 목록이 보이지 않아요. 로그인하지 않으면 이 기기에만 저장돼요.</p>
       </section>
 
       <div class="flow">
-        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>새로 등록된 제품이 맨 위에 모여 있어요 · 카드마다 언급된 영상 건수가 보이고, 많이 언급된 상위 10개에는 순위가 붙어요 · 제품을 누르면 그 자리에서 바로 아래에 상세 정보가 펼쳐져요</span></div>
+        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>새로 등록된 제품이 맨 위에 모여 있어요 · 카드마다 언급된 영상 건수가 보이고, 많이 언급된 상위 10개에는 순위가 붙어요 · 제품을 누르면 그 자리에서 바로 아래에 상세 정보가 펼쳐져요 · 담은 제품은 카드에서 바로 구매 체크할 수 있어요</span></div>
         <main id="list"></main>
         <p class="empty" id="emptyMsg">조건에 맞는 제품이 없어요. 검색어나 필터를 바꿔 보세요.</p>
       </div>
+
+      <section class="bought-page" id="boughtView" hidden aria-label="구매한 목록 페이지">
+        <div class="bought-card">
+          <div class="bought-head">
+            <div>
+              <h2>구매한 목록 <span id="boughtHeadCount"></span></h2>
+              <p id="boughtSummary">담은 제품 중에서 실제로 산 것만 따로 모아 보는 페이지예요. 매장에서 산 뒤 카드나 상세에서 ‘구매 체크’를 누르면 여기로 들어와요.</p>
+            </div>
+            <div class="bought-actions">
+              <button class="btn" id="copyBoughtBtn" type="button">구매 목록 복사</button>
+              <button class="btn primary" id="backToCatalogBtn" type="button">전체 목록 보기</button>
+            </div>
+          </div>
+          <div class="bp-track" aria-hidden="true"><div class="bp-fill" id="boughtProgressFill" style="width:0%"></div></div>
+          <p class="bp-text" id="boughtProgressText"></p>
+        </div>
+        <div class="bought-empty" id="boughtEmpty" hidden>아직 구매 체크한 제품이 없어요.<br />담은 제품 중에서 실제로 산 게 있으면, 전체 목록의 카드나 상세에서 <b>구매 체크</b>를 눌러 보세요. 여기에 따로 모여요.</div>
+        <div id="boughtListWrap"></div>
+        <h3 class="remain-title" id="remainTitle" hidden></h3>
+        <p class="remain-note" id="remainNote" hidden>담아 뒀지만 아직 사지 않은 제품이에요. 매장에서 사면 바로 구매 체크로 옮길 수 있어요.</p>
+        <div id="remainListWrap"></div>
+      </section>
+
+      <section class="dash-page" id="dashView" hidden aria-label="내 기록">
+        <div class="dash-grid">
+          <div class="dash-card"><p class="dk">담은 것</p><p class="dn" id="dashPicked">0<small>개</small></p><p class="ds">사려고 담아 둔 제품이에요</p></div>
+          <div class="dash-card buy"><p class="dk">구매한 것</p><p class="dn" id="dashBought">0<small>개</small></p><p class="ds" id="dashBoughtSub">아직 구매 체크한 게 없어요</p></div>
+          <div class="dash-card del"><p class="dk">삭제한 것</p><p class="dn" id="dashDeleted">0<small>개</small></p><p class="ds">목록에서 지운 제품이에요</p></div>
+        </div>
+        <div class="dash-hist">
+          <h2>최근 이력</h2>
+          <p>담고, 사고, 지운 일을 최근 순서로 보여줘요.</p>
+          <ul class="hist-list" id="histList"></ul>
+          <p class="hist-empty" id="histEmpty" hidden>아직 기록이 없어요.<br />제품을 담거나 구매 체크를 하면 여기에 쌓여요.</p>
+        </div>
+      </section>
 
       <section class="sources">
         <h2>출처 영상</h2>
@@ -7927,10 +8039,18 @@
     var deletedDates = {};
     var restoredSet = {};
     var unsavedSet = {};
+    var bought = {};
+    var boughtDates = {};
+    var boughtNames = {};
+    var unboughtSet = {};
+    var historyLog = [];
     var DELETED_KEY = "jp-shopping-list-deleted-v1";
     var SAVED_KEY = "jp-shopping-list-saved-v1";
     var RESTORED_KEY = "jp-shopping-list-restored-v1";
     var UNSAVED_KEY = "jp-shopping-list-unsaved-v1";
+    var BOUGHT_KEY = "jp-shopping-list-bought-v1";
+    var UNBOUGHT_KEY = "jp-shopping-list-unbought-v1";
+    var HISTORY_KEY = "jp-shopping-list-history-v1";
     var state = { q: "", store: "all", cat: "all", brand: "all", only: false };
     var selectedId = null;
 
@@ -8088,21 +8208,111 @@
         });
       } catch (e) { picked = {}; pickedDates = {}; savedNames = {}; }
     }
+    function saveBought(){
+      try {
+        var arr = Object.keys(bought).filter(function(id){ return picked[id] && !deleted[id]; }).map(function(id){
+          var p = byId(id);
+          var o = { id: id, name: boughtNames[id] || (p ? p.name : id) };
+          if (boughtDates[id]) o.boughtAt = boughtDates[id];
+          return o;
+        });
+        localStorage.setItem(BOUGHT_KEY, JSON.stringify(arr));
+      } catch (e) { /* storage unavailable — purchase checks still work for this session */ }
+    }
+    function loadBought(){
+      bought = {};
+      boughtDates = {};
+      boughtNames = {};
+      try {
+        var raw = localStorage.getItem(BOUGHT_KEY);
+        if (!raw) return;
+        var arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return;
+        arr.forEach(function(entry){
+          var id = typeof entry === "string" ? entry : (entry && entry.id);
+          if (!id) return;
+          bought[id] = true;
+          if (entry && entry.boughtAt) boughtDates[id] = entry.boughtAt;
+          if (entry && entry.name) boughtNames[id] = entry.name;
+        });
+      } catch (e) { bought = {}; boughtDates = {}; boughtNames = {}; }
+    }
+    function historyKey(e){ return (e && e.at ? e.at : "") + "|" + (e && e.type ? e.type : "") + "|" + (e && e.id ? e.id : ""); }
+    function saveHistory(){
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(historyLog)); } catch (e) { /* storage unavailable */ }
+    }
+    function loadHistory(){
+      historyLog = [];
+      try {
+        var arr = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+        if (Array.isArray(arr)) historyLog = arr.filter(function(e){ return e && e.type && e.at; }).slice(0, 300);
+      } catch (e) { historyLog = []; }
+    }
+    function pushHistory(type, id, name){
+      historyLog.unshift({ type: type, id: id, name: name || "", at: new Date().toISOString() });
+      if (historyLog.length > 300) historyLog.length = 300;
+      saveHistory();
+    }
     restoredSet = loadIdSet(RESTORED_KEY);
     unsavedSet = loadIdSet(UNSAVED_KEY);
+    unboughtSet = loadIdSet(UNBOUGHT_KEY);
     loadDeleted();
     loadSaved();
+    loadBought();
+    loadHistory();
+    // a purchase check only counts while the item stays in the picked list
+    Object.keys(bought).forEach(function(id){ if (!picked[id] || deleted[id]) { delete bought[id]; delete boughtDates[id]; } });
+    function clearBought(id){
+      if (!bought[id]) return;
+      delete bought[id];
+      delete boughtDates[id];
+      if (sharedBought[id]) { unboughtSet[id] = true; saveIdSet(UNBOUGHT_KEY, unboughtSet); }
+      saveBought();
+    }
+    function toggleBought(id){
+      var p = byId(id);
+      var nm = p ? p.name : id;
+      if (bought[id]) {
+        clearBought(id);
+        pushHistory("구매취소", id, nm);
+        toast("‘" + nm + "’ 구매 체크를 취소했어요.");
+      } else {
+        if (!picked[id]) {
+          picked[id] = true;
+          pickedDates[id] = new Date().toISOString();
+          if (p) savedNames[id] = p.name;
+          if (unsavedSet[id]) { delete unsavedSet[id]; saveIdSet(UNSAVED_KEY, unsavedSet); }
+          saveSaved();
+          pushHistory("담기", id, nm);
+        }
+        bought[id] = true;
+        boughtDates[id] = new Date().toISOString();
+        if (p) boughtNames[id] = p.name;
+        if (unboughtSet[id]) { delete unboughtSet[id]; saveIdSet(UNBOUGHT_KEY, unboughtSet); }
+        saveBought();
+        pushHistory("구매", id, nm);
+        toast("‘" + nm + "’ 구매 완료로 체크했어요. 구매한 목록에서 볼 수 있어요.");
+      }
+      scheduleServerSync();
+    }
     function togglePick(id){
+      var tp = byId(id);
+      var tnm = tp ? tp.name : id;
       if (picked[id]) {
+        var wasBought = !!bought[id];
         delete picked[id];
         delete pickedDates[id];
         if (sharedSaved[id]) { unsavedSet[id] = true; saveIdSet(UNSAVED_KEY, unsavedSet); }
+        clearBought(id);
+        if (wasBought) pushHistory("구매취소", id, tnm);
+        pushHistory("담기취소", id, tnm);
       } else {
         picked[id] = true;
         pickedDates[id] = new Date().toISOString();
         var p = byId(id);
         if (p) savedNames[id] = p.name;
         if (unsavedSet[id]) { delete unsavedSet[id]; saveIdSet(UNSAVED_KEY, unsavedSet); }
+        pushHistory("담기", id, tnm);
       }
       saveSaved();
       scheduleServerSync();
@@ -8110,6 +8320,10 @@
     function restoreAllDeleted(){
       var dn = Object.keys(deleted).length;
       if (!dn) return;
+      Object.keys(deleted).forEach(function(id){
+        var rp = byId(id);
+        pushHistory("복원", id, deletedNames[id] || (rp ? rp.name : id));
+      });
       Object.keys(sharedDeleted).forEach(function(id){ restoredSet[id] = true; });
       saveIdSet(RESTORED_KEY, restoredSet);
       deleted = {};
@@ -8130,6 +8344,7 @@
       delete deletedDates[id];
       if (sharedDeleted[id]) { restoredSet[id] = true; saveIdSet(RESTORED_KEY, restoredSet); }
       saveDeleted();
+      pushHistory("복원", id, name);
       scheduleServerSync();
       updateCount(); renderChips(); render();
       toast("‘" + name + "’을(를) 복원했어요.");
@@ -8145,7 +8360,7 @@
     }
 
     function rowHTML(p){
-      var h = '<button type="button" class="crow' + (p.id===selectedId ? " selected" : "") + '" id="' + p.id + '" data-select="' + p.id + '" aria-current="' + (p.id===selectedId ? "true" : "false") + '">';
+      var h = '<button type="button" class="crow' + (p.id===selectedId ? " selected" : "") + (bought[p.id] ? " is-bought" : "") + '" id="' + p.id + '" data-select="' + p.id + '" aria-current="' + (p.id===selectedId ? "true" : "false") + '">';
       h += '<span class="th">';
       if (!p.img) h += '<span class="noimg">사진 미확인</span>';
       else h += '<img src="' + p.img + '" alt="" loading="lazy" />';
@@ -8153,8 +8368,11 @@
       h += "</span>";
       h += '<span class="tx"><span class="nm">' + esc(p.name) + '</span>';
       h += '<span class="sub">' + esc(p.place) + (p.price ? ' · <span class="pr">' + esc(p.price) + "</span>" : "") + "</span>";
-      h += '<span class="mrow">' + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + "</span></span></span>";
-      h += '<span class="rowacts"><span class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" role="button" aria-pressed="' + (picked[p.id] ? "true" : "false") + '" title="담기">' + (picked[p.id] ? "담음 ✓" : "담기") + '</span><span class="rowdel" data-rowdel="' + p.id + '" role="button" title="이 제품 삭제">삭제</span></span>';
+      h += '<span class="mrow">' + (bought[p.id] ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + "</span></span></span>";
+      var acts = '<span class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" role="button" aria-pressed="' + (picked[p.id] ? "true" : "false") + '" title="담기">' + (picked[p.id] ? "담음 ✓" : "담기") + "</span>";
+      if (picked[p.id]) acts += '<span class="rowbuy' + (bought[p.id] ? " on" : "") + '" data-rowbuy="' + p.id + '" role="button" aria-pressed="' + (bought[p.id] ? "true" : "false") + '" title="구매 체크">' + (bought[p.id] ? "구매완료 ✓" : "구매 체크") + "</span>";
+      acts += '<span class="rowdel" data-rowdel="' + p.id + '" role="button" title="이 제품 삭제">삭제</span>';
+      h += '<span class="rowacts">' + acts + "</span>";
       h += "</button>";
       return h;
     }
@@ -8184,6 +8402,7 @@
       if (p.srcs) { for (var ji = 0; ji < p.srcs.length; ji++) { var js = p.srcs[ji]; if (js.ts && js.u && js.u.indexOf("youtube.com") >= 0) { jump = js; break; } } }
       if (jump) h += '<a class="jumpbtn" href="' + jump.u + (jump.u.indexOf("?") >= 0 ? "&t=" : "?t=") + jump.ts + 's" target="_blank" rel="noopener">▶ 영상에서 이 상품 바로 보기 <span>' + esc(jump.tl || "") + "부터</span></a>";
       h += '<button class="pickbtn" data-pick="' + p.id + '" aria-pressed="' + (picked[p.id] ? "true" : "false") + '">' + (picked[p.id] ? "담았어요 ✓ — 담은 목록에 있어요" : "이 제품 담기") + "</button>";
+      h += '<button class="buybtn" data-buy="' + p.id + '" aria-pressed="' + (bought[p.id] ? "true" : "false") + '">' + (bought[p.id] ? "구매했어요 ✓ — 구매한 목록에 있어요" : (picked[p.id] ? "구매 완료로 체크하기" : "담고 구매 완료로 체크하기")) + "</button>";
       h += '<button class="delbtn" data-del="' + p.id + '" type="button">이 제품 삭제하기</button>';
       if (picked[p.id]) h += '<p class="delhint">담은 제품은 바로 삭제할 수 없어요. 삭제하려면 먼저 담기를 취소해야 해요.</p>';
       h += '</div></div><div class="dbody">';
@@ -8341,8 +8560,11 @@
     // ---- picked / copy ----
     var pickCount = document.getElementById("pickCount");
     function updateCount(){
-      var n = Object.keys(picked).length;
-      pickCount.innerHTML = "담은 제품 <b>" + n + "</b>개";
+      var n = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
+      var bn = Object.keys(bought).filter(function(id){ return picked[id] && !deleted[id]; }).length;
+      pickCount.innerHTML = "담은 제품 <b>" + n + "</b>개 · 구매 <b>" + bn + "</b>개";
+      var bnc = document.getElementById("boughtNavCount");
+      if (bnc) bnc.textContent = bn + "개";
       var aliveMain = ITEMS.filter(function(p){ return !p.nc && !deleted[p.id]; });
       var aliveDonki = aliveMain.filter(function(p){ return p.store==="donki"; }).length;
       var aliveConv = aliveMain.filter(function(p){ return p.store==="conv"; }).length;
@@ -8372,6 +8594,8 @@
           }).join("");
         }
       }
+      renderBoughtPage();
+      renderDashboard();
       renderSyncPanel();
     }
     var toastEl = document.getElementById("toast"), toastTimer = null;
@@ -8424,10 +8648,14 @@
       var p = byId(pendingDeleteId);
       var name = p ? p.name : "";
       if (modalMode === "picked") {
+        var wasBoughtM = !!bought[pendingDeleteId];
         delete picked[pendingDeleteId];
         delete pickedDates[pendingDeleteId];
         if (sharedSaved[pendingDeleteId]) { unsavedSet[pendingDeleteId] = true; saveIdSet(UNSAVED_KEY, unsavedSet); }
         saveSaved();
+        clearBought(pendingDeleteId);
+        if (wasBoughtM) pushHistory("구매취소", pendingDeleteId, name);
+        pushHistory("담기취소", pendingDeleteId, name);
         scheduleServerSync();
         closeDeleteModal();
         updateCount(); render();
@@ -8438,7 +8666,9 @@
         deletedDates[pendingDeleteId] = new Date().toISOString();
         if (restoredSet[pendingDeleteId]) { delete restoredSet[pendingDeleteId]; saveIdSet(RESTORED_KEY, restoredSet); }
         if (picked[pendingDeleteId]) { delete picked[pendingDeleteId]; delete pickedDates[pendingDeleteId]; saveSaved(); }
+        clearBought(pendingDeleteId);
         saveDeleted();
+        pushHistory("삭제", pendingDeleteId, name);
         scheduleServerSync();
         if (selectedId === pendingDeleteId) selectedId = null;
         closeDeleteModal();
@@ -8484,6 +8714,38 @@
       else fallback();
     });
 
+    var backBtnEl = document.getElementById("backToCatalogBtn");
+    if (backBtnEl) backBtnEl.addEventListener("click", function(){ setView("catalog"); });
+    var copyBoughtBtnEl = document.getElementById("copyBoughtBtn");
+    if (copyBoughtBtnEl) copyBoughtBtnEl.addEventListener("click", function(){
+      var sel = boughtItems();
+      if (!sel.length) { toast("아직 구매 체크한 제품이 없어요."); return; }
+      var lines = ["일본 쇼핑리스트 — 구매한 목록 (" + sel.length + "개)", ""];
+      ["donki","conv"].forEach(function(st){
+        var group = sel.filter(function(p){ return p.store===st; });
+        if (!group.length) return;
+        lines.push("[" + storeName(st) + "]");
+        var lastCat = null;
+        group.forEach(function(p){
+          if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
+          lines.push("  - " + p.name + (p.price ? " (" + p.price + ")" : ""));
+        });
+        lines.push("");
+      });
+      var text = lines.join("\n");
+      function done(){ toast("구매한 목록 " + sel.length + "개를 복사했어요."); }
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); }
+        catch (e) { toast("복사에 실패했어요. 브라우저 권한을 확인해 주세요."); }
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    });
+
     document.getElementById("copyBtn").addEventListener("click", function(){
       var sel = ITEMS.filter(function(p){ return picked[p.id] && !deleted[p.id]; });
       if (!sel.length) { toast("먼저 제품을 담아 주세요."); return; }
@@ -8495,7 +8757,7 @@
         var lastCat = null;
         group.forEach(function(p){
           if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
-          lines.push("  - " + p.name + (p.price ? " (" + p.price + ")" : ""));
+          lines.push("  - " + p.name + (p.price ? " (" + p.price + ")" : "") + (bought[p.id] ? " ✓ 구매완료" : ""));
         });
         lines.push("");
       });
@@ -8606,7 +8868,8 @@
       // Merge this browser's state with my server state (deleted wins).
       apiStatus = "unknown";
       sharedStatus = "loading";
-      sharedDeleted = {}; sharedSaved = {};
+      sharedDeleted = {}; sharedSaved = {}; sharedBought = {};
+      sharedHistoryKeys = []; sharedHistoryKeySet = {};
       serverDeletedCount = 0; serverSavedCount = 0;
       loadSharedState();
     }
@@ -8717,6 +8980,10 @@
     var sharedUpdatedAt = null;
     var sharedDeleted = {};
     var sharedSaved = {};
+    var sharedBought = {};
+    var sharedBoughtDates = {};
+    var sharedHistoryKeys = [];
+    var sharedHistoryKeySet = {};
     var sharedDeletedDates = {};
     var sharedSavedDates = {};
     var apiStatus = "unknown"; // "unknown" | "ok" | "noapi"
@@ -8764,12 +9031,46 @@
           if (entry && entry.savedAt) pickedDates[id] = entry.savedAt;
         }
       });
+      var bArr = Array.isArray(data.bought) ? data.bought : [];
+      bArr.forEach(function(entry){
+        var id = typeof entry === "string" ? entry : (entry && entry.id);
+        if (!id) return;
+        sharedBought[id] = true;
+        if (entry && entry.boughtAt) sharedBoughtDates[id] = entry.boughtAt;
+        var p = byId(id);
+        if (entry && entry.name) boughtNames[id] = entry.name;
+        else if (p && !boughtNames[id]) boughtNames[id] = p.name;
+        if (deleted[id] || unboughtSet[id] || !picked[id]) return;
+        if (!bought[id]) {
+          bought[id] = true;
+          if (entry && entry.boughtAt) boughtDates[id] = entry.boughtAt;
+        }
+      });
       // a deleted product never stays in the saved list
       Object.keys(picked).forEach(function(id){
         if (deleted[id]) { delete picked[id]; delete pickedDates[id]; }
       });
+      // a purchase check only counts while the item stays picked
+      Object.keys(bought).forEach(function(id){
+        if (deleted[id] || !picked[id]) { delete bought[id]; delete boughtDates[id]; }
+      });
+      // merge the shared history with this browser's (newest first)
+      var hArr = Array.isArray(data.history) ? data.history : [];
+      sharedHistoryKeys = hArr.map(historyKey);
+      sharedHistoryKeySet = {};
+      sharedHistoryKeys.forEach(function(k){ sharedHistoryKeySet[k] = true; });
+      var localKeys = {};
+      historyLog.forEach(function(e){ localKeys[historyKey(e)] = true; });
+      hArr.forEach(function(e){
+        if (!e || !e.type || !e.at) return;
+        if (!localKeys[historyKey(e)]) historyLog.push({ type: e.type, id: e.id || "", name: e.name || "", at: e.at });
+      });
+      historyLog.sort(function(a, b){ return a.at < b.at ? 1 : a.at > b.at ? -1 : 0; });
+      if (historyLog.length > 300) historyLog.length = 300;
+      saveHistory();
       saveDeleted();
       saveSaved();
+      saveBought();
       updateCount(); renderChips(); render();
     }
     function loadFileStateFallback(){
@@ -8820,7 +9121,13 @@
         var p = byId(id);
         return { id: id, name: savedNames[id] || (p ? p.name : id) };
       });
-      return { version: 1, deleted: del, saved: sav };
+      var buySet = {};
+      Object.keys(bought).forEach(function(id){ if (!deleted[id] && picked[id]) buySet[id] = true; });
+      var buy = orderedIds(buySet).map(function(id){
+        var p = byId(id);
+        return { id: id, name: boughtNames[id] || (p ? p.name : id) };
+      });
+      return { version: 1, deleted: del, saved: sav, bought: buy, history: historyLog };
     }
     function serverStateMatchesLocal(){
       var dIds = Object.keys(deleted);
@@ -8829,6 +9136,11 @@
       if (sIds.length !== Object.keys(sharedSaved).length) return false;
       for (var i = 0; i < dIds.length; i++) if (!sharedDeleted[dIds[i]]) return false;
       for (var j = 0; j < sIds.length; j++) if (!sharedSaved[sIds[j]]) return false;
+      var bIds = Object.keys(bought).filter(function(id){ return !deleted[id] && picked[id]; });
+      if (bIds.length !== Object.keys(sharedBought).length) return false;
+      for (var k = 0; k < bIds.length; k++) if (!sharedBought[bIds[k]]) return false;
+      if (historyLog.length !== sharedHistoryKeys.length) return false;
+      for (var m = 0; m < historyLog.length; m++) if (!sharedHistoryKeySet[historyKey(historyLog[m])]) return false;
       return true;
     }
     function scheduleServerSync(){
@@ -8862,9 +9174,13 @@
         serverDeletedCount = payload.deleted.length;
         serverSavedCount = payload.saved.length;
         // The server now mirrors the merged local state.
-        sharedDeleted = {}; sharedSaved = {};
+        sharedDeleted = {}; sharedSaved = {}; sharedBought = {};
         payload.deleted.forEach(function(e){ sharedDeleted[e.id] = true; });
         payload.saved.forEach(function(e){ sharedSaved[e.id] = true; });
+        payload.bought.forEach(function(e){ sharedBought[e.id] = true; });
+        sharedHistoryKeys = payload.history.map(historyKey);
+        sharedHistoryKeySet = {};
+        sharedHistoryKeys.forEach(function(k){ sharedHistoryKeySet[k] = true; });
         renderSyncPanel();
       }).catch(function(){
         postState = "failed";
@@ -8894,6 +9210,7 @@
       var st = document.getElementById("syncStatus");
       var delN = Object.keys(deleted).length;
       var savN = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
+      var buyN = Object.keys(bought).filter(function(id){ return !deleted[id] && picked[id]; }).length;
       if (st) st.textContent = "· " + syncStatusText();
       var lp = document.getElementById("syncLoginPrompt");
       if (lp) lp.hidden = isLoggedIn();
@@ -8906,7 +9223,7 @@
       } else {
         sum.textContent = "내 목록을 불러오는 중이에요…";
       }
-      var parts = ["담은 것 " + savN + "개 · 삭제한 것 " + delN + "개"];
+      var parts = ["담은 것 " + savN + "개 · 구매한 것 " + buyN + "개 · 삭제한 것 " + delN + "개"];
       if (!isLoggedIn()) {
         parts.push("로그인하면 다른 기기에서도 이 목록을 그대로 볼 수 있어요.");
       }
@@ -8917,6 +9234,135 @@
       }
       if (det) det.textContent = parts.join(" ");
     }
+    // ---- purchased page + dashboard + view switching ----
+    var currentView = "catalog";
+    function boughtItems(){ return ITEMS.filter(function(p){ return picked[p.id] && bought[p.id] && !deleted[p.id]; }); }
+    function remainingItems(){ return ITEMS.filter(function(p){ return picked[p.id] && !bought[p.id] && !deleted[p.id]; }); }
+    function fmtDate(iso){
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
+    }
+    function browHTML(p, isBought){
+      var h = '<div class="brow"><span class="th">';
+      if (!p.img) h += '<span class="noimg">사진 미확인</span>';
+      else h += '<img src="' + p.img + '" alt="" loading="lazy" />';
+      h += '</span><span class="tx"><span class="nm">' + esc(p.name) + "</span>";
+      h += '<span class="sub">' + esc(storeName(p.store)) + " · " + esc(p.cat || "") + (p.price ? " · " + esc(p.price) : "") + "</span>";
+      if (isBought && boughtDates[p.id]) h += '<span class="sub buydate">구매 체크한 날: ' + esc(fmtDate(boughtDates[p.id])) + "</span>";
+      h += '</span><span class="browacts">';
+      h += '<button type="button" class="btn browbtn' + (isBought ? "" : " buy") + '" data-buytoggle="' + p.id + '">' + (isBought ? "구매 취소" : "구매 체크") + "</button>";
+      h += '<button type="button" class="btn browbtn" data-goto="' + p.id + '">상세 보기</button>';
+      h += "</span></div>";
+      return h;
+    }
+    function browGroupHTML(items, isBought){
+      var h = "";
+      ["donki", "conv"].forEach(function(st){
+        var group = items.filter(function(p){ return p.store === st; });
+        if (!group.length) return;
+        h += '<div class="bought-group"><h3>' + (st === "donki" ? "돈키호테" : "일본 편의점") + ' <span class="n">' + group.length + "개</span></h3>";
+        h += '<div class="brows">' + group.map(function(p){ return browHTML(p, isBought); }).join("") + "</div></div>";
+      });
+      return h;
+    }
+    function renderBoughtPage(){
+      var wrap = document.getElementById("boughtListWrap");
+      if (!wrap) return;
+      var bItems = boughtItems();
+      var rItems = remainingItems();
+      var total = bItems.length + rItems.length;
+      var hc = document.getElementById("boughtHeadCount");
+      if (hc) hc.textContent = bItems.length ? bItems.length + "개" : "";
+      var sum = document.getElementById("boughtSummary");
+      if (sum) {
+        if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담아 보세요.";
+        else if (!bItems.length) sum.textContent = "담은 " + total + "개 중 아직 구매한 게 없어요. 실제로 산 제품은 전체 목록의 카드나 상세에서 구매 체크로 표시해 보세요.";
+        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했어요." + (rItems.length ? " 아직 " + rItems.length + "개가 남았어요." : " 담은 건 전부 샀어요.");
+      }
+      var pct = total ? Math.round(bItems.length / total * 100) : 0;
+      var fill = document.getElementById("boughtProgressFill");
+      if (fill) fill.style.width = pct + "%";
+      var pt = document.getElementById("boughtProgressText");
+      if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
+      var empty = document.getElementById("boughtEmpty");
+      if (empty) empty.hidden = bItems.length > 0;
+      wrap.innerHTML = browGroupHTML(bItems, true);
+      var rt = document.getElementById("remainTitle");
+      var rn = document.getElementById("remainNote");
+      var rw = document.getElementById("remainListWrap");
+      if (rt) { rt.hidden = !rItems.length; rt.textContent = rItems.length ? "아직 안 산 담은 것 " + rItems.length + "개" : ""; }
+      if (rn) rn.hidden = !rItems.length;
+      if (rw) rw.innerHTML = browGroupHTML(rItems, false);
+    }
+    function fmtHistoryTime(iso){
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return "";
+      var hh = String(d.getHours()); if (hh.length < 2) hh = "0" + hh;
+      var mm = String(d.getMinutes()); if (mm.length < 2) mm = "0" + mm;
+      return (d.getMonth() + 1) + "월 " + d.getDate() + "일 " + hh + ":" + mm;
+    }
+    function eulReul(name){
+      if (!name) return "을";
+      var c = name.charCodeAt(name.length - 1);
+      if (c >= 0xAC00 && c <= 0xD7A3) return ((c - 0xAC00) % 28) ? "을" : "를";
+      return "을";
+    }
+    function historySentence(e){
+      var n = e.name || "제품";
+      if (e.type === "담기") return n + eulReul(n) + " 담았어요";
+      if (e.type === "담기취소") return n + " 담기를 취소했어요";
+      if (e.type === "삭제") return n + eulReul(n) + " 삭제했어요";
+      if (e.type === "복원") return n + eulReul(n) + " 다시 목록에 넣었어요";
+      if (e.type === "구매") return n + eulReul(n) + " 구매했어요";
+      if (e.type === "구매취소") return n + " 구매 체크를 취소했어요";
+      return n + " · " + e.type;
+    }
+    function renderDashboard(){
+      var dp = document.getElementById("dashPicked");
+      if (!dp) return;
+      var savN = Object.keys(picked).filter(function(id){ return !deleted[id]; }).length;
+      var buyN = Object.keys(bought).filter(function(id){ return !deleted[id] && picked[id]; }).length;
+      var delN = Object.keys(deleted).length;
+      dp.innerHTML = savN + "<small>개</small>";
+      var db = document.getElementById("dashBought");
+      if (db) db.innerHTML = buyN + "<small>개</small>";
+      var dd = document.getElementById("dashDeleted");
+      if (dd) dd.innerHTML = delN + "<small>개</small>";
+      var ds = document.getElementById("dashBoughtSub");
+      if (ds) ds.textContent = savN ? ("담은 것 중 " + buyN + "개 샀어요 · 아직 " + (savN - buyN) + "개 남았어요") : "아직 구매 체크한 게 없어요";
+      var hl = document.getElementById("histList");
+      var he = document.getElementById("histEmpty");
+      if (hl) {
+        hl.innerHTML = historyLog.slice(0, 30).map(function(e){
+          var cls = (e.type === "구매" || e.type === "구매취소") ? " buy" : (e.type === "삭제" ? " del" : "");
+          return '<li><span class="hist-chip' + cls + '">' + esc(e.type) + '</span><span class="hist-text">' + esc(historySentence(e)) + '</span><span class="hist-time">' + esc(fmtHistoryTime(e.at)) + "</span></li>";
+        }).join("");
+      }
+      if (he) he.hidden = historyLog.length > 0;
+    }
+    function setView(v){
+      currentView = v;
+      document.querySelectorAll("[data-viewtab]").forEach(function(b){
+        b.setAttribute("aria-pressed", b.getAttribute("data-viewtab") === v ? "true" : "false");
+      });
+      var bv = document.getElementById("boughtView");
+      if (bv) bv.hidden = v !== "bought";
+      var dv = document.getElementById("dashView");
+      if (dv) dv.hidden = v !== "dashboard";
+      var isCat = v === "catalog";
+      [".notice", ".toolbar", ".flow", ".sources", ".fineprint"].forEach(function(sel){
+        var el = document.querySelector(sel);
+        if (el) el.classList.toggle("view-hidden", !isCat);
+      });
+      var sp = document.getElementById("syncPanel");
+      if (sp) sp.classList.toggle("view-hidden", !isCat);
+      var delp = document.getElementById("deletedPanel");
+      if (delp) delp.classList.toggle("view-hidden", !isCat);
+      if (v === "bought") renderBoughtPage();
+      if (v === "dashboard") renderDashboard();
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
+    }
     loadSharedState();
 
     // ---- events ----
@@ -8926,6 +9372,29 @@
       if (ro) {
         e.stopPropagation();
         restoreOneDeleted(ro.getAttribute("data-restore-one"));
+        return;
+      }
+      var vt = t.closest ? t.closest("[data-viewtab]") : null;
+      if (vt) {
+        setView(vt.getAttribute("data-viewtab"));
+        return;
+      }
+      var bt = t.closest ? t.closest("[data-buytoggle]") : null;
+      if (bt) {
+        toggleBought(bt.getAttribute("data-buytoggle"));
+        updateCount(); render();
+        return;
+      }
+      var gt = t.closest ? t.closest("[data-goto]") : null;
+      if (gt) {
+        state.q = ""; document.getElementById("q").value = "";
+        state.store = "all"; state.cat = "all"; state.brand = "all"; state.only = false;
+        document.getElementById("onlyPicked").setAttribute("aria-pressed", "false");
+        selectedId = gt.getAttribute("data-goto");
+        setView("catalog");
+        renderChips(); render();
+        var gel = document.getElementById(selectedId);
+        if (gel) gel.scrollIntoView({ block: "center", behavior: scrollBehavior() });
         return;
       }
       var rd = t.closest ? t.closest("[data-rowdel]") : null;
@@ -8946,9 +9415,22 @@
         updateCount(); render();
         return;
       }
+      var rby = t.closest ? t.closest("[data-rowbuy]") : null;
+      if (rby) {
+        e.stopPropagation();
+        toggleBought(rby.getAttribute("data-rowbuy"));
+        updateCount(); render();
+        return;
+      }
       var pk = t.closest ? t.closest("[data-pick]") : null;
       if (pk) {
         togglePick(pk.getAttribute("data-pick"));
+        updateCount(); render();
+        return;
+      }
+      var by = t.closest ? t.closest("[data-buy]") : null;
+      if (by) {
+        toggleBought(by.getAttribute("data-buy"));
         updateCount(); render();
         return;
       }
