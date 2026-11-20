@@ -19,7 +19,10 @@ function defaultState() {
     saved: [],
     // Purchased items: snapshots { id, name, price?, image?, store?, purchasedDate? }
     // so the separate purchased page can render them without the catalog.
+    // The page sends/reads this list under the name `bought`; the API keeps
+    // both names in sync (same array) so either name works.
     purchased: [],
+    bought: [],
     // Activity history: { type, id, name, at } where type is a short action
     // name such as saved / unsaved / deleted / restored / purchased / unpurchased.
     // Newest entries are at the end; the server keeps the newest 500.
@@ -33,9 +36,17 @@ function normalizeHistoryEntry(e) {
 }
 
 function normalizePurchasedEntry(e) {
-  const out = { id: e.id, name: e.name };
+  // Accept a plain id string as well as { id, name, ... }.
+  if (typeof e === 'string') return { id: e, name: e };
+  const out = { id: e.id, name: typeof e.name === 'string' && e.name ? e.name : e.id };
   for (const k of ['price', 'image', 'store', 'purchasedDate']) {
     if (typeof e[k] === 'string' && e[k]) out[k] = e[k];
+  }
+  // The page may carry the purchase date under another field name.
+  if (!out.purchasedDate) {
+    for (const k of ['date', 'boughtAt', 'purchasedAt']) {
+      if (typeof e[k] === 'string' && e[k]) { out.purchasedDate = e[k]; break; }
+    }
   }
   return out;
 }
@@ -43,18 +54,25 @@ function normalizePurchasedEntry(e) {
 function isValidState(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return false;
   if (!Array.isArray(body.deleted) || !Array.isArray(body.saved)) return false;
-  // purchased is optional for old clients; when present it must be an array.
+  // purchased / bought are optional for old clients; when present each must
+  // be an array. Entries may be plain id strings or { id, name, ... }.
   if (body.purchased !== undefined && !Array.isArray(body.purchased)) return false;
+  if (body.bought !== undefined && !Array.isArray(body.bought)) return false;
   // history is optional for old clients; when present it must be an array.
   // Validation is intentionally loose on the action type so the page can
   // add new action names without breaking sync.
   if (body.history !== undefined && !Array.isArray(body.history)) return false;
   const okEntry = (e) =>
     e && typeof e === 'object' && typeof e.id === 'string' && typeof e.name === 'string';
+  const okPurchasedEntry = (e) =>
+    typeof e === 'string' ||
+    (e && typeof e === 'object' && typeof e.id === 'string');
   const okHistoryEntry = (e) =>
     e && typeof e === 'object' && typeof e.type === 'string' && typeof e.id === 'string' &&
     typeof e.name === 'string' && typeof e.at === 'string';
-  const purchasedOk = !Array.isArray(body.purchased) || body.purchased.every(okEntry);
+  const purchasedOk =
+    (!Array.isArray(body.purchased) || body.purchased.every(okPurchasedEntry)) &&
+    (!Array.isArray(body.bought) || body.bought.every(okPurchasedEntry));
   const historyOk = !Array.isArray(body.history) || body.history.every(okHistoryEntry);
   return body.deleted.every(okEntry) && body.saved.every(okEntry) && purchasedOk && historyOk;
 }
@@ -125,7 +143,11 @@ export default async function handler(req, res) {
       return res.status(200).json({ ...fresh, _source: 'default' });
     }
     // Merge over defaults so old stored states gain the purchased field.
-    return res.status(200).json({ ...defaultState(), ...state, _source: 'blob' });
+    // Keep both purchased/bought names in sync in every response.
+    const merged = { ...defaultState(), ...state };
+    merged.purchased = Array.isArray(merged.purchased) ? merged.purchased : [];
+    merged.bought = merged.purchased;
+    return res.status(200).json({ ...merged, _source: 'blob' });
   }
 
   if (req.method === 'POST') {
@@ -141,13 +163,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'invalid state shape' });
     }
     // Old clients may post without purchased/history; keep the stored lists then.
+    // The page sends the purchased list as `bought`; union both names by id.
     let purchased = [];
     let history = [];
-    if (Array.isArray(body.purchased)) {
-      purchased = body.purchased;
+    const incomingPurchased = [];
+    if (Array.isArray(body.purchased)) incomingPurchased.push(...body.purchased);
+    if (Array.isArray(body.bought)) incomingPurchased.push(...body.bought);
+    if (incomingPurchased.length) {
+      const seen = new Set();
+      purchased = incomingPurchased
+        .map(normalizePurchasedEntry)
+        .filter((p) => {
+          if (seen.has(p.id)) return false;
+          seen.add(p.id);
+          return true;
+        })
+        .slice(0, 1000);
     } else {
       const existing = await readState(blobPath);
       if (existing && Array.isArray(existing.purchased)) purchased = existing.purchased;
+      else if (existing && Array.isArray(existing.bought)) purchased = existing.bought;
     }
     if (Array.isArray(body.history)) {
       history = body.history;
@@ -160,7 +195,8 @@ export default async function handler(req, res) {
       updatedAt: new Date().toISOString(),
       deleted: body.deleted.slice(0, 1000),
       saved: body.saved.slice(0, 1000),
-      purchased: purchased.slice(0, 1000).map(normalizePurchasedEntry),
+      purchased,
+      bought: purchased,
       // Keep only the newest 500 history entries.
       history: history.slice(-500).map(normalizeHistoryEntry),
     };
