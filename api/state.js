@@ -17,15 +17,29 @@ function defaultState() {
     updatedAt: new Date().toISOString(),
     deleted: [],
     saved: [],
+    // Purchased items: snapshots { id, name, price?, image?, store?, purchasedDate? }
+    // so the separate purchased page can render them without the catalog.
+    purchased: [],
   };
+}
+
+function normalizePurchasedEntry(e) {
+  const out = { id: e.id, name: e.name };
+  for (const k of ['price', 'image', 'store', 'purchasedDate']) {
+    if (typeof e[k] === 'string' && e[k]) out[k] = e[k];
+  }
+  return out;
 }
 
 function isValidState(body) {
   if (!body || typeof body !== 'object' || Array.isArray(body)) return false;
   if (!Array.isArray(body.deleted) || !Array.isArray(body.saved)) return false;
+  // purchased is optional for old clients; when present it must be an array.
+  if (body.purchased !== undefined && !Array.isArray(body.purchased)) return false;
   const okEntry = (e) =>
     e && typeof e === 'object' && typeof e.id === 'string' && typeof e.name === 'string';
-  return body.deleted.every(okEntry) && body.saved.every(okEntry);
+  const purchasedOk = !Array.isArray(body.purchased) || body.purchased.every(okEntry);
+  return body.deleted.every(okEntry) && body.saved.every(okEntry) && purchasedOk;
 }
 
 // Verify a Google ID token and return the user's opaque subject id (sub),
@@ -93,7 +107,8 @@ export default async function handler(req, res) {
       const fresh = defaultState();
       return res.status(200).json({ ...fresh, _source: 'default' });
     }
-    return res.status(200).json({ ...state, _source: 'blob' });
+    // Merge over defaults so old stored states gain the purchased field.
+    return res.status(200).json({ ...defaultState(), ...state, _source: 'blob' });
   }
 
   if (req.method === 'POST') {
@@ -108,11 +123,20 @@ export default async function handler(req, res) {
     if (!isValidState(body)) {
       return res.status(400).json({ error: 'invalid state shape' });
     }
+    // Old clients may post without purchased; keep the stored list then.
+    let purchased = [];
+    if (Array.isArray(body.purchased)) {
+      purchased = body.purchased;
+    } else {
+      const existing = await readState(blobPath);
+      if (existing && Array.isArray(existing.purchased)) purchased = existing.purchased;
+    }
     const state = {
       version: 1,
       updatedAt: new Date().toISOString(),
       deleted: body.deleted.slice(0, 1000),
       saved: body.saved.slice(0, 1000),
+      purchased: purchased.slice(0, 1000).map(normalizePurchasedEntry),
     };
     try {
       await put(blobPath, JSON.stringify(state), {
