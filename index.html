@@ -403,6 +403,20 @@
       .bwrap{display:flex;flex-direction:column;gap:7px}
       .bdetail .detail{margin:2px 0 6px}
       .browbtn.pickoff{border-color:var(--line);color:var(--ink2)}
+      /* ---- reference info page (sources + methodology, off the main list) ---- */
+      .info-page{margin:18px 0 2px}
+      .info-page[hidden]{display:none}
+      .info-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .info-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+      .info-head h2{font-size:21px;margin:0 0 4px;font-weight:800}
+      .info-head h2 span{color:var(--ink3);font-size:15px;font-weight:700;margin-left:4px}
+      .info-head p{margin:0;color:var(--ink2);font-size:14px;line-height:1.55;max-width:42em}
+      .info-actions{display:flex;gap:8px;flex-wrap:wrap;flex:none}
+      .info-page .sources{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px 20px 14px}
+      .info-page .sources h2{font-size:19px}
+      .info-page .fineprint{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px}
+      .info-page .fineprint h2{font-size:17px;color:var(--ink);margin:0 0 8px}
+      @media (max-width:640px){.info-head{flex-direction:column}.info-actions{width:100%}.info-actions .btn{flex:1;justify-content:center}}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -495,6 +509,7 @@
         <button class="viewtab pick" type="button" data-viewtab="picked" aria-pressed="false">담은 목록<span class="vn" id="pickedNavCount">0개</span></button>
         <button class="viewtab buy" type="button" data-viewtab="bought" aria-pressed="false">구매한 목록<span class="vn" id="boughtNavCount">0개</span></button>
         <button class="viewtab" type="button" data-viewtab="dashboard" aria-pressed="false">내 기록</button>
+        <button class="viewtab" type="button" data-viewtab="info" aria-pressed="false">참고 정보</button>
       </nav>
       <div class="notice" role="note">
         <h2>사기 전에 꼭 확인 — 반입·현지 섭취 주의</h2>
@@ -625,6 +640,18 @@
         </div>
       </section>
 
+      <section class="info-page" id="infoView" hidden aria-label="참고 정보 — 출처와 조사 방법">
+        <div class="info-card">
+          <div class="info-head">
+            <div>
+              <h2>참고 정보 <span>출처 · 조사 방법</span></h2>
+              <p>평소 쇼핑할 때는 안 봐도 되는 자료예요. 어떤 영상에서 근거를 가져왔는지, 조사할 때 어떤 기준으로 골랐고 어떤 한계가 있는지 모아뒀어요. 제품별 근거 영상은 각 제품 상세에서도 바로 볼 수 있어요.</p>
+            </div>
+            <div class="info-actions">
+              <button class="btn primary" id="backFromInfoBtn" type="button">전체 목록 보기</button>
+            </div>
+          </div>
+        </div>
       <section class="sources">
         <h2>출처 영상</h2>
         <p>제품별 근거는 각 제품 상세에도 링크했어요. 등장 시점이 확인된 영상은 상세에서 ‘▶ 바로 보기’로 그 상품이 나오는 구간부터 열립니다. 돈키호테는 영상 42개(V번호), 편의점은 영상 35개를 교차 확인했습니다.</p>
@@ -670,6 +697,7 @@
           <li>조사일: 2026년 11월 8일. 가격과 반입 규정은 바뀔 수 있으니 출발 전에 최신 안내를 다시 확인하세요.</li>
         </ul>
       </div>
+      </section>
       </div>
     </div>
     <div class="modal-backdrop" id="deleteModal" hidden>
@@ -8766,6 +8794,8 @@
     if (backBtnEl) backBtnEl.addEventListener("click", function(){ setView("catalog"); });
     var backPickedBtnEl = document.getElementById("backFromPickedBtn");
     if (backPickedBtnEl) backPickedBtnEl.addEventListener("click", function(){ setView("catalog"); });
+    var backInfoBtnEl = document.getElementById("backFromInfoBtn");
+    if (backInfoBtnEl) backInfoBtnEl.addEventListener("click", function(){ setView("catalog"); });
     var copyPickedBtnEl = document.getElementById("copyPickedBtn");
     if (copyPickedBtnEl) copyPickedBtnEl.addEventListener("click", function(){
       var cb = document.getElementById("copyBtn");
@@ -9448,8 +9478,10 @@
       if (bv) bv.hidden = v !== "bought";
       var dv = document.getElementById("dashView");
       if (dv) dv.hidden = v !== "dashboard";
+      var iv = document.getElementById("infoView");
+      if (iv) iv.hidden = v !== "info";
       var isCat = v === "catalog";
-      [".notice", ".toolbar", ".flow", ".sources", ".fineprint"].forEach(function(sel){
+      [".notice", ".toolbar", ".flow"].forEach(function(sel){
         var el = document.querySelector(sel);
         if (el) el.classList.toggle("view-hidden", !isCat);
       });
