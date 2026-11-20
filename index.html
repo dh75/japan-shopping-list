@@ -428,17 +428,17 @@
       body.is-authed .auth-bar{padding:10px 14px}
       body.is-authed .auth-info span{display:none}
       body.is-authed .auth-info strong{font-size:14.5px;margin:0}
-      .toolbar{position:sticky;top:0;z-index:40;background:var(--bg);padding-top:10px}
+      .toolbar{position:static;background:var(--bg);padding-top:10px}
       .toolbar select{font:inherit;font-size:14px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;max-width:100%}
       .toolbar .lbl{font-size:13px;color:var(--ink2);font-weight:700}
       .toolbar-note{margin:8px 0 0;font-size:13px;color:var(--ink2);line-height:1.55}
-      .btn[disabled]{opacity:.45;cursor:not-allowed}
+      .btn[disabled]{opacity:1;background:var(--surface2);color:var(--ink2);border-color:var(--line);font-weight:600;cursor:not-allowed}
       .btn.danger-outline{border-color:var(--accent);color:var(--accent-ink)}
       details.notice-details{margin:20px 0 6px}
       details.notice-details summary{cursor:pointer;font-weight:800;font-size:15.5px;background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:12px;padding:13px 16px;list-style:none}
       details.notice-details summary::-webkit-details-marker{display:none}
       details.notice-details .notice{margin-top:8px}
-      .crow{display:flex;gap:11px;align-items:stretch;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;scroll-margin-top:150px;text-align:left}
+      .crow{display:flex;gap:11px;align-items:stretch;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;scroll-margin-top:16px;text-align:left}
       .crow.selected{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
       .crow-main{flex:1;min-width:0;display:flex;gap:11px;align-items:center;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
       .crow-main:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
@@ -457,6 +457,7 @@
       .dangerzone p{font-size:13px;color:var(--ink3);margin:0 0 8px;line-height:1.55}
       .toplink{display:inline-flex;margin-top:10px;font-size:13.5px;font-weight:700}
       .floatbtns{position:fixed;right:16px;bottom:16px;z-index:55;display:flex;flex-direction:column;gap:8px}
+      .floatbtns[hidden]{display:none !important}
       .floatbtns button{border:1px solid var(--line);background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 16px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
       .floatbtns button.sub{background:var(--surface);color:var(--ink)}
       .list-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
@@ -494,6 +495,51 @@
       .print-area{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin:18px 0}
       .print-area.show{display:block}
       .help-list{font-size:14.5px;line-height:1.7;color:var(--ink2);margin:0;padding-left:19px}
+
+      /* ==== mobile fix pass: collapsible filters, single-column stacks, no sideways scroll ==== */
+      /* the toolbar no longer sticks: only the search field stays at the top of the
+         catalog, and on narrow screens everything else folds away behind one toggle */
+      .filter-toggle{display:none}
+      .chip{max-width:100%;white-space:normal;word-break:keep-all;overflow-wrap:anywhere;text-align:left;line-height:1.4}
+      .chips,.storetabs,.toolbar .row{max-width:100%}
+      .dsrc a{overflow-wrap:anywhere}
+      body{overflow-x:clip}
+      @media (max-width:760px){
+        .filter-toggle{display:inline-flex;margin:0 0 10px}
+        .toolbar.filters-closed .row .btn,
+        .toolbar.filters-closed .row select,
+        .toolbar.filters-closed .row .lbl,
+        .toolbar.filters-closed .row .count,
+        .toolbar.filters-closed .storetabs,
+        .toolbar.filters-closed .chips,
+        .toolbar.filters-closed .toolbar-note{display:none}
+        .toolbar .row .count{margin-left:0}
+        /* NEW section + catalog rows and the TOP 10 list go single column */
+        .rows{grid-template-columns:1fr}
+        .top10 ol{grid-template-columns:1fr}
+        .top10 .t10name{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4}
+        .top10 a{flex-wrap:wrap}
+        /* product detail info table stacks into one column */
+        .dgrid{grid-template-columns:1fr}
+        /* dashboard summary cards stack into one column */
+        .dash-grid{grid-template-columns:1fr}
+        .dash-card .ds{font-size:12.5px}
+        /* glossary cards stack into one column */
+        .glossary{grid-template-columns:1fr}
+        /* picked / bought rows: actions move under the text as big, well-spaced buttons,
+           with the un-pick button set apart from the buy check */
+        .brow{flex-wrap:wrap}
+        .browacts{width:100%;flex-direction:column;gap:8px;margin-top:2px}
+        .browbtn{min-height:46px;font-size:14px;padding:11px 14px}
+        .browbtn.pickoff{margin-top:14px}
+        /* floating buttons shrink into a small row in the corner, clear of card buttons */
+        .floatbtns{right:10px;bottom:calc(10px + env(safe-area-inset-bottom));flex-direction:row;gap:6px}
+        .floatbtns button{padding:8px 12px;font-size:12.5px;opacity:.96}
+      }
+      @media (min-width:761px){
+        .browbtn{min-height:42px;font-size:13px;padding:9px 13px}
+        .browbtn.pickoff{margin-top:12px}
+      }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -608,7 +654,8 @@
         </ul>
       </div></details>
 
-      <div class="toolbar">
+      <div class="toolbar" id="toolbar">
+        <button class="btn filter-toggle" id="filterToggle" type="button" aria-expanded="true">필터·정렬 접기</button>
         <div class="row">
           <label class="search">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg>
@@ -870,7 +917,7 @@
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
         <h3 id="helpTitle">도움말 — 이렇게 쓰세요</h3>
         <ul class="help-list">
-          <li><b>찾기:</b> 위쪽 검색·필터 바는 스크롤해도 계속 보여요. ‘필터 초기화’를 누르면 한 번에 처음 상태로 돌아가요.</li>
+          <li><b>찾기:</b> 위쪽 검색창으로 제품을 찾고, 좁은 화면에서는 ‘필터·정렬 펼치기’ 버튼을 눌러 가게·카테고리·정렬을 열 수 있어요. ‘필터 초기화’를 누르면 한 번에 처음 상태로 돌아가요.</li>
           <li><b>담기·구매:</b> 카드의 ‘담기’로 담고, 산 뒤에는 ‘구매 체크’를 눌러요. 구매한 것만 ‘구매한 목록’ 탭에 모여요.</li>
           <li><b>삭제:</b> 카드에는 삭제 버튼이 없어요. 제품 상세를 열고 맨 아래 ‘삭제’ 영역에서만 지울 수 있고, 지운 건 카탈로그 위 ‘삭제한 상품’에서 복원할 수 있어요.</li>
           <li><b>가격:</b> ‘가격 미확인’은 조사에서 가격을 못 찾은 경우예요. 예상 총액은 가격을 아는 제품만 더한 값이라 실제보다 적을 수 있어요.</li>
@@ -8840,6 +8887,16 @@
       h += "</ol></div>";
       return h;
     }
+    // Floating shortcut buttons stay hidden until the reader has scrolled well
+    // past the top of the page — the login card and the intro cards live there,
+    // and the fixed buttons used to cover their text. They also only belong to
+    // the logged-in catalog view: guests and the other tabs never see them.
+    function updateFloatBtns(){
+      var fb = document.getElementById("floatBtns");
+      if (!fb) return;
+      var scrolled = (window.scrollY || window.pageYOffset || 0) > 480;
+      fb.hidden = !(scrolled && currentView === "catalog" && isLoggedIn());
+    }
     function render(){
       var vis = ITEMS.filter(match);
       if (selectedId && !vis.some(function(p){ return p.id===selectedId; })) selectedId = null;
@@ -8885,8 +8942,7 @@
         var known = aliveAll.filter(function(p){ return priceYen(p) != null; }).length;
         pn.textContent = "가격 확인 " + known + "개 · 가격 미확인 " + (aliveAll.length - known) + "개예요. 미확인은 조사에서 가격을 특정하지 못한 경우로, 상세에 이유가 적혀 있어요.";
       }
-      var fb = document.getElementById("floatBtns");
-      if (fb) fb.hidden = !(currentView === "catalog" && isLoggedIn());
+      updateFloatBtns();
     }
 
     function selectProduct(id, scroll){
@@ -9220,6 +9276,7 @@
         if (desc) desc.textContent = "돈키호테 141개 · 편의점 74개 전체 목록과 검색·담기·삭제 기능은 로그인 후 이용할 수 있어요. 로그인하면 내 목록이 구글 계정에 따로 저장돼 다른 기기에서도 이어서 볼 수 있어요.";
         if (lp) lp.hidden = false;
       }
+      updateFloatBtns();
     }
     function onGoogleCredential(resp){
       if (!resp || !resp.credential) { setAuthMsg("로그인 응답을 받지 못했어요. 다시 시도해 주세요."); return; }
@@ -9841,8 +9898,7 @@
       if (v === "picked") renderPickedPage();
       if (v === "bought") renderBoughtPage();
       if (v === "dashboard") renderDashboard();
-      var fb2 = document.getElementById("floatBtns");
-      if (fb2) fb2.hidden = v !== "catalog";
+      updateFloatBtns();
       var pa = document.getElementById("printArea");
       if (pa && v !== "picked" && v !== "bought") { pa.classList.remove("show"); pa.style.display = ""; }
       window.scrollTo({ top: 0, behavior: scrollBehavior() });
@@ -10007,6 +10063,22 @@
     if (priceSelEl) priceSelEl.addEventListener("change", function(e){ state.priceBand = e.target.value; render(); });
     var resetBtnEl = document.getElementById("resetFiltersBtn");
     if (resetBtnEl) resetBtnEl.addEventListener("click", resetFilters);
+    // Mobile: the filter area starts folded away so it never covers the list;
+    // the search field stays visible and one tap opens stores/categories/sort.
+    var toolbarEl = document.getElementById("toolbar");
+    var filterToggleEl = document.getElementById("filterToggle");
+    function setFiltersClosed(closed){
+      if (!toolbarEl || !filterToggleEl) return;
+      toolbarEl.classList.toggle("filters-closed", closed);
+      filterToggleEl.setAttribute("aria-expanded", closed ? "false" : "true");
+      filterToggleEl.textContent = closed ? "필터·정렬 펼치기" : "필터·정렬 접기";
+    }
+    if (filterToggleEl) {
+      filterToggleEl.addEventListener("click", function(){
+        setFiltersClosed(!toolbarEl.classList.contains("filters-closed"));
+      });
+      if (window.matchMedia("(max-width: 760px)").matches) setFiltersClosed(true);
+    }
     var emptyResetEl = document.getElementById("emptyResetBtn");
     if (emptyResetEl) emptyResetEl.addEventListener("click", resetFilters);
     var pqEl = document.getElementById("pickedQ");
@@ -10049,6 +10121,8 @@
     if (ttEl) ttEl.addEventListener("click", function(){ window.scrollTo({ top: 0, behavior: scrollBehavior() }); });
     var t10El = document.getElementById("toTop10Btn");
     if (t10El) t10El.addEventListener("click", function(){ var b = document.getElementById("top10board"); if (b) b.scrollIntoView({ block: "start", behavior: scrollBehavior() }); else toast("TOP 10은 필터를 모두 풀었을 때 보여요. ‘필터 초기화’를 눌러 보세요."); });
+    window.addEventListener("scroll", updateFloatBtns, { passive: true });
+    updateFloatBtns();
     var helpModal = document.getElementById("helpModal");
     var helpBtnEl = document.getElementById("helpBtn");
     if (helpBtnEl && helpModal) helpBtnEl.addEventListener("click", function(){ helpModal.hidden = false; });
