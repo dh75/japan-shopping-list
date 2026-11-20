@@ -542,22 +542,28 @@
         .browbtn.pickoff{margin-top:12px}
       }
       /* ---- quantity + local price controls ---- */
-      .qtybox{margin-top:9px;background:var(--surface2);border-radius:10px;padding:10px 11px;display:flex;flex-direction:column;gap:8px}
-      .qtyrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-      .qtylab{flex:none;font-size:12.5px;font-weight:800;color:var(--ink2);min-width:62px}
-      .qtybtn{flex:none;min-width:42px;height:42px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;font:inherit;font-size:17px;font-weight:800;cursor:pointer;padding:0 10px}
-      .qtybtn.buy1{border-color:var(--buy);color:var(--buy);font-size:13.5px}
-      .qtybtn:active{transform:scale(.97)}
-      .qtyinput{flex:none;width:62px;height:42px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:9px;font:inherit;font-size:15px;font-weight:700;text-align:center;padding:0 4px}
-      .qtyinput.price{width:92px;text-align:right}
-      .qtyinput.addin{width:56px}
-      .qtyunit{font-size:13px;color:var(--ink2);font-weight:600}
-      .progchip{display:inline-block;font-size:12px;font-weight:800;color:var(--buy);background:var(--buy-bg);border-radius:999px;padding:3px 9px;line-height:1.5;white-space:nowrap}
-      .progchip.done{background:var(--buy);color:#fff}
+      /* compact box: every row stays on one line (nowrap), quantities are plain
+         text adjusted only with the round −/+ steppers, no number keyboards */
+      .qtybox{margin-top:9px;background:var(--surface2);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+      .qtyrow{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;min-width:0}
+      .qtylab{flex:none;font-size:12px;font-weight:800;color:var(--ink2);min-width:50px;white-space:nowrap}
+      .qtybtn{flex:none;height:40px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;padding:0 13px}
+      .qtybtn.step{width:40px;min-width:40px;padding:0;border-radius:50%;font-size:19px;line-height:1;background:#fdeee9;border-color:#f3c8bb;color:var(--accent-ink);box-shadow:0 1px 3px rgba(201,51,33,.14)}
+      .qtybtn.buy1{background:var(--buy-bg);border-color:transparent;color:var(--buy)}
+      .qtybtn:active{transform:scale(.94)}
+      .qtynum{flex:none;min-width:32px;text-align:center;font-size:16px;font-weight:800;color:var(--ink)}
+      .qtyinput{flex:none;height:40px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;font:inherit;font-size:15px;font-weight:700;padding:0 8px}
+      .qtyinput.price{width:88px;text-align:right}
+      .qtyunit{flex:none;font-size:12.5px;color:var(--ink2);font-weight:600;white-space:nowrap}
+      .qtysum{display:flex;justify-content:flex-end;align-items:center;font-size:12.5px;color:var(--ink2);white-space:nowrap}
+      .qtysum b{color:var(--ink);font-size:13.5px;margin-left:5px}
       .noprice{display:inline-block;font-size:11.5px;font-weight:800;color:#7c5410;background:#fdf3e3;border:1px solid #e8cf9f;border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
-      @media (prefers-color-scheme: dark){.noprice{color:#edc979;background:#2c2413;border-color:#5c4a22}.qtybtn.buy1{color:var(--buy)}}
+      @media (prefers-color-scheme: dark){.noprice{color:#edc979;background:#2c2413;border-color:#5c4a22}.qtybtn.step{background:#40271f;border-color:#66453a;color:#ff9d8a;box-shadow:none}}
       .detail .qtybox{margin:12px 0 2px}
-      .detail .qtylab{min-width:70px;font-size:13.5px}
+      /* on very narrow phones the list-row box borrows the thumbnail column's
+         width (its top starts below the 76px thumbnail) so no row ever wraps */
+      @media (max-width:430px){.brow .qtybox{margin-left:-87px}.brow .mrow{min-height:20px}}
+      .price-field .pf-label{font-size:13.5px;font-weight:700;color:var(--ink2)}
       .price-field{display:flex;flex-direction:column;gap:5px;margin:0 0 14px}
       .price-field label{font-size:13.5px;font-weight:700;color:var(--ink2)}
       .price-field input{font:inherit;font-size:16px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%}
@@ -961,8 +967,13 @@
           <span class="hint" id="priceModalHint"></span>
         </div>
         <div class="price-field">
-          <label for="priceModalQty">몇 개 샀어요?</label>
-          <input id="priceModalQty" type="number" inputmode="numeric" min="1" step="1" value="1" />
+          <span class="pf-label">몇 개 샀어요?</span>
+          <div class="qtyrow">
+            <button type="button" class="qtybtn step" id="priceModalQtyMinus" aria-label="산 개수 줄이기">−</button>
+            <span class="qtynum" id="priceModalQtyVal">1</span>
+            <button type="button" class="qtybtn step" id="priceModalQtyPlus" aria-label="산 개수 늘리기">+</button>
+            <span class="qtyunit">개</span>
+          </div>
         </div>
         <div class="modal-actions">
           <button class="btn ghost" id="priceModalCancel" type="button">취소</button>
@@ -8781,6 +8792,15 @@
     }
     // ---- first-purchase price ask (in-page modal, no browser dialogs) ----
     var pricePending = null; // {id, mode:"add"|"set", qty}
+    var priceModalQty = 1; // count chosen with the −/+ steppers in the price modal
+    function setPriceModalQty(v){
+      v = parseInt(v, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      if (v > 999) v = 999;
+      priceModalQty = v;
+      var el = document.getElementById("priceModalQtyVal");
+      if (el) el.textContent = v;
+    }
     function openPriceModal(id, mode, qty){
       var p = byId(id);
       if (!p) return;
@@ -8788,13 +8808,12 @@
       var m = document.getElementById("priceModal");
       var msg = document.getElementById("priceModalMsg");
       var inp = document.getElementById("priceModalInput");
-      var qin = document.getElementById("priceModalQty");
       var hint = document.getElementById("priceModalHint");
       var rep = priceYen(p);
       if (msg) msg.innerHTML = "<b>" + esc(p.name) + "</b>을(를) 처음 사는 거예요. 현지에서 확인한 1개 가격을 적어 주세요. 나중에 구매한 목록이나 상세에서 바꿀 수 있어요.";
       if (inp) inp.value = rep != null ? rep : "";
       if (hint) hint.textContent = rep != null ? "이 페이지에 적힌 대표 가격 " + fmtYen(rep) + "을(를) 미리 넣어 뒀어요. 현지 가격이 다르면 고쳐 주세요. 비워 두면 금액 없이 구매한 것으로 표시돼요." : "이 제품은 이 페이지에 가격이 없어요. 현지에서 본 가격을 직접 적어 주세요. 비워 두면 금액 없이 구매한 것으로 표시돼요.";
-      if (qin) qin.value = qty;
+      setPriceModalQty(qty);
       if (m) m.hidden = false;
       if (inp) { inp.focus(); inp.select(); }
     }
@@ -8879,12 +8898,11 @@
 
     function qtyBoxHTML(p){
       var pq = getPlanned(p.id), bq = getBoughtQty(p.id), lp = getLocalPrice(p.id);
-      var done = bq >= pq && bq > 0;
       var h = '<div class="qtybox">';
-      h += '<div class="qtyrow"><span class="qtylab">살 예정</span><button type="button" class="qtybtn" data-plan-minus="' + p.id + '" aria-label="살 예정 개수 줄이기">−</button><input class="qtyinput" type="number" inputmode="numeric" min="1" max="999" step="1" value="' + pq + '" data-plan-input="' + p.id + '" aria-label="살 예정 개수" /><button type="button" class="qtybtn" data-plan-plus="' + p.id + '" aria-label="살 예정 개수 늘리기">+</button><span class="qtyunit">개</span></div>';
-      h += '<div class="qtyrow"><span class="qtylab">산 것</span><button type="button" class="qtybtn" data-buy-minus="' + p.id + '" aria-label="산 개수 줄이기">−</button><input class="qtyinput" type="number" inputmode="numeric" min="0" max="999" step="1" value="' + bq + '" data-bought-input="' + p.id + '" aria-label="산 개수" /><button type="button" class="qtybtn buy1" data-buy-plus1="' + p.id + '">구매 +1</button><span class="progchip' + (done ? " done" : "") + '">' + bq + "/" + pq + "개 삼" + (done ? " · 다 샀어요" : "") + "</span></div>";
-      h += '<div class="qtyrow"><span class="qtylab">한 번에 사기</span><input class="qtyinput addin" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="개수" data-buy-add-input="' + p.id + '" aria-label="한 번에 살 개수" /><button type="button" class="qtybtn buy1" data-buy-add="' + p.id + '">이만큼 구매</button></div>';
-      h += '<div class="qtyrow"><span class="qtylab">1개 가격</span><span class="qtyunit">¥</span><input class="qtyinput price" type="number" inputmode="numeric" min="0" step="1" placeholder="현지 가격" value="' + (lp != null ? lp : "") + '" data-price-input="' + p.id + '" aria-label="현지에서 본 1개 가격 (엔)" /><span class="qtyunit">엔</span>' + (bq > 0 && lp == null ? '<span class="noprice">금액 미입력</span>' : "") + (bq > 0 && lp != null ? '<span class="qtyunit">산 것 합계 ' + fmtYen(lp * bq) + "</span>" : "") + "</div>";
+      h += '<div class="qtyrow"><span class="qtylab">살 예정</span><button type="button" class="qtybtn step" data-plan-minus="' + p.id + '" aria-label="살 예정 개수 줄이기">−</button><span class="qtynum">' + pq + '</span><button type="button" class="qtybtn step" data-plan-plus="' + p.id + '" aria-label="살 예정 개수 늘리기">+</button><span class="qtyunit">개</span></div>';
+      h += '<div class="qtyrow"><span class="qtylab">산 것</span><button type="button" class="qtybtn step" data-buy-minus="' + p.id + '" aria-label="산 개수 줄이기">−</button><span class="qtynum">' + bq + '</span><button type="button" class="qtybtn buy1" data-buy-plus1="' + p.id + '">구매 +1</button></div>';
+      h += '<div class="qtyrow"><span class="qtylab">1개 가격</span><span class="qtyunit">¥</span><input class="qtyinput price" type="number" inputmode="numeric" min="0" step="1" placeholder="현지 가격" value="' + (lp != null ? lp : "") + '" data-price-input="' + p.id + '" aria-label="현지에서 본 1개 가격 (엔)" /><span class="qtyunit">엔</span></div>';
+      if (bq > 0) h += '<div class="qtysum">' + (lp != null ? '<span>산 것 합계</span><b>' + fmtYen(lp * bq) + '</b>' : '<span class="noprice">금액 미입력</span>') + "</div>";
       h += "</div>";
       return h;
     }
@@ -10177,15 +10195,6 @@
       if (bm) { var bmid = bm.getAttribute("data-buy-minus"); if (getBoughtQty(bmid) > 0) { setBoughtQty(bmid, getBoughtQty(bmid) - 1); } updateCount(); render(); return; }
       var bp1 = t.closest ? t.closest("[data-buy-plus1]") : null;
       if (bp1) { addBought(bp1.getAttribute("data-buy-plus1"), 1, "add"); return; }
-      var ba = t.closest ? t.closest("[data-buy-add]") : null;
-      if (ba) {
-        var baid = ba.getAttribute("data-buy-add");
-        var bain = document.querySelector('[data-buy-add-input="' + baid + '"]');
-        var ban = bain ? parseInt(bain.value, 10) : NaN;
-        if (isNaN(ban) || ban < 1) { toast("몇 개 살지 먼저 적어 주세요."); if (bain) bain.focus(); return; }
-        addBought(baid, ban, "add");
-        return;
-      }
       var gt = t.closest ? t.closest("[data-goto]") : null;
       if (gt) {
         var gid2 = gt.getAttribute("data-goto");
@@ -10276,17 +10285,6 @@
     document.addEventListener("change", function(e){
       var t = e.target;
       if (!t || !t.getAttribute) return;
-      var pid = t.getAttribute("data-plan-input");
-      if (pid) { setPlannedQty(pid, t.value); updateCount(); render(); return; }
-      var bid = t.getAttribute("data-bought-input");
-      if (bid) {
-        var bv = parseInt(t.value, 10);
-        if (isNaN(bv) || bv < 0) bv = 0;
-        if (bv > getBoughtQty(bid) && needsPricePrompt(bid)) { openPriceModal(bid, "set", bv); return; }
-        setBoughtQty(bid, bv);
-        updateCount(); render();
-        return;
-      }
       var prid = t.getAttribute("data-price-input");
       if (prid) {
         setLocalPrice(prid, t.value);
@@ -10302,12 +10300,10 @@
       if (!pricePending) { closePriceModal(); return; }
       var pid2 = pricePending.id, mode2 = pricePending.mode;
       var inp2 = document.getElementById("priceModalInput");
-      var qin2 = document.getElementById("priceModalQty");
       var pv = inp2 ? inp2.value : "";
       if (pv === "" || pv == null || isNaN(Number(pv))) { delete localPrices[pid2]; priceBlank[pid2] = true; }
       else { localPrices[pid2] = Math.max(0, Math.round(Number(pv))); delete priceBlank[pid2]; }
-      var qv = qin2 ? parseInt(qin2.value, 10) : 1;
-      if (isNaN(qv) || qv < 1) qv = 1;
+      var qv = priceModalQty;
       closePriceModal();
       var target2 = (mode2 === "set") ? qv : getBoughtQty(pid2) + qv;
       var v2 = setBoughtQty(pid2, target2);
@@ -10315,6 +10311,10 @@
       toast("‘" + (pp2 ? pp2.name : pid2) + "’ " + v2 + "개 샀어요. (" + progressText(pid2) + ")");
       updateCount(); render();
     });
+    var pmqMinusEl = document.getElementById("priceModalQtyMinus");
+    if (pmqMinusEl) pmqMinusEl.addEventListener("click", function(){ setPriceModalQty(priceModalQty - 1); });
+    var pmqPlusEl = document.getElementById("priceModalQtyPlus");
+    if (pmqPlusEl) pmqPlusEl.addEventListener("click", function(){ setPriceModalQty(priceModalQty + 1); });
     var priceCancelEl = document.getElementById("priceModalCancel");
     if (priceCancelEl) priceCancelEl.addEventListener("click", closePriceModal);
     var priceModalEl = document.getElementById("priceModal");
