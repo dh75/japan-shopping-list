@@ -417,6 +417,83 @@
       .info-page .fineprint{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px}
       .info-page .fineprint h2{font-size:17px;color:var(--ink);margin:0 0 8px}
       @media (max-width:640px){.info-head{flex-direction:column}.info-actions{width:100%}.info-actions .btn{flex:1;justify-content:center}}
+
+      /* ==== fix pass: sticky toolbar, compact hero, clarity ==== */
+      mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0 1px}
+      @media (prefers-color-scheme: dark){mark{background:#7a5c00;color:#fff}}
+      body.is-authed .hero{grid-template-columns:1fr;padding:16px 0 2px;gap:8px}
+      body.is-authed .hero figure{display:none}
+      body.is-authed .hero h1{font-size:clamp(22px,3vw,28px);margin-bottom:6px}
+      body.is-authed .hero p{font-size:14px;margin-bottom:10px;max-width:60em}
+      body.is-authed .auth-bar{padding:10px 14px}
+      body.is-authed .auth-info span{display:none}
+      body.is-authed .auth-info strong{font-size:14.5px;margin:0}
+      .toolbar{position:sticky;top:0;z-index:40;background:var(--bg);padding-top:10px}
+      .toolbar select{font:inherit;font-size:14px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;max-width:100%}
+      .toolbar .lbl{font-size:13px;color:var(--ink2);font-weight:700}
+      .toolbar-note{margin:8px 0 0;font-size:13px;color:var(--ink2);line-height:1.55}
+      .btn[disabled]{opacity:.45;cursor:not-allowed}
+      .btn.danger-outline{border-color:var(--accent);color:var(--accent-ink)}
+      details.notice-details{margin:20px 0 6px}
+      details.notice-details summary{cursor:pointer;font-weight:800;font-size:15.5px;background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:12px;padding:13px 16px;list-style:none}
+      details.notice-details summary::-webkit-details-marker{display:none}
+      details.notice-details .notice{margin-top:8px}
+      .crow{display:flex;gap:11px;align-items:stretch;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;scroll-margin-top:150px;text-align:left}
+      .crow.selected{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+      .crow-main{flex:1;min-width:0;display:flex;gap:11px;align-items:center;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+      .crow-main:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+      .crow .sub{font-size:12.5px}
+      .mchip{font-size:12px}
+      .catnote, section.cat>.catnote{font-size:13.5px !important}
+      .rowacts{flex:none;display:flex;flex-direction:column;gap:8px;align-items:stretch;justify-content:center}
+      .rowpick,.rowbuy{font-size:12.5px;padding:7px 11px;cursor:pointer;font-family:inherit}
+      button.rowpick{background:transparent}
+      .dupchip{display:inline-block;font-size:11.5px;font-weight:800;color:#7c5410;background:#fdf3e3;border:1px solid #e8cf9f;border-radius:999px;padding:2px 8px;line-height:1.5;white-space:nowrap}
+      @media (prefers-color-scheme: dark){.dupchip{color:#edc979;background:#2c2413;border-color:#5c4a22}}
+      .detailbar{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px 18px 0}
+      .detailbar .where{font-size:13px;color:var(--ink3);font-weight:700}
+      .closebtn{flex:none}
+      .dangerzone{margin-top:22px;border-top:1px dashed var(--line);padding-top:16px}
+      .dangerzone p{font-size:13px;color:var(--ink3);margin:0 0 8px;line-height:1.55}
+      .toplink{display:inline-flex;margin-top:10px;font-size:13.5px;font-weight:700}
+      .floatbtns{position:fixed;right:16px;bottom:16px;z-index:55;display:flex;flex-direction:column;gap:8px}
+      .floatbtns button{border:1px solid var(--line);background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 16px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:var(--shadow)}
+      .floatbtns button.sub{background:var(--surface);color:var(--ink)}
+      .list-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+      .list-controls .search{flex:1 1 200px}
+      .list-controls select{font:inherit;font-size:14px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+      .totals{margin-top:14px;background:var(--surface2);border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.65}
+      .totals b{font-size:16px}
+      .totals .t-sub{font-size:13px;color:var(--ink2)}
+      details.copyprev{margin-top:12px;font-size:13.5px;color:var(--ink2)}
+      details.copyprev summary{cursor:pointer;font-weight:700;color:var(--ink)}
+      details.copyprev pre{white-space:pre-wrap;background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6;color:var(--ink);max-height:260px;overflow:auto}
+      .hist-chip.unbuy{background:#f6d9a8;color:#7c5410}
+      .hist-chip.unpick{background:transparent;border:1px solid var(--line);color:var(--ink2)}
+      .hist-chip.restore{background:#dcefe8;color:#146c4c}
+      @media (prefers-color-scheme: dark){.hist-chip.unbuy{background:#5c4a22;color:#edc979}.hist-chip.restore{background:#16382a;color:#45cf8d}}
+      .hist-list li.clickable{cursor:pointer}
+      .hist-list li.clickable:hover .hist-text{text-decoration:underline;text-underline-offset:3px}
+      .hist-filters{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+      .info-key{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:16px 18px;color:var(--warn-ink);margin-top:14px}
+      .info-key h3{margin:0 0 8px;font-size:16px}
+      .info-key ul{margin:0;padding-left:19px;font-size:14px;line-height:1.65}
+      .glossary{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:8px;margin-top:10px}
+      .glossary div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13.5px;line-height:1.55}
+      .glossary b{display:block;margin-bottom:2px}
+      .toc{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+      .browacts{gap:8px}
+      .browbtn{padding:8px 12px}
+      .print-area{display:none}
+      @media print{
+        body>*{display:none !important}
+        body>.print-area{display:block !important;color:#000;background:#fff;font-size:13px}
+        .print-area h2{font-size:18px}
+        .print-area li{margin:3px 0}
+      }
+      .print-area{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin:18px 0}
+      .print-area.show{display:block}
+      .help-list{font-size:14.5px;line-height:1.7;color:var(--ink2);margin:0;padding-left:19px}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -425,9 +502,9 @@
       <header class="hero">
         <div>
           <h1>일본 쇼핑리스트<br />돈키호테 <span class="hl">141</span> + 편의점 <span class="hl">74</span></h1>
-          <p>따로 정리했던 <b>돈키호테 쇼핑리스트</b>와 <b>일본 편의점 쇼핑리스트</b>를 한 페이지로 합쳤어요. 한국 유튜브 영상을 교차 확인해, 여러 영상에서 공통으로 추천된 제품만 모은 리스트예요. 로그인하면 전체 목록을 검색하고, 살 것만 담아 나만의 리스트를 만들 수 있어요.</p>
+          <p>따로 정리했던 <b>돈키호테 쇼핑리스트</b>와 <b>일본 편의점 쇼핑리스트</b>를 한 페이지로 합쳤어요. 한국 유튜브 영상을 교차 확인해, 여러 영상에서 공통으로 추천된 제품만 모은 리스트예요. 로그인하면 전체 목록을 검색하고, 살 것만 담아 나만의 리스트를 만들 수 있어요. 개수는 어느 화면에서든 같은 기준으로 셉니다 — 본 목록 215개(돈키호테 141 + 편의점 74)에 참고용 2개를 더한 전체 카드 217개예요.</p>
           <div class="stats">
-            <span class="stat">전체 제품 <b id="statTotal">215개</b> <span id="statRef">(참고용 2개 별도)</span></span>
+            <span class="stat">본 목록 <b id="statTotal">215개</b> <span id="statRef">(참고용 2개 별도 · 전체 카드 217개)</span></span>
             <span class="stat">돈키호테 <b id="statDonki">141개</b> · 출처 영상 42개</span>
             <span class="stat">편의점 <b id="statConv">74개</b> · 출처 영상 35개</span>
             <span class="stat">카테고리 <b>16개</b></span>
@@ -511,6 +588,7 @@
         <button class="viewtab" type="button" data-viewtab="dashboard" aria-pressed="false">내 기록</button>
         <button class="viewtab" type="button" data-viewtab="info" aria-pressed="false">참고 정보</button>
       </nav>
+      <details class="notice-details" id="noticeDetails"><summary>사기 전에 꼭 확인 — 반입 금지·현지에서 먹을 것 요약 (눌러서 펼치기)</summary>
       <div class="notice" role="note">
         <h2>사기 전에 꼭 확인 — 반입·현지 섭취 주의</h2>
         <h3>돈키호테</h3>
@@ -528,7 +606,7 @@
           <li><b>주류</b>는 성인만 구매할 수 있고, 한국 반입 시 면세 한도(주류 2병·400달러 이내 등, 시점별 규정 확인 필요)를 넘으면 신고·과세 대상이 될 수 있어요.</li>
           <li>가격은 2023~2026년 영상·블로그 시점 기준이라 지금 가격과 다를 수 있고, 같은 제품도 출처마다 차이가 있어요. 확인 안 된 건 ‘가격 미확인’으로 적었어요.</li>
         </ul>
-      </div>
+      </div></details>
 
       <div class="toolbar">
         <div class="row">
@@ -537,6 +615,25 @@
             <input id="q" type="search" placeholder="돈키호테·편의점 전체에서 제품명·일본어 이름으로 검색" aria-label="제품 검색" />
           </label>
           <button class="btn" id="onlyPicked" aria-pressed="false">담은 것만 보기</button>
+          <label class="lbl" for="sortSel">정렬</label>
+          <select id="sortSel" aria-label="정렬 방식">
+            <option value="default">기본순 (카테고리별)</option>
+            <option value="priceAsc">가격 낮은 순</option>
+            <option value="priceDesc">가격 높은 순</option>
+            <option value="mention">언급 많은 순</option>
+            <option value="name">이름순</option>
+          </select>
+          <label class="lbl" for="priceSel">가격대</label>
+          <select id="priceSel" aria-label="가격대 필터">
+            <option value="all">전체 가격</option>
+            <option value="le300">300엔 이하</option>
+            <option value="m">301~1,000엔</option>
+            <option value="l">1,001~3,000엔</option>
+            <option value="xl">3,000엔 초과</option>
+            <option value="unknown">가격 미확인만</option>
+          </select>
+          <button class="btn" id="resetFiltersBtn" type="button">필터 초기화</button>
+          <button class="btn" id="helpBtn" type="button">도움말</button>
           <button class="btn primary" id="copyBtn">담은 목록 복사</button>
           <button class="btn" id="restoreBtn" hidden>삭제한 항목 되돌리기</button>
           <span class="count" id="pickCount">담은 제품 <b>0</b>개</span>
@@ -548,6 +645,8 @@
         </div>
         <div class="chips" id="catChips" role="group" aria-label="카테고리 필터"></div>
         <div class="chips" id="brandChips" role="group" aria-label="편의점 필터"></div>
+        <p class="toolbar-note" id="priceNote"></p>
+        <p class="toolbar-note">가격은 출처에 적힌 대표 가격(범위면 가장 낮은 값, 세포함 표기가 있으면 그 값)으로 정리했어요. 원래 표기는 제품 상세에서 그대로 볼 수 있어요. 복사하면 가게·카테고리별로 “제품명 (가격)” 줄 목록이 복사됩니다.</p>
       </div>
 
       <section class="deleted-panel" id="deletedPanel" hidden aria-label="삭제한 상품 목록">
@@ -580,9 +679,9 @@
       </section>
 
       <div class="flow">
-        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>새로 등록된 제품이 맨 위에 모여 있어요 · 카드마다 언급된 영상 건수가 보이고, 많이 언급된 상위 10개에는 순위가 붙어요 · 제품을 누르면 그 자리에서 바로 아래에 상세 정보가 펼쳐져요 · 담은 제품은 카드에서 바로 구매 체크할 수 있어요</span></div>
+        <div class="pane-head"><h2>카탈로그</h2><span id="catCount"></span><span>제품을 누르면 그 자리에서 바로 아래에 상세가 펼쳐져요</span></div>
         <main id="list"></main>
-        <p class="empty" id="emptyMsg">조건에 맞는 제품이 없어요. 검색어나 필터를 바꿔 보세요.</p>
+        <p class="empty" id="emptyMsg">조건에 맞는 제품이 없어요.<br /><button class="btn" id="emptyResetBtn" type="button" style="margin-top:12px">검색·필터 한 번에 지우기</button></p>
       </div>
 
       <section class="picked-page" id="pickedView" hidden aria-label="담은 목록 페이지">
@@ -599,6 +698,19 @@
           </div>
           <div class="bp-track" aria-hidden="true"><div class="bp-fill" id="pickedProgressFill" style="width:0%"></div></div>
           <p class="bp-text" id="pickedProgressText"></p>
+          <div class="list-controls">
+            <label class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg><input id="pickedQ" type="search" placeholder="담은 목록 안에서 검색" aria-label="담은 목록 내 검색" /></label>
+            <select id="pickedSort" aria-label="담은 목록 정렬">
+              <option value="added">담은 순서</option>
+              <option value="priceAsc">가격 낮은 순</option>
+              <option value="priceDesc">가격 높은 순</option>
+              <option value="name">이름순</option>
+              <option value="store">가게순</option>
+            </select>
+            <button class="btn" id="printPickedBtn" type="button">인쇄용으로 보기</button>
+          </div>
+          <div class="totals" id="pickedTotals"></div>
+          <details class="copyprev"><summary>복사 형식 미리보기 — 이렇게 복사돼요</summary><pre id="pickedCopyPreview"></pre></details>
         </div>
         <div class="picked-empty" id="pickedEmpty" hidden>아직 담은 제품이 없어요.<br />전체 목록에서 사고 싶은 제품의 <b>담기</b>를 눌러 보세요. 여기에 사진·가격·파는 곳과 함께 따로 모여요.</div>
         <div id="pickedListWrap"></div>
@@ -618,24 +730,45 @@
           </div>
           <div class="bp-track" aria-hidden="true"><div class="bp-fill" id="boughtProgressFill" style="width:0%"></div></div>
           <p class="bp-text" id="boughtProgressText"></p>
+          <div class="list-controls">
+            <label class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg><input id="boughtQ" type="search" placeholder="구매한 목록 안에서 검색" aria-label="구매한 목록 내 검색" /></label>
+            <select id="boughtSort" aria-label="구매한 목록 정렬">
+              <option value="boughtAt">구매한 순서</option>
+              <option value="priceAsc">가격 낮은 순</option>
+              <option value="priceDesc">가격 높은 순</option>
+              <option value="name">이름순</option>
+              <option value="store">가게순</option>
+            </select>
+            <button class="btn" id="gotoPickedFromBought" type="button">아직 안 산 담은 것 보기</button>
+            <button class="btn" id="printBoughtBtn" type="button">인쇄용으로 보기</button>
+          </div>
+          <div class="totals" id="boughtTotals"></div>
+          <details class="copyprev"><summary>복사 형식 미리보기 — 이렇게 복사돼요</summary><pre id="boughtCopyPreview"></pre></details>
         </div>
         <div class="bought-empty" id="boughtEmpty" hidden>아직 구매 체크한 제품이 없어요.<br />담은 제품 중에서 실제로 산 게 있으면, 전체 목록의 카드나 상세에서 <b>구매 체크</b>를 눌러 보세요. 여기에 따로 모여요.</div>
         <div id="boughtListWrap"></div>
-        <h3 class="remain-title" id="remainTitle" hidden></h3>
-        <p class="remain-note" id="remainNote" hidden>담아 뒀지만 아직 사지 않은 제품이에요. 매장에서 사면 바로 구매 체크로 옮길 수 있어요.</p>
-        <div id="remainListWrap"></div>
+        <p class="remain-note" id="boughtRemainNote" hidden></p>
       </section>
 
       <section class="dash-page" id="dashView" hidden aria-label="내 기록">
         <div class="dash-grid">
           <div class="dash-card"><p class="dk">담은 것</p><p class="dn" id="dashPicked">0<small>개</small></p><p class="ds">사려고 담아 둔 제품이에요</p></div>
           <div class="dash-card buy"><p class="dk">구매한 것</p><p class="dn" id="dashBought">0<small>개</small></p><p class="ds" id="dashBoughtSub">아직 구매 체크한 게 없어요</p></div>
-          <div class="dash-card del"><p class="dk">삭제한 것</p><p class="dn" id="dashDeleted">0<small>개</small></p><p class="ds">목록에서 지운 제품이에요</p></div>
+          <div class="dash-card del"><p class="dk">삭제한 것</p><p class="dn" id="dashDeleted">0<small>개</small></p><p class="ds">목록에서 지워 숨긴 제품이에요. 완전히 사라진 게 아니고, 카탈로그 위쪽 ‘삭제한 상품’에서 언제든 복원할 수 있어요</p></div>
         </div>
         <div class="dash-hist">
           <h2>최근 이력</h2>
-          <p>담고, 사고, 지운 일을 최근 순서로 보여줘요.</p>
+          <p>담고, 사고, 지운 일을 최근 순서로 보여줘요. 항목을 누르면 해당 제품으로 이동해요 (삭제한 제품은 복원 안내가 떠요).</p>
+          <div class="hist-filters" id="histFilters" role="group" aria-label="이력 종류 필터">
+            <button class="chip" type="button" data-histfilter="all" aria-pressed="true">전체</button>
+            <button class="chip" type="button" data-histfilter="담기" aria-pressed="false">담기</button>
+            <button class="chip" type="button" data-histfilter="구매" aria-pressed="false">구매</button>
+            <button class="chip" type="button" data-histfilter="구매취소" aria-pressed="false">구매취소</button>
+            <button class="chip" type="button" data-histfilter="삭제" aria-pressed="false">삭제</button>
+            <button class="chip" type="button" data-histfilter="복원" aria-pressed="false">복원</button>
+          </div>
           <ul class="hist-list" id="histList"></ul>
+          <button class="btn" id="histMoreBtn" type="button" hidden>이력 더 보기</button>
           <p class="hist-empty" id="histEmpty" hidden>아직 기록이 없어요.<br />제품을 담거나 구매 체크를 하면 여기에 쌓여요.</p>
         </div>
       </section>
@@ -651,10 +784,38 @@
               <button class="btn primary" id="backFromInfoBtn" type="button">전체 목록 보기</button>
             </div>
           </div>
+          <div class="toc">
+            <a class="chip" href="#infoKey">핵심 주의사항</a>
+            <a class="chip" href="#infoSources">출처 영상</a>
+            <a class="chip" href="#infoMethod">조사 방법과 한계</a>
+            <a class="chip" href="#infoGlossary">용어 설명</a>
+          </div>
         </div>
-      <section class="sources">
+        <div class="info-key" id="infoKey">
+          <h3>먼저 볼 핵심 주의사항</h3>
+          <ul>
+            <li><b>가격은 참고용이에요.</b> 2023~2026년 영상·블로그 시점 가격이라 지금 매장 가격과 다를 수 있고, 같은 제품도 출처마다 차이가 큽니다. ‘가격 미확인’은 조사에서 가격을 특정하지 못했다는 뜻이지, 공짜나 판매 중단이라는 뜻이 아니에요.</li>
+            <li><b>단종·리뉴얼 가능성이 있어요.</b> 특히 2023년 영상에 나온 제품은 지금은 단종됐거나 패키지·가격이 바뀌었을 수 있어요.</li>
+            <li><b>조사일:</b> 기본 조사 2026년 11월 8일, 마지막 추가 조사 2026년 11월 16일 (신규 23개). 출발 전에 최신 가격·반입 규정을 다시 확인하세요.</li>
+            <li><b>반입 금지:</b> 이브(EVE) 진통제와 컵형 곤약젤리는 한국 반입이 안 돼 목록에서 뺐어요. 자세한 주의는 전체 목록 위쪽 ‘사기 전에 꼭 확인’을 봐 주세요.</li>
+          </ul>
+        </div>
+        <div id="infoGlossary" style="margin-top:16px">
+          <h3 style="margin:0;font-size:16px">용어 설명</h3>
+          <div class="glossary">
+            <div><b>언급 건수</b>이 제품이 서로 다른 유튜브 영상 몇 곳에서 추천됐는지 대략 센 수예요. ‘영상 5곳 이상’처럼 적혀 있어요.</div>
+            <div><b>근거 영상</b>제품 상세 아래에 링크된, 그 제품을 실제로 소개한 영상이에요. 순위를 매길 때 동점이면 근거 영상이 많은 쪽이 위예요.</div>
+            <div><b>많이 언급된 TOP 10</b>언급 건수가 가장 많은 10개예요. 1순위 언급 건수 → 2순위 근거 영상 수 → 3순위 원래 목록 순서로 정해요.</div>
+            <div><b>NEW</b>2026년 11월 16일에 새로 등록된 23개예요. NEW 배지는 등록일부터 7일 동안만 붙어요 — 11월 23일까지 표시되고, 11월 24일부터는 배지와 맨 위 안내판이 자동으로 사라져요 (제품 자체는 목록에 그대로 남아요). 표시 기간 안에는 맨 위 안내판에서 모아 볼 수 있고, 원래 카테고리 안에서도 NEW 배지와 함께 그대로 찾을 수 있어요.</div>
+            <div><b>참고용 항목 (2개)</b>반복 추천 기준(3개 이상 영상)에는 못 미치지만 알아두면 좋은 2개예요. 본 목록 215개에는 세지 않고 따로 표시해요.</div>
+            <div><b>세전 / 세포함</b>세전은 소비세를 빼기 전, 세포함은 소비세(보통 8~10%)를 더한 가격이에요. 출처마다 기준이 달라 상세에 원래 표기를 그대로 남겼어요.</div>
+            <div><b>V번호</b>돈키호테 출처 영상 번호예요 (V1, V2 … V42). 편의점 출처는 아래 목록 순서대로예요.</div>
+            <div><b>대표 가격</b>가격순 정렬·예상 총액에 쓰는 값이에요. 범위면 가장 낮은 값, 세포함 표기가 있으면 그 값을 써요.</div>
+          </div>
+        </div>
+      <section class="sources" id="infoSources">
         <h2>출처 영상</h2>
-        <p>제품별 근거는 각 제품 상세에도 링크했어요. 등장 시점이 확인된 영상은 상세에서 ‘▶ 바로 보기’로 그 상품이 나오는 구간부터 열립니다. 돈키호테는 영상 42개(V번호), 편의점은 영상 35개를 교차 확인했습니다.</p>
+        <p>제품별 근거는 각 제품 상세에도 링크했어요. 등장 시점이 확인된 영상은 상세에서 ‘▶ 바로 보기’로 그 상품이 나오는 구간부터 열립니다. 돈키호테 42개와 편의점 35개, 모두 같은 형식으로 정리했어요.</p>
         <div class="srcgrid">
           <div>
             <h3 style="margin:0 0 10px;font-size:16px">돈키호테 — 출처 영상 42개</h3>
@@ -662,12 +823,12 @@
           </div>
           <div>
             <h3 style="margin:0 0 10px;font-size:16px">일본 편의점 — 출처 영상 35개</h3>
-            <ol id="cSrcList"></ol>
+            <ul id="cSrcList"></ul>
           </div>
         </div>
       </section>
 
-      <div class="fineprint">
+      <div class="fineprint" id="infoMethod">
         <h2>조사 방법과 한계</h2>
         <ul>
           <li><b>‘많이 언급된 TOP 10’ 순위 기준:</b> 각 제품에 표기된 언급 건수(‘영상 N곳 이상’, ‘약 N개 영상’)가 많은 순이고, 동점이면 상세에 링크된 근거 영상이 많은 순으로 정했습니다. 언급 건수 자체가 대략치인 제품은 순위도 그만큼 대략적인 순서로 봐 주세요.</li>
@@ -698,6 +859,25 @@
         </ul>
       </div>
       </section>
+      </div>
+    </div>
+    <div class="floatbtns" id="floatBtns" hidden>
+      <button type="button" id="toTop10Btn" class="sub">TOP 10 보기</button>
+      <button type="button" id="toTopBtn">맨 위로 ↑</button>
+    </div>
+    <section class="print-area" id="printArea" aria-label="인쇄용 목록"></section>
+    <div class="modal-backdrop" id="helpModal" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <h3 id="helpTitle">도움말 — 이렇게 쓰세요</h3>
+        <ul class="help-list">
+          <li><b>찾기:</b> 위쪽 검색·필터 바는 스크롤해도 계속 보여요. ‘필터 초기화’를 누르면 한 번에 처음 상태로 돌아가요.</li>
+          <li><b>담기·구매:</b> 카드의 ‘담기’로 담고, 산 뒤에는 ‘구매 체크’를 눌러요. 구매한 것만 ‘구매한 목록’ 탭에 모여요.</li>
+          <li><b>삭제:</b> 카드에는 삭제 버튼이 없어요. 제품 상세를 열고 맨 아래 ‘삭제’ 영역에서만 지울 수 있고, 지운 건 카탈로그 위 ‘삭제한 상품’에서 복원할 수 있어요.</li>
+          <li><b>가격:</b> ‘가격 미확인’은 조사에서 가격을 못 찾은 경우예요. 예상 총액은 가격을 아는 제품만 더한 값이라 실제보다 적을 수 있어요.</li>
+          <li><b>인쇄:</b> 담은/구매한 목록의 ‘인쇄용으로 보기’를 누르면 깔끔한 목록이 나오고, 브라우저 메뉴에서 인쇄할 수 있어요.</li>
+          <li><b>문의:</b> 별도 문의 창구는 없어요. 잘못된 가격·링크를 발견하면 이 페이지를 공유해 준 사람에게 알려 주세요.</li>
+        </ul>
+        <div class="modal-actions" style="margin-top:16px"><button class="btn primary" id="helpCloseBtn" type="button">닫기</button></div>
       </div>
     </div>
     <div class="modal-backdrop" id="deleteModal" hidden>
@@ -8124,19 +8304,103 @@
     var BOUGHT_KEY = "jp-shopping-list-bought-v1";
     var UNBOUGHT_KEY = "jp-shopping-list-unbought-v1";
     var HISTORY_KEY = "jp-shopping-list-history-v1";
-    var state = { q: "", store: "all", cat: "all", brand: "all", only: false };
+    var state = { q: "", store: "all", cat: "all", brand: "all", only: false, sort: "default", priceBand: "all" };
+    var listState = { pickedQ: "", pickedSort: "added", boughtQ: "", boughtSort: "boughtAt", histFilter: "all", histLimit: 30 };
     var selectedId = null;
 
     function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
     function byId(id){ for (var i=0;i<ITEMS.length;i++) if (ITEMS[i].id===id) return ITEMS[i]; return null; }
+    function todayISO(){
+      var d = new Date();
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return d.getFullYear() + "-" + m + "-" + day;
+    }
+    function newExpiryISO(p){
+      if (!p || !p.addedDate) return "";
+      var d = new Date(p.addedDate + "T00:00:00");
+      if (isNaN(d.getTime())) return "";
+      d.setDate(d.getDate() + 7);
+      var m = String(d.getMonth() + 1).padStart(2, "0");
+      var day = String(d.getDate()).padStart(2, "0");
+      return d.getFullYear() + "-" + m + "-" + day;
+    }
+    function newUntilLabel(p){
+      var iso = newExpiryISO(p);
+      if (!iso) return "";
+      var parts = iso.split("-");
+      if (parts.length !== 3) return iso + "까지 표시";
+      return parseInt(parts[1], 10) + "월 " + parseInt(parts[2], 10) + "일까지 표시";
+    }
+    function newUntilFullLabel(p){
+      var iso = newExpiryISO(p);
+      if (!iso) return "";
+      var parts = iso.split("-");
+      if (parts.length !== 3) return iso + "까지 표시";
+      return parseInt(parts[0], 10) + "년 " + parseInt(parts[1], 10) + "월 " + parseInt(parts[2], 10) + "일까지 표시";
+    }
     function isNew(p){
       if (!p || !p.addedDate) return false;
-      var t = new Date(p.addedDate + "T00:00:00");
-      if (isNaN(t.getTime())) return false;
-      var n = new Date();
-      var today = new Date(n.getFullYear(), n.getMonth(), n.getDate());
-      var diff = Math.round((today - t) / 864e5);
-      return diff >= 0 && diff <= 7;
+      var expiry = newExpiryISO(p);
+      if (!expiry) return false;
+      return todayISO() <= expiry;
+    }
+    // Representative price in yen for sorting / filters / totals.
+    // Tax-included figure wins when the source names one; otherwise the
+    // lowest number in the source text (start of a range). null = unknown.
+    function priceYen(p){
+      var s = (p && p.price) || "";
+      if (!s) return null;
+      var m = s.match(/세포함\s*([\d,]+(?:\.\d+)?)/);
+      if (m) return Math.round(parseFloat(m[1].replace(/,/g, "")));
+      // Only numbers the source actually marks as money (¥… or …엔) count —
+      // bare numbers are video tags (V24), piece counts (11개입) or grams.
+      var vals = [];
+      var re1 = /¥\s*([\d,]+)/g, mm;
+      while ((mm = re1.exec(s))) vals.push(parseFloat(mm[1].replace(/,/g, "")));
+      var re2 = /([\d,]+(?:\.\d+)?)\s*엔/g;
+      while ((mm = re2.exec(s))) vals.push(parseFloat(mm[1].replace(/,/g, "")));
+      vals = vals.filter(function(v){ return v >= 10 && v <= 100000; });
+      if (!vals.length) return null;
+      return Math.round(Math.min.apply(null, vals));
+    }
+    function priceLabel(p){
+      var v = priceYen(p);
+      if (v == null) return "가격 미확인";
+      return "¥" + v.toLocaleString("en-US") + (/[~～]/.test(p.price || "") ? "부터" : "");
+    }
+    function fmtYen(v){ return "¥" + Math.round(v).toLocaleString("en-US"); }
+    // Same product sold at both stores (e.g. 자가리코, 호로요이): keyed by
+    // the Japanese kana/kanji core of the original name.
+    function dupKey(p){
+      var o = p.orig || "";
+      var m = o.match(/[\u3040-\u30ff\u4e00-\u9faf]+/g);
+      if (!m) return "";
+      return m.join("").slice(0, 12);
+    }
+    var DUPMAP = {};
+    (function(){
+      var byKey = {};
+      ITEMS.forEach(function(p){ var k = dupKey(p); if (k) { (byKey[k] = byKey[k] || []).push(p); } });
+      Object.keys(byKey).forEach(function(k){
+        var arr = byKey[k];
+        var stores = {};
+        arr.forEach(function(p){ stores[p.store] = true; });
+        if (arr.length > 1 && Object.keys(stores).length > 1) arr.forEach(function(p){ DUPMAP[p.id] = arr.filter(function(q){ return q.id !== p.id; }); });
+      });
+    })();
+    function dupChipHTML(p){
+      if (!DUPMAP[p.id]) return "";
+      return '<span class="dupchip">돈키호테·편의점 공통 — 같은 제품</span>';
+    }
+    function hlText(text){
+      var t = esc(text == null ? "" : text);
+      var q = (state.q || "").trim();
+      if (!q) return t;
+      var eq = esc(q);
+      var i = t.toLowerCase().indexOf(eq.toLowerCase());
+      if (i < 0) return t;
+      return t.slice(0, i) + "<mark>" + t.slice(i, i + eq.length) + "</mark>" + t.slice(i + eq.length);
     }
     // Mention count used for the on-card count chip and the TOP 10 ranking.
     // The number comes from the item's own mentions text ("영상 5곳 이상",
@@ -8433,26 +8697,28 @@
     }
 
     function rowHTML(p){
-      var h = '<button type="button" class="crow' + (p.id===selectedId ? " selected" : "") + (bought[p.id] ? " is-bought" : "") + '" id="' + p.id + '" data-select="' + p.id + '" aria-current="' + (p.id===selectedId ? "true" : "false") + '">';
+      var h = '<div class="crow' + (p.id===selectedId ? " selected" : "") + (bought[p.id] ? " is-bought" : "") + '" id="' + p.id + '">';
+      h += '<button type="button" class="crow-main" data-select="' + p.id + '" aria-current="' + (p.id===selectedId ? "true" : "false") + '" aria-label="' + esc(p.name) + ' 상세 ' + (p.id===selectedId ? "닫기" : "열기") + '">';
       h += '<span class="th">';
       if (!p.img) h += '<span class="noimg">사진 미확인</span>';
       else h += '<img src="' + p.img + '" alt="" loading="lazy" />';
       if (isNew(p)) h += '<span class="newbadge">NEW</span>';
       h += "</span>";
-      h += '<span class="tx"><span class="nm">' + esc(p.name) + '</span>';
-      h += '<span class="sub">' + esc(p.place) + (p.price ? ' · <span class="pr">' + esc(p.price) + "</span>" : "") + "</span>";
-      h += '<span class="mrow">' + (bought[p.id] ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + "</span></span></span>";
-      var acts = '<span class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" role="button" aria-pressed="' + (picked[p.id] ? "true" : "false") + '" title="담기">' + (picked[p.id] ? "담음 ✓" : "담기") + "</span>";
-      if (picked[p.id]) acts += '<span class="rowbuy' + (bought[p.id] ? " on" : "") + '" data-rowbuy="' + p.id + '" role="button" aria-pressed="' + (bought[p.id] ? "true" : "false") + '" title="구매 체크">' + (bought[p.id] ? "구매완료 ✓" : "구매 체크") + "</span>";
-      acts += '<span class="rowdel" data-rowdel="' + p.id + '" role="button" title="이 제품 삭제">삭제</span>';
-      h += '<span class="rowacts">' + acts + "</span>";
+      h += '<span class="tx"><span class="nm">' + hlText(p.name) + '</span>';
+      h += '<span class="sub">' + esc(p.place) + ' · <span class="pr">' + esc(priceLabel(p)) + "</span></span>";
+      h += '<span class="mrow">' + (bought[p.id] ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + '<span class="mchip">' + esc(mentionShort(p)) + " · 근거 영상 " + (p.srcs ? p.srcs.length : 0) + "개</span>" + dupChipHTML(p) + "</span></span>";
       h += "</button>";
+      var acts = '<button type="button" class="rowpick' + (picked[p.id] ? " on" : "") + '" data-rowpick="' + p.id + '" aria-pressed="' + (picked[p.id] ? "true" : "false") + '">' + (picked[p.id] ? "담음 ✓" : "담기") + "</button>";
+      if (picked[p.id]) acts += '<button type="button" class="rowbuy' + (bought[p.id] ? " on" : "") + '" data-rowbuy="' + p.id + '" aria-pressed="' + (bought[p.id] ? "true" : "false") + '">' + (bought[p.id] ? "구매완료 ✓" : "구매 체크") + "</button>";
+      h += '<span class="rowacts">' + acts + "</span>";
+      h += "</div>";
+      if (p.id === selectedId) h += '<section class="detail dwrap" aria-live="polite">' + detailHTML(p) + "</section>";
       return h;
     }
 
     function detailHTML(p){
       var g = groupOf(p);
-      var h = '<div class="dtop"><div class="dph">';
+      var h = '<div class="detailbar"><span class="where">' + storeName(p.store) + " · " + esc(g.name) + '</span><button type="button" class="btn closebtn" data-close="' + p.id + '">상세 닫기 ✕</button></div><div class="dtop"><div class="dph">';
       if (!p.img) h += '<div class="noimg">사진 미확인</div>';
       else h += '<img src="' + p.img + '" alt="' + esc(p.name) + ' 제품 사진" />';
       if (p.badge) h += '<span class="badge">' + esc(p.badge) + "</span>";
@@ -8467,7 +8733,8 @@
       else h += '<span class="bchip ' + brandClass(p) + '">' + esc(p.place) + "</span>";
       if (p.mentions) h += '<span class="mentions">' + esc(p.mentions) + "</span>";
       h += rankChipHTML(p);
-      if (p.addedDate) h += '<span class="mentions">' + esc(addedLabel(p)) + "</span>";
+      if (p.addedDate && isNew(p)) h += '<span class="mentions">' + esc(addedLabel(p)) + " · NEW는 " + esc(newUntilLabel(p)) + "</span>";
+      else if (p.addedDate) h += '<span class="mentions">' + esc(addedLabel(p)) + "</span>";
       if (p.use) h += '<span class="tchip' + (p.use.indexOf("주류") === 0 ? " alc" : "") + '">' + esc(p.use) + "</span>";
       h += "</div>";
       h += '<p class="dreason">' + (p.reasonHtml ? p.reasonHtml : esc(p.reason || "")) + "</p>";
@@ -8476,11 +8743,15 @@
       if (jump) h += '<a class="jumpbtn" href="' + jump.u + (jump.u.indexOf("?") >= 0 ? "&t=" : "?t=") + jump.ts + 's" target="_blank" rel="noopener">▶ 영상에서 이 상품 바로 보기 <span>' + esc(jump.tl || "") + "부터</span></a>";
       h += '<button class="pickbtn" data-pick="' + p.id + '" aria-pressed="' + (picked[p.id] ? "true" : "false") + '">' + (picked[p.id] ? "담았어요 ✓ — 담은 목록에 있어요" : "이 제품 담기") + "</button>";
       h += '<button class="buybtn" data-buy="' + p.id + '" aria-pressed="' + (bought[p.id] ? "true" : "false") + '">' + (bought[p.id] ? "구매했어요 ✓ — 구매한 목록에 있어요" : (picked[p.id] ? "구매 완료로 체크하기" : "담고 구매 완료로 체크하기")) + "</button>";
-      h += '<button class="delbtn" data-del="' + p.id + '" type="button">이 제품 삭제하기</button>';
-      if (picked[p.id]) h += '<p class="delhint">담은 제품은 바로 삭제할 수 없어요. 삭제하려면 먼저 담기를 취소해야 해요.</p>';
+      if (DUPMAP[p.id]) {
+        h += '<p class="delhint" style="margin-top:10px">같은 제품을 다른 가게에서도 팔아요: ';
+        DUPMAP[p.id].forEach(function(q, qi){ h += (qi ? " · " : "") + '<a href="#' + q.id + '" data-jump="' + q.id + '">' + esc(storeName(q.store)) + "의 " + esc(q.name) + " 보기</a>"; });
+        h += "</p>";
+      }
+      if (rankOf(p)) h += '<a class="toplink" href="#top10board" data-top10link="1">↑ 많이 언급된 TOP 10으로 돌아가기 (' + rankOf(p) + "위)</a>";
       h += '</div></div><div class="dbody">';
       h += '<dl class="dgrid">';
-      h += '<div class="dcell"><dt>가격 (영상·출처 기준)</dt><dd>' + (p.price ? esc(p.price) : "가격 미확인") + "</dd></div>";
+      h += '<div class="dcell"><dt>대표 가격 (정렬·합계 기준)</dt><dd>' + esc(priceLabel(p)) + '</dd></div><div class="dcell"><dt>출처 가격 표기 (원문)</dt><dd class="normal">' + (p.price ? esc(p.price) : "가격 미확인 — 조사에서 가격을 특정하지 못했어요") + "</dd></div>";
       h += '<div class="dcell"><dt>파는 곳</dt><dd class="normal">' + esc(p.place) + "</dd></div>";
       h += '<div class="dcell"><dt>언급된 영상</dt><dd>' + esc(p.mentions || "—") + "</dd></div>";
       h += '<div class="dcell"><dt>구분</dt><dd>' + esc(p.use || (p.store === "donki" ? "돈키호테 매장에서 구매" : "—")) + "</dd></div>";
@@ -8496,6 +8767,10 @@
         h += "<li>다수 리스트 교차확인</li>";
       }
       h += "</ul></div>";
+      h += '<div class="dangerzone"><p><b>삭제는 여기서만 할 수 있어요.</b> 카드에서 실수로 지우는 일을 막으려고 삭제 버튼을 상세 맨 아래에 따로 뒀어요. 지운 제품은 카탈로그 위쪽 ‘삭제한 상품’에서 복원할 수 있어요.</p>';
+      h += '<button class="delbtn" data-del="' + p.id + '" type="button">이 제품 삭제하기</button>';
+      if (picked[p.id]) h += '<p class="delhint">담은 제품은 바로 삭제할 수 없어요. 삭제하려면 먼저 담기를 취소해야 해요.</p>';
+      h += '<button class="delbtn" data-close="' + p.id + '" type="button" style="margin-top:9px">상세 닫기</button></div>';
       h += "</div>";
       return h;
     }
@@ -8509,6 +8784,15 @@
         if (!p.bk || p.bk.indexOf(state.brand) < 0) return false;
       }
       if (state.only && !picked[p.id]) return false;
+      if (state.priceBand && state.priceBand !== "all") {
+        var pv = priceYen(p);
+        if (state.priceBand === "unknown") { if (pv != null) return false; }
+        else if (pv == null) return false;
+        else if (state.priceBand === "le300" && pv > 300) return false;
+        else if (state.priceBand === "m" && (pv <= 300 || pv > 1000)) return false;
+        else if (state.priceBand === "l" && (pv <= 1000 || pv > 3000)) return false;
+        else if (state.priceBand === "xl" && pv <= 3000) return false;
+      }
       if (state.q && p.search.indexOf(state.q) < 0) return false;
       return true;
     }
@@ -8519,18 +8803,39 @@
 
     function rowsFor(items){
       var rowsHtml = "";
-      items.forEach(function(p){
-        rowsHtml += rowHTML(p);
-        if (p.id === selectedId) rowsHtml += '<section class="detail dwrap" aria-live="polite">' + detailHTML(p) + "</section>";
-      });
+      items.forEach(function(p){ rowsHtml += rowHTML(p); });
       return rowsHtml;
+    }
+    function sortItems(items){
+      var arr = items.slice();
+      if (state.sort === "priceAsc" || state.sort === "priceDesc") {
+        var dir = state.sort === "priceAsc" ? 1 : -1;
+        arr.sort(function(a, b){ var x = priceYen(a), y = priceYen(b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return (x - y) * dir; });
+      } else if (state.sort === "mention") {
+        arr.sort(function(a, b){ var d = mentionCount(b) - mentionCount(a); if (d) return d; return (b.srcs ? b.srcs.length : 0) - (a.srcs ? a.srcs.length : 0); });
+      } else if (state.sort === "name") {
+        arr.sort(function(a, b){ return a.name < b.name ? -1 : a.name > b.name ? 1 : 0; });
+      }
+      return arr;
     }
     function top10HTML(){
       var alive = TOP10.filter(function(p){ return !deleted[p.id]; });
       if (!alive.length) return "";
-      var h = '<div class="top10"><h3>많이 언급된 TOP 10</h3><p class="t10note">여러 영상에서 언급된 건수 기준이에요. 동점이면 근거 영상이 많은 순으로 정했어요. 누르면 해당 제품으로 이동해요.</p><ol>';
+      var h = '<div class="top10" id="top10board"><h3>많이 언급된 TOP 10</h3><p class="t10note">순위 기준: ① 언급 건수가 많은 순 → ② 동점이면 근거 영상(상세에 링크된 영상)이 많은 순 → ③ 그래도 같으면 원래 목록 순서예요. 그래서 둘 다 ‘약 7개 영상’이어도 근거 영상이 더 많은 쪽이 위예요. 각 줄 오른쪽에 두 숫자를 모두 적었어요. 누르면 해당 제품으로 이동해요.</p><ol>';
       alive.forEach(function(p){
-        h += '<li><a href="#' + p.id + '" data-jump="' + p.id + '"><span class="t10rank">' + RANK[p.id] + '위</span><span class="t10name">' + esc(p.name) + '</span><span class="t10meta">' + esc(mentionShort(p)) + " · " + (p.store === "donki" ? "돈키호테" : "편의점") + "</span></a></li>";
+        h += '<li><a href="#' + p.id + '" data-jump="' + p.id + '"><span class="t10rank">' + RANK[p.id] + '위</span><span class="t10name">' + esc(p.name) + '</span><span class="t10meta">' + esc(mentionShort(p)) + " · 근거 영상 " + (p.srcs ? p.srcs.length : 0) + "개 · " + (p.store === "donki" ? "돈키호테" : "편의점") + "</span></a></li>";
+      });
+      h += "</ol></div>";
+      return h;
+    }
+    function newBoardHTML(items){
+      if (!items.length) return "";
+      var latestP = { addedDate: latestAddedDate() };
+      var untilShort = newUntilLabel(latestP);
+      var untilFull = newUntilFullLabel(latestP);
+      var h = '<div class="top10" id="newboard"><h3>새로 등록된 제품 ' + items.length + '개</h3><p class="t10note">' + esc(addedLabel(latestP)) + '에 새로 등록된 제품이에요. NEW 배지와 이 안내판은 등록일부터 7일 동안만 보여요 — ' + esc(untilFull) + '되고, 그다음 날부터는 자동으로 사라져요. 이 안내판은 모아 보기용이고, 제품 자체는 원래 카테고리 안에서도 NEW 배지와 함께 그대로 찾을 수 있어요 (카테고리에서 빠지지 않아요). 누르면 해당 제품으로 이동해요.</p><ol>';
+      items.forEach(function(p){
+        h += '<li><a href="#' + p.id + '" data-jump="' + p.id + '"><span class="t10rank">NEW</span><span class="t10name">' + esc(p.name) + '</span><span class="t10meta">' + esc(p.cat || "") + " · " + (p.store === "donki" ? "돈키호테" : "편의점") + "</span></a></li>";
       });
       h += "</ol></div>";
       return h;
@@ -8539,47 +8844,49 @@
       var vis = ITEMS.filter(match);
       if (selectedId && !vis.some(function(p){ return p.id===selectedId; })) selectedId = null;
       var html = "";
-      // 1) Newly registered items first: pulled out of their categories
-      // into one section at the very top of the catalog.
-      var newItems = vis.filter(function(p){ return !!p.addedDate; });
-      var newIds = {};
-      newItems.forEach(function(p){ newIds[p.id] = true; });
-      if (newItems.length) {
-        var orderedNew = newItems.map(function(p, i){ return { p: p, i: i }; }).sort(function(a, b){
-          var d = mentionCount(b.p) - mentionCount(a.p);
-          if (d) return d;
-          d = (b.p.srcs ? b.p.srcs.length : 0) - (a.p.srcs ? a.p.srcs.length : 0);
-          if (d) return d;
-          return a.i - b.i;
-        }).map(function(x){ return x.p; });
-        html += '<section class="cat newsec">';
-        html += '<h3><span class="ntag">NEW</span>새로 등록된 제품 <span class="n">' + newItems.length + "개</span></h3>";
-        html += '<p class="catnote">' + esc(addedLabel({ addedDate: latestAddedDate() })) + "에 새로 등록된 제품이에요. 원래 카테고리에서 여기로 모아 맨 위에 보여드려요.</p>";
-        html += '<div class="rows">' + rowsFor(orderedNew) + "</div></section>";
+      var isDefault = !state.q && state.store === "all" && state.cat === "all" && state.brand === "all" && !state.only && state.sort === "default" && state.priceBand === "all";
+      if (isDefault) {
+        var newItems = vis.filter(function(p){ return isNew(p); });
+        html += newBoardHTML(newItems);
+        html += top10HTML();
       }
-      // 2) TOP 10 ranking board, in the default (unfiltered) view only.
-      var isDefault = !state.q && state.store === "all" && state.cat === "all" && state.brand === "all" && !state.only;
-      if (isDefault) html += top10HTML();
-      // 3) Everything else, grouped by category as before.
       var lastStore = null;
-      GROUPS.forEach(function(g){
-        var items = vis.filter(function(p){ return p.gid===g.gid && !newIds[p.id]; });
-        if (!items.length) return;
-        if (g.store !== lastStore) {
-          lastStore = g.store;
-          html += '<div class="storehead"><h2><span class="stag' + (g.store==="donki" ? " dk" : "") + '">' + (g.store==="donki" ? "돈키호테" : "편의점") + "</span>" +
-            (g.store==="donki" ? "돈키호테 공통 추천템" : "일본 편의점 공통 추천템") + "</h2><p>" +
-            (g.store==="donki" ? "한국 유튜브 영상 34개를 교차 확인해, 3개 이상 영상에서 공통 추천된 제품을 중심으로 정리했어요. 약사 추천 영상(V33) 신규 15개, 약사 인터뷰 영상(V34) 신규 8개와 참고용 항목도 함께 표시합니다." :
-                                 "한국 유튜브 영상 35개를 교차 확인해, 3개 이상 영상에서 공통 추천된 제품을 정리했어요. 할명수 ep.222 단독 추천은 마지막 카테고리에 따로 모았습니다.") + "</p></div>";
-        }
-        html += '<section class="cat" data-cat="' + g.gid + '">';
-        html += "<h3>" + (g.store==="donki" ? "돈키호테" : "편의점") + " · " + esc(g.name) + ' <span class="n">' + items.length + "개</span></h3>";
-        if (g.note) html += '<p class="catnote">' + esc(g.note) + "</p>";
-        html += '<div class="rows">' + rowsFor(items) + "</div></section>";
-      });
+      if (state.sort !== "default") {
+        // Flat sorted list (category grouping would hide the sort order).
+        var sorted = sortItems(vis);
+        var sortLabels = { priceAsc: "가격 낮은 순", priceDesc: "가격 높은 순", mention: "언급 많은 순", name: "이름순" };
+        html += '<div class="storehead"><h2>정렬 결과 — ' + esc(sortLabels[state.sort] || "") + '</h2><p>선택한 순서대로 전체를 한 목록으로 보여요. 가격순에서는 가격 미확인이 맨 뒤에 와요. 기본순으로 돌리면 카테고리별로 다시 묶여요.</p></div>';
+        html += '<div class="rows">' + sorted.map(function(p){ return rowHTML(p); }).join("") + "</div>";
+      } else {
+        GROUPS.forEach(function(g){
+          var items = vis.filter(function(p){ return p.gid===g.gid; });
+          if (!items.length) return;
+          if (g.store !== lastStore) {
+            lastStore = g.store;
+            html += '<div class="storehead"><h2><span class="stag' + (g.store==="donki" ? " dk" : "") + '">' + (g.store==="donki" ? "돈키호테" : "편의점") + "</span>" +
+              (g.store==="donki" ? "돈키호테 공통 추천템" : "일본 편의점 공통 추천템") + "</h2><p>" +
+              (g.store==="donki" ? "한국 유튜브 영상 42개를 교차 확인해, 3개 이상 영상에서 공통 추천된 제품을 중심으로 정리했어요. 약사 추천 영상(V33) 신규 15개, 약사 인터뷰 영상(V34) 신규 8개와 참고용 항목 2개도 함께 표시합니다." :
+                                   "한국 유튜브 영상 35개를 교차 확인해, 3개 이상 영상에서 공통 추천된 제품을 정리했어요. 할명수 ep.222 단독 추천은 마지막 카테고리에 따로 모았습니다.") + "</p></div>";
+          }
+          html += '<section class="cat" data-cat="' + g.gid + '">';
+          html += "<h3>" + esc(g.name) + ' <span class="n">' + items.length + "개</span></h3>";
+          if (g.note) html += '<p class="catnote">' + esc(g.note) + "</p>";
+          html += '<div class="rows">' + rowsFor(items) + "</div></section>";
+        });
+      }
       listEl.innerHTML = html;
       emptyMsg.style.display = vis.length ? "none" : "block";
-      catCount.innerHTML = "전체 <b>" + vis.length + "</b>개 표시 중";
+      var mainN = vis.filter(function(p){ return !p.nc; }).length;
+      var refN = vis.length - mainN;
+      catCount.innerHTML = "표시 중 <b>" + vis.length + "</b>개 (본 목록 " + mainN + "개" + (refN ? " + 참고용 " + refN + "개" : "") + ") · 전체 카드 217개 = 본 목록 215개 + 참고용 2개";
+      var pn = document.getElementById("priceNote");
+      if (pn) {
+        var aliveAll = ITEMS.filter(function(p){ return !deleted[p.id]; });
+        var known = aliveAll.filter(function(p){ return priceYen(p) != null; }).length;
+        pn.textContent = "가격 확인 " + known + "개 · 가격 미확인 " + (aliveAll.length - known) + "개예요. 미확인은 조사에서 가격을 특정하지 못한 경우로, 상세에 이유가 적혀 있어요.";
+      }
+      var fb = document.getElementById("floatBtns");
+      if (fb) fb.hidden = !(currentView === "catalog" && isLoggedIn());
     }
 
     function selectProduct(id, scroll){
@@ -8597,7 +8904,7 @@
     function renderCatChips(){
       var defs = [{ gid: "all", label: "전체 카테고리", store: "" }];
       GROUPS.forEach(function(g){
-        var n = ITEMS.filter(function(p){ return p.gid===g.gid && !p.nc && !deleted[p.id]; }).length;
+        var n = ITEMS.filter(function(p){ return p.gid===g.gid && !deleted[p.id]; }).length;
         defs.push({ gid: g.gid, label: g.name, store: g.store, n: n });
       });
       catChips.innerHTML = defs.map(function(d){
@@ -8626,8 +8933,8 @@
         (v.date ? " · " + esc(v.date) : "") + (v.tag ? '<span class="vtag">' + esc(v.tag) + "</span>" : "") + "</li>";
     }).join("");
     var cSrc = document.getElementById("cSrcList");
-    cSrc.innerHTML = DATA.cSources.map(function(s){
-      return '<li><a href="https://www.youtube.com/watch?v=' + s.vid + '" target="_blank" rel="noopener"><b>' + esc(s.title) + "</b></a><br />" + esc(s.ch) + (s.date ? " · " + esc(s.date) : "") + "</li>";
+    cSrc.innerHTML = DATA.cSources.map(function(s, i){
+      return '<li><span class="vno">C' + (i + 1) + '</span><a href="https://www.youtube.com/watch?v=' + s.vid + '" target="_blank" rel="noopener"><b>' + esc(s.ch) + "</b> · " + esc(s.title) + "</a>" + (s.date ? " · " + esc(s.date) : "") + "</li>";
     }).join("");
 
     // ---- picked / copy ----
@@ -8647,7 +8954,7 @@
       var st = document.getElementById("statTotal"); if (st) st.textContent = aliveMain.length + "개";
       var sd = document.getElementById("statDonki"); if (sd) sd.textContent = aliveDonki + "개";
       var sc = document.getElementById("statConv"); if (sc) sc.textContent = aliveConv + "개";
-      var sr = document.getElementById("statRef"); if (sr) sr.textContent = aliveRef ? "(참고용 " + aliveRef + "개 별도)" : "";
+      var sr = document.getElementById("statRef"); if (sr) sr.textContent = aliveRef ? "(참고용 " + aliveRef + "개 별도 · 전체 카드 " + (aliveMain.length + aliveRef) + "개)" : "";
       document.querySelectorAll("[data-tabcount]").forEach(function(el){
         var k = el.getAttribute("data-tabcount");
         el.textContent = (k==="donki" ? aliveDonki : k==="conv" ? aliveConv : aliveMain.length) + "개";
@@ -8669,6 +8976,8 @@
           }).join("");
         }
       }
+      var mainCopy = document.getElementById("copyBtn");
+      if (mainCopy) mainCopy.disabled = n === 0;
       renderPickedPage();
       renderBoughtPage();
       renderDashboard();
@@ -8805,19 +9114,7 @@
     if (copyBoughtBtnEl) copyBoughtBtnEl.addEventListener("click", function(){
       var sel = boughtItems();
       if (!sel.length) { toast("아직 구매 체크한 제품이 없어요."); return; }
-      var lines = ["일본 쇼핑리스트 — 구매한 목록 (" + sel.length + "개)", ""];
-      ["donki","conv"].forEach(function(st){
-        var group = sel.filter(function(p){ return p.store===st; });
-        if (!group.length) return;
-        lines.push("[" + storeName(st) + "]");
-        var lastCat = null;
-        group.forEach(function(p){
-          if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
-          lines.push("  - " + p.name + (p.price ? " (" + p.price + ")" : ""));
-        });
-        lines.push("");
-      });
-      var text = lines.join("\n");
+      var text = copyTextFor(sel, "구매한 목록");
       function done(){ toast("구매한 목록 " + sel.length + "개를 복사했어요."); }
       function fallback(){
         var ta = document.createElement("textarea");
@@ -8834,19 +9131,7 @@
     document.getElementById("copyBtn").addEventListener("click", function(){
       var sel = ITEMS.filter(function(p){ return picked[p.id] && !deleted[p.id]; });
       if (!sel.length) { toast("먼저 제품을 담아 주세요."); return; }
-      var lines = ["일본 쇼핑리스트 — 담은 목록 (" + sel.length + "개)", ""];
-      ["donki","conv"].forEach(function(st){
-        var group = sel.filter(function(p){ return p.store===st; });
-        if (!group.length) return;
-        lines.push("[" + storeName(st) + "]");
-        var lastCat = null;
-        group.forEach(function(p){
-          if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
-          lines.push("  - " + p.name + (p.price ? " (" + p.price + ")" : "") + (bought[p.id] ? " ✓ 구매완료" : ""));
-        });
-        lines.push("");
-      });
-      var text = lines.join("\n");
+      var text = copyTextFor(sel, "담은 목록");
       function done(){ toast("담은 목록 " + sel.length + "개를 복사했어요."); }
       function fallback(){
         var ta = document.createElement("textarea");
@@ -9344,11 +9629,13 @@
       else h += '<img src="' + p.img + '" alt="' + esc(p.name) + ' 제품 사진" loading="lazy" />';
       if (isNew(p)) h += '<span class="newbadge">NEW</span>';
       h += '</span><span class="tx"><span class="nm">' + esc(p.name) + "</span>";
-      if (p.orig) h += '<span class="sub orig">' + esc(p.orig) + "</span>";
-      h += '<span class="sub">' + esc(storeName(p.store)) + " · " + esc(p.place || "") + (p.cat ? " · " + esc(p.cat) : "") + "</span>";
-      h += '<span class="sub price">가격 ' + esc(p.price || "가격 미확인") + "</span>";
-      h += '<span class="mrow">' + (isBought ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + (p.mentions ? '<span class="mchip">' + esc(mentionShort(p)) + "</span>" : "") + "</span>";
-      if (p.reasonHtml || p.reason) h += '<span class="reason">' + (p.reasonHtml ? p.reasonHtml : esc(p.reason)) + "</span>";
+      var metaBits = [];
+      if (p.place && p.place !== storeName(p.store)) metaBits.push(p.place);
+      else metaBits.push(storeName(p.store));
+      if (p.cat) metaBits.push(p.cat);
+      h += '<span class="sub">' + esc(metaBits.join(" · ")) + "</span>";
+      h += '<span class="sub price">' + esc(priceLabel(p)) + (priceYen(p) != null && p.price ? ' <span style="font-weight:500;color:var(--ink3)">(출처 표기: ' + esc(p.price) + ")</span>" : "") + "</span>";
+      h += '<span class="mrow">' + (isBought ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + (p.mentions ? '<span class="mchip">' + esc(mentionShort(p)) + "</span>" : "") + dupChipHTML(p) + "</span>";
       if (isBought && boughtDates[p.id]) h += '<span class="sub buydate">구매 체크한 날: ' + esc(fmtDate(boughtDates[p.id])) + "</span>";
       if (!isBought && pickedDates[p.id]) h += '<span class="sub">담은 날: ' + esc(fmtDate(pickedDates[p.id])) + "</span>";
       h += '</span><span class="browacts">';
@@ -9370,6 +9657,48 @@
       });
       return h;
     }
+    function copyTextFor(items, title){
+      var lines = ["일본 쇼핑리스트 — " + title + " (" + items.length + "개)", ""];
+      ["donki","conv"].forEach(function(st){
+        var group = items.filter(function(p){ return p.store===st; });
+        if (!group.length) return;
+        lines.push("[" + storeName(st) + "]");
+        var lastCat = null;
+        group.forEach(function(p){
+          if (p.cat !== lastCat) { lastCat = p.cat; lines.push("· " + p.cat); }
+          lines.push("  - " + p.name + " (" + priceLabel(p) + ")" + (bought[p.id] ? " ✓ 구매완료" : ""));
+        });
+        lines.push("");
+      });
+      var tot = totalsFor(items);
+      lines.push("예상 합계: " + fmtYen(tot.sum) + " (가격 확인된 " + tot.known + "개 기준" + (tot.unknown ? ", 미확인 " + tot.unknown + "개 제외" : "") + ")");
+      return lines.join("\n");
+    }
+    function totalsFor(items){
+      var sum = 0, known = 0, byStore = {};
+      items.forEach(function(p){
+        var v = priceYen(p);
+        if (v != null) { sum += v; known++; byStore[p.store] = (byStore[p.store] || 0) + v; }
+      });
+      return { sum: sum, known: known, unknown: items.length - known, byStore: byStore };
+    }
+    function totalsHTML(items, label){
+      if (!items.length) return label + "이 비어 있어 합계를 낼 수 없어요.";
+      var t = totalsFor(items);
+      var parts = [];
+      if (t.byStore.donki) parts.push("돈키호테 소계 " + fmtYen(t.byStore.donki));
+      if (t.byStore.conv) parts.push("편의점 소계 " + fmtYen(t.byStore.conv));
+      return "예상 총액 <b>" + fmtYen(t.sum) + "</b> <span class=\"t-sub\">가격 확인된 " + t.known + "개만 더한 값이에요" + (t.unknown ? " · 가격 미확인 " + t.unknown + "개는 빠져서 실제보다 적을 수 있어요" : "") + (parts.length ? " · " + parts.join(" · ") : "") + "</span>";
+    }
+    function sortListItems(items, mode){
+      var arr = items.slice();
+      if (mode === "priceAsc" || mode === "priceDesc") { var dir = mode === "priceAsc" ? 1 : -1; arr.sort(function(a, b){ var x = priceYen(a), y = priceYen(b); if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1; return (x - y) * dir; }); }
+      else if (mode === "name") arr.sort(function(a, b){ return a.name < b.name ? -1 : a.name > b.name ? 1 : 0; });
+      else if (mode === "store") arr.sort(function(a, b){ return a.store < b.store ? -1 : a.store > b.store ? 1 : 0; });
+      else if (mode === "boughtAt") arr.sort(function(a, b){ return (boughtDates[a.id] || "") < (boughtDates[b.id] || "") ? 1 : -1; });
+      else if (mode === "added") arr.sort(function(a, b){ return (pickedDates[a.id] || "") < (pickedDates[b.id] || "") ? -1 : 1; });
+      return arr;
+    }
     function renderPickedPage(){
       var wrap = document.getElementById("pickedListWrap");
       if (!wrap) return;
@@ -9381,7 +9710,7 @@
       var sum = document.getElementById("pickedSummary");
       if (sum) {
         if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담으면 여기에 사진·가격·파는 곳과 함께 모여요.";
-        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했고, 아직 " + (total - bItems.length) + "개가 남았어요. 각 제품의 ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 볼 수 있어요.";
+        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했고, 아직 " + (total - bItems.length) + "개가 남았어요. ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 볼 수 있어요.";
       }
       var pct = total ? Math.round(bItems.length / total * 100) : 0;
       var fill = document.getElementById("pickedProgressFill");
@@ -9390,7 +9719,17 @@
       if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
       var empty = document.getElementById("pickedEmpty");
       if (empty) empty.hidden = total > 0;
-      wrap.innerHTML = browGroupHTML(pItems, "picked");
+      var tot = document.getElementById("pickedTotals");
+      if (tot) tot.innerHTML = totalsHTML(pItems, "담은 목록");
+      var prev = document.getElementById("pickedCopyPreview");
+      if (prev) prev.textContent = total ? copyTextFor(pItems, "담은 목록") : "담은 제품이 없어서 복사할 내용이 없어요.";
+      var cp = document.getElementById("copyPickedBtn");
+      if (cp) cp.disabled = !total;
+      var view = pItems;
+      if (listState.pickedQ) { var q = listState.pickedQ; view = view.filter(function(p){ return p.search.indexOf(q) >= 0; }); }
+      view = sortListItems(view, listState.pickedSort);
+      if (listState.pickedSort === "store" || listState.pickedSort === "added") wrap.innerHTML = browGroupHTML(view, "picked");
+      else wrap.innerHTML = view.length ? '<div class="brows" style="margin-top:18px">' + view.map(function(p){ return browHTML(p, "picked"); }).join("") + "</div>" : (total ? '<p class="remain-note" style="margin-top:16px">목록 안 검색에 맞는 제품이 없어요.</p>' : "");
     }
     function renderBoughtPage(){
       var wrap = document.getElementById("boughtListWrap");
@@ -9403,8 +9742,8 @@
       var sum = document.getElementById("boughtSummary");
       if (sum) {
         if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담아 보세요.";
-        else if (!bItems.length) sum.textContent = "담은 " + total + "개 중 아직 구매한 게 없어요. 실제로 산 제품은 전체 목록의 카드나 상세에서 구매 체크로 표시해 보세요.";
-        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했어요." + (rItems.length ? " 아직 " + rItems.length + "개가 남았어요." : " 담은 건 전부 샀어요.");
+        else if (!bItems.length) sum.textContent = "담은 " + total + "개 중 아직 구매한 게 없어요. 이 탭에는 실제로 구매 체크한 것만 보여요. 아직 안 산 담은 것은 ‘담은 목록’ 탭에서 보세요.";
+        else sum.textContent = "구매 체크한 " + bItems.length + "개만 모았어요." + (rItems.length ? " 아직 안 산 담은 것 " + rItems.length + "개는 ‘담은 목록’ 탭에 따로 있어요." : " 담은 건 전부 샀어요.");
       }
       var pct = total ? Math.round(bItems.length / total * 100) : 0;
       var fill = document.getElementById("boughtProgressFill");
@@ -9413,13 +9752,19 @@
       if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
       var empty = document.getElementById("boughtEmpty");
       if (empty) empty.hidden = bItems.length > 0;
-      wrap.innerHTML = browGroupHTML(bItems, "bought");
-      var rt = document.getElementById("remainTitle");
-      var rn = document.getElementById("remainNote");
-      var rw = document.getElementById("remainListWrap");
-      if (rt) { rt.hidden = !rItems.length; rt.textContent = rItems.length ? "아직 안 산 담은 것 " + rItems.length + "개" : ""; }
-      if (rn) rn.hidden = !rItems.length;
-      if (rw) rw.innerHTML = browGroupHTML(rItems, "remain");
+      var tot = document.getElementById("boughtTotals");
+      if (tot) tot.innerHTML = totalsHTML(bItems, "구매한 목록");
+      var prev = document.getElementById("boughtCopyPreview");
+      if (prev) prev.textContent = bItems.length ? copyTextFor(bItems, "구매한 목록") : "구매한 제품이 없어서 복사할 내용이 없어요.";
+      var cp = document.getElementById("copyBoughtBtn");
+      if (cp) cp.disabled = !bItems.length;
+      var note = document.getElementById("boughtRemainNote");
+      if (note) { note.hidden = !(bItems.length && rItems.length); note.textContent = rItems.length ? "아직 안 산 담은 것 " + rItems.length + "개는 이 탭에 섞지 않았어요. 위 ‘아직 안 산 담은 것 보기’를 눌러 주세요." : ""; }
+      var view = bItems;
+      if (listState.boughtQ) { var q2 = listState.boughtQ; view = view.filter(function(p){ return p.search.indexOf(q2) >= 0; }); }
+      view = sortListItems(view, listState.boughtSort);
+      if (listState.boughtSort === "store" || listState.boughtSort === "boughtAt") wrap.innerHTML = browGroupHTML(view, "bought");
+      else wrap.innerHTML = view.length ? '<div class="brows" style="margin-top:18px">' + view.map(function(p){ return browHTML(p, "bought"); }).join("") + "</div>" : (bItems.length ? '<p class="remain-note" style="margin-top:16px">목록 안 검색에 맞는 제품이 없어요.</p>' : "");
     }
     function fmtHistoryTime(iso){
       var d = new Date(iso);
@@ -9457,15 +9802,19 @@
       if (dd) dd.innerHTML = delN + "<small>개</small>";
       var ds = document.getElementById("dashBoughtSub");
       if (ds) ds.textContent = savN ? ("담은 것 중 " + buyN + "개 샀어요 · 아직 " + (savN - buyN) + "개 남았어요") : "아직 구매 체크한 게 없어요";
+      var filtered = historyLog.filter(function(e){ return listState.histFilter === "all" || e.type === listState.histFilter; });
       var hl = document.getElementById("histList");
       var he = document.getElementById("histEmpty");
       if (hl) {
-        hl.innerHTML = historyLog.slice(0, 30).map(function(e){
-          var cls = (e.type === "구매" || e.type === "구매취소") ? " buy" : (e.type === "삭제" ? " del" : "");
-          return '<li><span class="hist-chip' + cls + '">' + esc(e.type) + '</span><span class="hist-text">' + esc(historySentence(e)) + '</span><span class="hist-time">' + esc(fmtHistoryTime(e.at)) + "</span></li>";
+        hl.innerHTML = filtered.slice(0, listState.histLimit).map(function(e){
+          var cls = e.type === "구매" ? " buy" : e.type === "구매취소" ? " unbuy" : e.type === "삭제" ? " del" : e.type === "담기취소" ? " unpick" : e.type === "복원" ? " restore" : "";
+          return '<li class="clickable" data-goto="' + esc(e.id || "") + '" title="이 제품으로 이동"><span class="hist-chip' + cls + '">' + esc(e.type) + '</span><span class="hist-text">' + esc(historySentence(e)) + '</span><span class="hist-time">' + esc(fmtHistoryTime(e.at)) + "</span></li>";
         }).join("");
       }
-      if (he) he.hidden = historyLog.length > 0;
+      if (he) { he.hidden = filtered.length > 0; if (!filtered.length) he.innerHTML = historyLog.length ? "이 종류의 기록은 아직 없어요." : "아직 기록이 없어요.<br />제품을 담거나 구매 체크를 하면 여기에 쌓여요."; }
+      var mb = document.getElementById("histMoreBtn");
+      if (mb) { var remain = filtered.length - listState.histLimit; mb.hidden = remain <= 0; mb.textContent = remain > 0 ? "이력 더 보기 (남은 " + remain + "개)" : "이력 더 보기"; }
+      document.querySelectorAll("[data-histfilter]").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-histfilter") === listState.histFilter ? "true" : "false"); });
     }
     function setView(v){
       currentView = v;
@@ -9492,6 +9841,10 @@
       if (v === "picked") renderPickedPage();
       if (v === "bought") renderBoughtPage();
       if (v === "dashboard") renderDashboard();
+      var fb2 = document.getElementById("floatBtns");
+      if (fb2) fb2.hidden = v !== "catalog";
+      var pa = document.getElementById("printArea");
+      if (pa && v !== "picked" && v !== "bought") { pa.classList.remove("show"); pa.style.display = ""; }
       window.scrollTo({ top: 0, behavior: scrollBehavior() });
     }
     loadSharedState();
@@ -9505,6 +9858,24 @@
         restoreOneDeleted(ro.getAttribute("data-restore-one"));
         return;
       }
+      var cl = t.closest ? t.closest("[data-close]") : null;
+      if (cl) {
+        selectedId = null;
+        Object.keys(listDetail).forEach(function(k){ listDetail[k] = null; });
+        render(); renderPickedPage(); renderBoughtPage();
+        var backRow = document.getElementById(cl.getAttribute("data-close"));
+        if (backRow && currentView === "catalog") backRow.scrollIntoView({ block: "center", behavior: scrollBehavior() });
+        return;
+      }
+      var t10 = t.closest ? t.closest("[data-top10link]") : null;
+      if (t10) {
+        e.preventDefault();
+        var board = document.getElementById("top10board");
+        if (board) board.scrollIntoView({ block: "start", behavior: scrollBehavior() });
+        return;
+      }
+      var hf = t.closest ? t.closest("[data-histfilter]") : null;
+      if (hf) { listState.histFilter = hf.getAttribute("data-histfilter"); listState.histLimit = 30; renderDashboard(); return; }
       var vt = t.closest ? t.closest("[data-viewtab]") : null;
       if (vt) {
         setView(vt.getAttribute("data-viewtab"));
@@ -9526,6 +9897,10 @@
       }
       var gt = t.closest ? t.closest("[data-goto]") : null;
       if (gt) {
+        var gid2 = gt.getAttribute("data-goto");
+        var gp = gid2 ? byId(gid2) : null;
+        if (!gp) { toast("기록만 남아 있고 지금 목록에는 없는 제품이에요."); return; }
+        if (deleted[gid2]) { toast("‘" + gp.name + "’은(는) 삭제한 제품이라 목록에 없어요. 카탈로그 위쪽 ‘삭제한 상품’에서 복원하면 다시 볼 수 있어요."); return; }
         state.q = ""; document.getElementById("q").value = "";
         state.store = "all"; state.cat = "all"; state.brand = "all"; state.only = false;
         document.getElementById("onlyPicked").setAttribute("aria-pressed", "false");
@@ -9616,6 +9991,70 @@
       e.currentTarget.setAttribute("aria-pressed", state.only ? "true" : "false");
       render();
     });
+    function resetFilters(){
+      state.q = ""; state.store = "all"; state.cat = "all"; state.brand = "all"; state.only = false; state.sort = "default"; state.priceBand = "all";
+      var q = document.getElementById("q"); if (q) q.value = "";
+      var ss = document.getElementById("sortSel"); if (ss) ss.value = "default";
+      var ps = document.getElementById("priceSel"); if (ps) ps.value = "all";
+      var op = document.getElementById("onlyPicked"); if (op) op.setAttribute("aria-pressed", "false");
+      selectedId = null;
+      renderChips(); render();
+      toast("검색·필터를 모두 지웠어요.");
+    }
+    var sortSelEl = document.getElementById("sortSel");
+    if (sortSelEl) sortSelEl.addEventListener("change", function(e){ state.sort = e.target.value; render(); });
+    var priceSelEl = document.getElementById("priceSel");
+    if (priceSelEl) priceSelEl.addEventListener("change", function(e){ state.priceBand = e.target.value; render(); });
+    var resetBtnEl = document.getElementById("resetFiltersBtn");
+    if (resetBtnEl) resetBtnEl.addEventListener("click", resetFilters);
+    var emptyResetEl = document.getElementById("emptyResetBtn");
+    if (emptyResetEl) emptyResetEl.addEventListener("click", resetFilters);
+    var pqEl = document.getElementById("pickedQ");
+    if (pqEl) pqEl.addEventListener("input", function(e){ listState.pickedQ = e.target.value.trim().toLowerCase(); renderPickedPage(); });
+    var psortEl = document.getElementById("pickedSort");
+    if (psortEl) psortEl.addEventListener("change", function(e){ listState.pickedSort = e.target.value; renderPickedPage(); });
+    var bqEl = document.getElementById("boughtQ");
+    if (bqEl) bqEl.addEventListener("input", function(e){ listState.boughtQ = e.target.value.trim().toLowerCase(); renderBoughtPage(); });
+    var bsortEl = document.getElementById("boughtSort");
+    if (bsortEl) bsortEl.addEventListener("change", function(e){ listState.boughtSort = e.target.value; renderBoughtPage(); });
+    var hmEl = document.getElementById("histMoreBtn");
+    if (hmEl) hmEl.addEventListener("click", function(){ listState.histLimit += 50; renderDashboard(); });
+    var gpbEl = document.getElementById("gotoPickedFromBought");
+    if (gpbEl) gpbEl.addEventListener("click", function(){ setView("picked"); });
+    function showPrint(title, items){
+      var pa = document.getElementById("printArea");
+      if (!pa) return;
+      if (!items.length) { toast("목록이 비어 있어 인쇄용으로 볼 게 없어요."); return; }
+      var t = totalsFor(items);
+      var hh = "<h2>일본 쇼핑리스트 — " + esc(title) + " (" + items.length + "개)</h2><p>예상 합계 " + fmtYen(t.sum) + " (가격 확인된 " + t.known + "개 기준" + (t.unknown ? ", 미확인 " + t.unknown + "개 제외" : "") + ") · 이 화면에서 브라우저 메뉴의 인쇄를 누르면 이 목록만 인쇄돼요.</p>";
+      ["donki","conv"].forEach(function(st){
+        var group = items.filter(function(x){ return x.store===st; });
+        if (!group.length) return;
+        hh += "<h3>" + storeName(st) + "</h3><ul>";
+        group.forEach(function(x){ hh += "<li>" + esc(x.name) + " — " + esc(priceLabel(x)) + " · " + esc(x.place || "") + (bought[x.id] ? " · 구매완료" : "") + "</li>"; });
+        hh += "</ul>";
+      });
+      hh += '<button class="btn" type="button" id="printCloseBtn">인쇄용 목록 닫기</button>';
+      pa.innerHTML = hh;
+      pa.classList.add("show");
+      pa.scrollIntoView({ block: "start", behavior: scrollBehavior() });
+      var cb = document.getElementById("printCloseBtn");
+      if (cb) cb.addEventListener("click", function(){ pa.classList.remove("show"); pa.innerHTML = ""; });
+    }
+    var ppEl = document.getElementById("printPickedBtn");
+    if (ppEl) ppEl.addEventListener("click", function(){ showPrint("담은 목록", pickedItems()); });
+    var pbEl = document.getElementById("printBoughtBtn");
+    if (pbEl) pbEl.addEventListener("click", function(){ showPrint("구매한 목록", boughtItems()); });
+    var ttEl = document.getElementById("toTopBtn");
+    if (ttEl) ttEl.addEventListener("click", function(){ window.scrollTo({ top: 0, behavior: scrollBehavior() }); });
+    var t10El = document.getElementById("toTop10Btn");
+    if (t10El) t10El.addEventListener("click", function(){ var b = document.getElementById("top10board"); if (b) b.scrollIntoView({ block: "start", behavior: scrollBehavior() }); else toast("TOP 10은 필터를 모두 풀었을 때 보여요. ‘필터 초기화’를 눌러 보세요."); });
+    var helpModal = document.getElementById("helpModal");
+    var helpBtnEl = document.getElementById("helpBtn");
+    if (helpBtnEl && helpModal) helpBtnEl.addEventListener("click", function(){ helpModal.hidden = false; });
+    var helpCloseEl = document.getElementById("helpCloseBtn");
+    if (helpCloseEl && helpModal) helpCloseEl.addEventListener("click", function(){ helpModal.hidden = true; });
+    if (helpModal) helpModal.addEventListener("click", function(e){ if (e.target === helpModal) helpModal.hidden = true; });
 
     renderChips();
     render();
