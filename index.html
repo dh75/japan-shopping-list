@@ -282,7 +282,7 @@
       .sync-login-prompt{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
       .sync-login-prompt[hidden]{display:none}
       .sync-login-prompt p{margin:0;font-size:13.5px;color:var(--ink2)}
-      @media (max-width:640px){.auth-main{flex-direction:column;align-items:stretch}.auth-actions .google-btn{width:100%;justify-content:center}.sync-login-prompt .btn{width:100%;justify-content:center}}
+      @media (max-width:640px){.auth-main{flex-direction:column;align-items:stretch}.auth-info{flex:0 1 auto;flex-basis:auto}.auth-actions .google-btn{width:100%;justify-content:center}.sync-login-prompt .btn{width:100%;justify-content:center}}
       /* ---- login gate: guest sees intro only, full list after login ---- */
       #appContent[hidden],#guestView[hidden]{display:none !important}
       .guest-view{margin:18px 0 2px}
@@ -515,7 +515,8 @@
         .toolbar.filters-closed .toolbar-note{display:none}
         .toolbar .row .count{margin-left:0}
         /* NEW section + catalog rows and the TOP 10 list go single column */
-        .rows{grid-template-columns:1fr}
+        .rows{grid-template-columns:minmax(0,1fr)}
+        .crow{min-width:0}
         .top10 ol{grid-template-columns:1fr}
         .top10 .t10name{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.4}
         .top10 a{flex-wrap:wrap}
