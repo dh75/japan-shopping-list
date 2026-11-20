@@ -379,6 +379,30 @@
       .hist-empty{color:var(--ink3);font-size:14.5px;padding:14px 0 4px;text-align:center;line-height:1.6;margin:0}
       .hist-empty[hidden]{display:none}
       @media (max-width:640px){.dash-grid{gap:7px}.dash-card{padding:13px 12px}.dash-card .dn{font-size:24px}.dash-card .ds{font-size:11.5px}}
+      /* ---- picked list page + richer list rows with inline detail ---- */
+      .viewnav{flex-wrap:wrap}
+      .viewtab.pick[aria-pressed="true"]{background:var(--accent);color:#fff}
+      .picked-page{margin:18px 0 2px}
+      .picked-page[hidden]{display:none}
+      .picked-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+      .picked-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+      .picked-head h2{font-size:21px;margin:0 0 4px;font-weight:800}
+      .picked-head h2 span{color:var(--accent-ink)}
+      .picked-head p{margin:0;color:var(--ink2);font-size:14px;line-height:1.55;max-width:40em}
+      .picked-actions{display:flex;gap:8px;flex-wrap:wrap;flex:none}
+      .picked-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:30px 20px;text-align:center;color:var(--ink2);font-size:14.5px;line-height:1.6;margin-top:18px}
+      .picked-empty[hidden]{display:none}
+      @media (max-width:640px){.picked-head{flex-direction:column}.picked-actions{width:100%}.picked-actions .btn{flex:1;justify-content:center}.viewtab{flex:1 1 42%;font-size:14.5px;padding:10px 6px}}
+      .brow{align-items:flex-start}
+      .brow .th{width:76px;height:76px}
+      .brow .sub{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.45}
+      .brow .sub.price{color:var(--ink);font-weight:700;font-size:13px}
+      .brow .sub.orig{color:var(--ink3)}
+      .brow .mrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;align-items:center}
+      .brow .reason{display:block;font-size:12.5px;color:var(--ink2);line-height:1.5;margin-top:5px}
+      .bwrap{display:flex;flex-direction:column;gap:7px}
+      .bdetail .detail{margin:2px 0 6px}
+      .browbtn.pickoff{border-color:var(--line);color:var(--ink2)}
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
@@ -444,7 +468,7 @@
           <h2>로그인하면 할 수 있어요</h2>
           <ol>
             <li><span class="step-no">1</span><b>전체 목록 보기</b>가게·카테고리·편의점 브랜드별로 골라 보고, 제품명·일본어 이름으로 검색해요.</li>
-            <li><span class="step-no">2</span><b>담고, 사고, 체크하기</b>살 것은 담아 두고, 실제로 산 건 구매 완료로 체크해요. 구매한 것만 모은 페이지를 따로 볼 수 있어요.</li>
+            <li><span class="step-no">2</span><b>담고, 사고, 체크하기</b>살 것은 담아 두고, 실제로 산 건 구매 완료로 체크해요. 담은 것만 모은 ‘담은 목록’과 구매한 것만 모은 ‘구매한 목록’을 각각 따로 볼 수 있어요.</li>
             <li><span class="step-no">3</span><b>기기마다 이어보기</b>담기·삭제 목록이 내 구글 계정에 저장돼, 폰에서 만든 목록을 다른 기기에서도 그대로 봐요.</li>
           </ol>
         </div>
@@ -460,6 +484,7 @@
         </div>
         <div class="guest-cta">
           <p><b>전체 215개 목록이 궁금하다면</b><br /><span>구글 계정으로 로그인하고 바로 시작하세요. 별도 가입 없이, 로그인만으로 내 목록이 저장돼요.</span></p>
+          <div id="gisGuestBtn" aria-label="구글 로그인 버튼"></div>
           <button class="btn primary" id="guestLoginBtn" type="button">구글로 로그인하고 목록 보기</button>
         </div>
       </section>
@@ -467,6 +492,7 @@
       <div id="appContent" hidden>
       <nav class="viewnav" aria-label="목록 보기 방식">
         <button class="viewtab" type="button" data-viewtab="catalog" aria-pressed="true">전체 목록</button>
+        <button class="viewtab pick" type="button" data-viewtab="picked" aria-pressed="false">담은 목록<span class="vn" id="pickedNavCount">0개</span></button>
         <button class="viewtab buy" type="button" data-viewtab="bought" aria-pressed="false">구매한 목록<span class="vn" id="boughtNavCount">0개</span></button>
         <button class="viewtab" type="button" data-viewtab="dashboard" aria-pressed="false">내 기록</button>
       </nav>
@@ -544,12 +570,31 @@
         <p class="empty" id="emptyMsg">조건에 맞는 제품이 없어요. 검색어나 필터를 바꿔 보세요.</p>
       </div>
 
+      <section class="picked-page" id="pickedView" hidden aria-label="담은 목록 페이지">
+        <div class="picked-card">
+          <div class="picked-head">
+            <div>
+              <h2>담은 목록 <span id="pickedHeadCount"></span></h2>
+              <p id="pickedSummary">사려고 담아 둔 제품만 따로 모아 보는 페이지예요. 각 제품의 사진·가격·파는 곳이 함께 보이고, ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 그 자리에서 펼쳐져요.</p>
+            </div>
+            <div class="picked-actions">
+              <button class="btn" id="copyPickedBtn" type="button">담은 목록 복사</button>
+              <button class="btn primary" id="backFromPickedBtn" type="button">전체 목록 보기</button>
+            </div>
+          </div>
+          <div class="bp-track" aria-hidden="true"><div class="bp-fill" id="pickedProgressFill" style="width:0%"></div></div>
+          <p class="bp-text" id="pickedProgressText"></p>
+        </div>
+        <div class="picked-empty" id="pickedEmpty" hidden>아직 담은 제품이 없어요.<br />전체 목록에서 사고 싶은 제품의 <b>담기</b>를 눌러 보세요. 여기에 사진·가격·파는 곳과 함께 따로 모여요.</div>
+        <div id="pickedListWrap"></div>
+      </section>
+
       <section class="bought-page" id="boughtView" hidden aria-label="구매한 목록 페이지">
         <div class="bought-card">
           <div class="bought-head">
             <div>
               <h2>구매한 목록 <span id="boughtHeadCount"></span></h2>
-              <p id="boughtSummary">담은 제품 중에서 실제로 산 것만 따로 모아 보는 페이지예요. 매장에서 산 뒤 카드나 상세에서 ‘구매 체크’를 누르면 여기로 들어와요.</p>
+              <p id="boughtSummary">담은 제품 중에서 실제로 산 것만 따로 모아 보는 페이지예요. 각 제품의 사진·가격·파는 곳이 함께 보이고, ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 그 자리에서 펼쳐져요.</p>
             </div>
             <div class="bought-actions">
               <button class="btn" id="copyBoughtBtn" type="button">구매 목록 복사</button>
@@ -8565,6 +8610,8 @@
       pickCount.innerHTML = "담은 제품 <b>" + n + "</b>개 · 구매 <b>" + bn + "</b>개";
       var bnc = document.getElementById("boughtNavCount");
       if (bnc) bnc.textContent = bn + "개";
+      var pnc = document.getElementById("pickedNavCount");
+      if (pnc) pnc.textContent = n + "개";
       var aliveMain = ITEMS.filter(function(p){ return !p.nc && !deleted[p.id]; });
       var aliveDonki = aliveMain.filter(function(p){ return p.store==="donki"; }).length;
       var aliveConv = aliveMain.filter(function(p){ return p.store==="conv"; }).length;
@@ -8594,6 +8641,7 @@
           }).join("");
         }
       }
+      renderPickedPage();
       renderBoughtPage();
       renderDashboard();
       renderSyncPanel();
@@ -8716,6 +8764,13 @@
 
     var backBtnEl = document.getElementById("backToCatalogBtn");
     if (backBtnEl) backBtnEl.addEventListener("click", function(){ setView("catalog"); });
+    var backPickedBtnEl = document.getElementById("backFromPickedBtn");
+    if (backPickedBtnEl) backPickedBtnEl.addEventListener("click", function(){ setView("catalog"); });
+    var copyPickedBtnEl = document.getElementById("copyPickedBtn");
+    if (copyPickedBtnEl) copyPickedBtnEl.addEventListener("click", function(){
+      var cb = document.getElementById("copyBtn");
+      if (cb) cb.click();
+    });
     var copyBoughtBtnEl = document.getElementById("copyBoughtBtn");
     if (copyBoughtBtnEl) copyBoughtBtnEl.addEventListener("click", function(){
       var sel = boughtItems();
@@ -8915,7 +8970,13 @@
         google.accounts.id.initialize({ client_id: GIS_CLIENT_ID, callback: onGoogleCredential, auto_select: false, cancel_on_tap_outside: true });
         var fb = document.getElementById("gisFallbackBtn");
         if (fb) google.accounts.id.renderButton(fb, { theme: "outline", size: "large", type: "standard", text: "signin_with", shape: "rectangular", locale: "ko" });
+        var gb = document.getElementById("gisGuestBtn");
+        if (gb) google.accounts.id.renderButton(gb, { theme: "outline", size: "large", type: "standard", text: "signin_with", shape: "rectangular", locale: "ko" });
         gisInitialized = true;
+        // Show Google's own rendered button right away, so signing in is a
+        // single click on the official button — no extra first click that
+        // only reveals it (that two-step flow is what made login feel broken).
+        showGisFallback();
       } catch (e) { return false; }
       return true;
     }
@@ -8925,12 +8986,10 @@
         setAuthMsg("Google 로그인 버튼을 아직 불러오지 못했어요. 인터넷 연결을 확인하고 잠시 후 다시 눌러 주세요.");
         return;
       }
-      // Show the GIS-rendered Google button right under the login button;
-      // the actual sign-in happens through that official button.
       showGisFallback();
       var bar = document.getElementById("authBar");
       if (bar) bar.scrollIntoView({ block: "nearest", behavior: scrollBehavior() });
-      toast("아래 Google 버튼을 눌러 로그인해 주세요.");
+      toast("위에 보이는 Google 버튼을 눌러 로그인해 주세요.");
     }
     // restore a previous login from this browser
     (function restoreAuth(){
@@ -9236,35 +9295,72 @@
     }
     // ---- purchased page + dashboard + view switching ----
     var currentView = "catalog";
+    function pickedItems(){ return ITEMS.filter(function(p){ return picked[p.id] && !deleted[p.id]; }); }
     function boughtItems(){ return ITEMS.filter(function(p){ return picked[p.id] && bought[p.id] && !deleted[p.id]; }); }
     function remainingItems(){ return ITEMS.filter(function(p){ return picked[p.id] && !bought[p.id] && !deleted[p.id]; }); }
+    // Which item's full detail is open inside each list page
+    // ("picked" / "bought" / "remain") — same detail card as the catalog.
+    var listDetail = { picked: null, bought: null, remain: null };
     function fmtDate(iso){
       var d = new Date(iso);
       if (isNaN(d.getTime())) return "";
       return d.getFullYear() + "년 " + (d.getMonth() + 1) + "월 " + d.getDate() + "일";
     }
-    function browHTML(p, isBought){
-      var h = '<div class="brow"><span class="th">';
+    function browHTML(p, ctx){
+      var isBought = !!bought[p.id];
+      var open = listDetail[ctx] === p.id;
+      var h = '<div class="bwrap"><div class="brow"><span class="th">';
       if (!p.img) h += '<span class="noimg">사진 미확인</span>';
-      else h += '<img src="' + p.img + '" alt="" loading="lazy" />';
+      else h += '<img src="' + p.img + '" alt="' + esc(p.name) + ' 제품 사진" loading="lazy" />';
+      if (isNew(p)) h += '<span class="newbadge">NEW</span>';
       h += '</span><span class="tx"><span class="nm">' + esc(p.name) + "</span>";
-      h += '<span class="sub">' + esc(storeName(p.store)) + " · " + esc(p.cat || "") + (p.price ? " · " + esc(p.price) : "") + "</span>";
+      if (p.orig) h += '<span class="sub orig">' + esc(p.orig) + "</span>";
+      h += '<span class="sub">' + esc(storeName(p.store)) + " · " + esc(p.place || "") + (p.cat ? " · " + esc(p.cat) : "") + "</span>";
+      h += '<span class="sub price">가격 ' + esc(p.price || "가격 미확인") + "</span>";
+      h += '<span class="mrow">' + (isBought ? '<span class="buychip">구매완료</span>' : "") + rankChipHTML(p) + (p.mentions ? '<span class="mchip">' + esc(mentionShort(p)) + "</span>" : "") + "</span>";
+      if (p.reasonHtml || p.reason) h += '<span class="reason">' + (p.reasonHtml ? p.reasonHtml : esc(p.reason)) + "</span>";
       if (isBought && boughtDates[p.id]) h += '<span class="sub buydate">구매 체크한 날: ' + esc(fmtDate(boughtDates[p.id])) + "</span>";
+      if (!isBought && pickedDates[p.id]) h += '<span class="sub">담은 날: ' + esc(fmtDate(pickedDates[p.id])) + "</span>";
       h += '</span><span class="browacts">';
       h += '<button type="button" class="btn browbtn' + (isBought ? "" : " buy") + '" data-buytoggle="' + p.id + '">' + (isBought ? "구매 취소" : "구매 체크") + "</button>";
-      h += '<button type="button" class="btn browbtn" data-goto="' + p.id + '">상세 보기</button>';
+      h += '<button type="button" class="btn browbtn" data-listdetail="' + p.id + '" data-listctx="' + ctx + '" aria-expanded="' + (open ? "true" : "false") + '">' + (open ? "상세 닫기" : "상세 보기") + "</button>";
+      if (ctx === "picked") h += '<button type="button" class="btn browbtn pickoff" data-rowpick="' + p.id + '">담기 취소</button>';
       h += "</span></div>";
+      if (open) h += '<div class="bdetail"><section class="detail" aria-label="' + esc(p.name) + ' 상세 정보">' + detailHTML(p) + "</section></div>";
+      h += "</div>";
       return h;
     }
-    function browGroupHTML(items, isBought){
+    function browGroupHTML(items, ctx){
       var h = "";
       ["donki", "conv"].forEach(function(st){
         var group = items.filter(function(p){ return p.store === st; });
         if (!group.length) return;
         h += '<div class="bought-group"><h3>' + (st === "donki" ? "돈키호테" : "일본 편의점") + ' <span class="n">' + group.length + "개</span></h3>";
-        h += '<div class="brows">' + group.map(function(p){ return browHTML(p, isBought); }).join("") + "</div></div>";
+        h += '<div class="brows">' + group.map(function(p){ return browHTML(p, ctx); }).join("") + "</div></div>";
       });
       return h;
+    }
+    function renderPickedPage(){
+      var wrap = document.getElementById("pickedListWrap");
+      if (!wrap) return;
+      var pItems = pickedItems();
+      var bItems = boughtItems();
+      var total = pItems.length;
+      var hc = document.getElementById("pickedHeadCount");
+      if (hc) hc.textContent = total ? total + "개" : "";
+      var sum = document.getElementById("pickedSummary");
+      if (sum) {
+        if (!total) sum.textContent = "아직 담은 제품이 없어요. 전체 목록에서 살 것을 담으면 여기에 사진·가격·파는 곳과 함께 모여요.";
+        else sum.textContent = "담은 " + total + "개 중 " + bItems.length + "개를 구매했고, 아직 " + (total - bItems.length) + "개가 남았어요. 각 제품의 ‘상세 보기’를 누르면 추천 이유와 근거 영상까지 볼 수 있어요.";
+      }
+      var pct = total ? Math.round(bItems.length / total * 100) : 0;
+      var fill = document.getElementById("pickedProgressFill");
+      if (fill) fill.style.width = pct + "%";
+      var pt = document.getElementById("pickedProgressText");
+      if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
+      var empty = document.getElementById("pickedEmpty");
+      if (empty) empty.hidden = total > 0;
+      wrap.innerHTML = browGroupHTML(pItems, "picked");
     }
     function renderBoughtPage(){
       var wrap = document.getElementById("boughtListWrap");
@@ -9287,13 +9383,13 @@
       if (pt) pt.textContent = total ? "담은 것 중 " + pct + "% 구매했어요 (" + bItems.length + "/" + total + "개)" : "담은 제품이 없어요";
       var empty = document.getElementById("boughtEmpty");
       if (empty) empty.hidden = bItems.length > 0;
-      wrap.innerHTML = browGroupHTML(bItems, true);
+      wrap.innerHTML = browGroupHTML(bItems, "bought");
       var rt = document.getElementById("remainTitle");
       var rn = document.getElementById("remainNote");
       var rw = document.getElementById("remainListWrap");
       if (rt) { rt.hidden = !rItems.length; rt.textContent = rItems.length ? "아직 안 산 담은 것 " + rItems.length + "개" : ""; }
       if (rn) rn.hidden = !rItems.length;
-      if (rw) rw.innerHTML = browGroupHTML(rItems, false);
+      if (rw) rw.innerHTML = browGroupHTML(rItems, "remain");
     }
     function fmtHistoryTime(iso){
       var d = new Date(iso);
@@ -9346,6 +9442,8 @@
       document.querySelectorAll("[data-viewtab]").forEach(function(b){
         b.setAttribute("aria-pressed", b.getAttribute("data-viewtab") === v ? "true" : "false");
       });
+      var pv = document.getElementById("pickedView");
+      if (pv) pv.hidden = v !== "picked";
       var bv = document.getElementById("boughtView");
       if (bv) bv.hidden = v !== "bought";
       var dv = document.getElementById("dashView");
@@ -9359,6 +9457,7 @@
       if (sp) sp.classList.toggle("view-hidden", !isCat);
       var delp = document.getElementById("deletedPanel");
       if (delp) delp.classList.toggle("view-hidden", !isCat);
+      if (v === "picked") renderPickedPage();
       if (v === "bought") renderBoughtPage();
       if (v === "dashboard") renderDashboard();
       window.scrollTo({ top: 0, behavior: scrollBehavior() });
@@ -9377,6 +9476,14 @@
       var vt = t.closest ? t.closest("[data-viewtab]") : null;
       if (vt) {
         setView(vt.getAttribute("data-viewtab"));
+        return;
+      }
+      var ld = t.closest ? t.closest("[data-listdetail]") : null;
+      if (ld) {
+        var lctx = ld.getAttribute("data-listctx") || "picked";
+        var lid = ld.getAttribute("data-listdetail");
+        listDetail[lctx] = (listDetail[lctx] === lid) ? null : lid;
+        if (lctx === "picked") renderPickedPage(); else renderBoughtPage();
         return;
       }
       var bt = t.closest ? t.closest("[data-buytoggle]") : null;
